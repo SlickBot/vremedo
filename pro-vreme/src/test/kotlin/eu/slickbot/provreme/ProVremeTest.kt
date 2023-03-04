@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runners.MethodSorters
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class ProVremeScraperTest {
+class ProVremeTest {
 
     companion object {
         private const val USER_AGENT = "Mozilla/5.0"
@@ -20,7 +20,7 @@ class ProVremeScraperTest {
         private lateinit var hours: List<ProHours>
     }
 
-    private lateinit var scraper: ProVremeScraper
+    private lateinit var scraper: ProVreme
 
     @Before
     fun setup() {
@@ -32,7 +32,7 @@ class ProVremeScraperTest {
                 chain.proceed(newRequest)
             }
             .build()
-        scraper = ProVremeScraper(okHttp)
+        scraper = ProVreme(okHttp)
     }
 
     @Test
