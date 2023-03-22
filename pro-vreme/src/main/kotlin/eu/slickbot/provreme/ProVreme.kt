@@ -4,7 +4,7 @@ import eu.slickbot.provreme.Constants.API_BASE_URL
 import eu.slickbot.provreme.Constants.API_DAY_URL
 import eu.slickbot.provreme.Constants.API_INDEX_URL
 import eu.slickbot.provreme.Constants.API_WEEK_URL
-import eu.slickbot.provreme.extensions.getResponseDocument
+import eu.slickbot.provreme.extension.getResponseDocument
 import eu.slickbot.provreme.model.ProCity
 import eu.slickbot.provreme.model.ProData
 import eu.slickbot.provreme.model.ProDay

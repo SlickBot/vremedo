@@ -1,4 +1,4 @@
-package eu.slickbot.provreme.extensions
+package eu.slickbot.provreme.extension
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
