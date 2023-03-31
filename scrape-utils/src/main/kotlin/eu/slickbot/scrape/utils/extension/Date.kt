@@ -1,4 +1,4 @@
-package eu.slickbot.arso.extension
+package eu.slickbot.scrape.utils.extension
 
 import java.text.SimpleDateFormat
 import java.util.*

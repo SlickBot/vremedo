@@ -1,14 +1,13 @@
 plugins {
     id "com.android.library"
     id "org.jetbrains.kotlin.android"
-    id "kotlin-parcelize"
 }
 
 android {
-    namespace "eu.slickbot.provreme"
+    namespace "eu.slickbot.scrape.utils"
 
     defaultConfig {
-        minSdk 26
+        minSdk 24
         targetSdk 33
         compileSdk 33
 
@@ -36,13 +35,16 @@ dependencies {
 
     /* Network */
 
-//    api "org.jsoup:jsoup:1.13.1"
-//    api "com.google.code.gson:gson:2.8.9"
-//    api "com.squareup.okhttp3:okhttp:4.10.0"
-    implementation project(":scrape-utils")
+    api "org.jsoup:jsoup:1.13.1"
+    api "com.google.code.gson:gson:2.8.9"
+    api "com.squareup.okhttp3:okhttp:4.10.0"
+
+    /* Datetime */
+
+    api "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
     /* Test */
 
-    testImplementation "junit:junit:4.13.2"
+//    testImplementation "junit:junit:4.13.2"
 
 }

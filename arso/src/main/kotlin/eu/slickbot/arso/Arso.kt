@@ -1,16 +1,16 @@
 package eu.slickbot.arso
 
-import eu.slickbot.arso.extension.*
+import eu.slickbot.scrape.utils.extension.*
 import eu.slickbot.arso.model.*
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 import okhttp3.OkHttpClient
-import org.w3c.dom.Element
 import org.xml.sax.InputSource
 import java.io.StringReader
 import java.lang.Integer.min
-import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
 
-class Arso(private val client: OkHttpClient) {
+class Arso(private val client: OkHttpClient = OkHttpClient()) {
 
     companion object {
 
@@ -347,7 +347,7 @@ class Arso(private val client: OkHttpClient) {
 
         var identifier: String? = null
         var sender: String? = null
-        var sent: Date? = null
+        var sent: Instant? = null
         var status: String? = null
         var msgType: String? = null
         var scope: String? = null
@@ -359,7 +359,7 @@ class Arso(private val client: OkHttpClient) {
             when (rootElement.tagName) {
                 "identifier" -> identifier = rootElement.childValue(0)
                 "sender" -> sender = rootElement.childValue(0)
-                "sent" -> sent = rootElement.childValue(0)?.parseDate()
+                "sent" -> sent = rootElement.childValue(0)?.toInstant()
                 "status" -> status = rootElement.childValue(0)
                 "msgType" -> msgType = rootElement.childValue(0)
                 "scope" -> scope = rootElement.childValue(0)
@@ -371,9 +371,9 @@ class Arso(private val client: OkHttpClient) {
                     var urgency: String? = null
                     var severity: String? = null
                     var certainty: String? = null
-                    var effective: Date? = null
-                    var onset: Date? = null
-                    var expires: Date? = null
+                    var effective: Instant? = null
+                    var onset: Instant? = null
+                    var expires: Instant? = null
                     var senderName: String? = null
                     var headline: String? = null
                     var description: String? = null
@@ -393,9 +393,9 @@ class Arso(private val client: OkHttpClient) {
                             "urgency" -> urgency = infoElement.childValue(0)
                             "severity" -> severity = infoElement.childValue(0)
                             "certainty" -> certainty = infoElement.childValue(0)
-                            "effective" -> effective = infoElement.childValue(0)?.parseDate()
-                            "onset" -> onset = infoElement.childValue(0)?.parseDate()
-                            "expires" -> expires = infoElement.childValue(0)?.parseDate()
+                            "effective" -> effective = infoElement.childValue(0)?.toInstant()
+                            "onset" -> onset = infoElement.childValue(0)?.toInstant()
+                            "expires" -> expires = infoElement.childValue(0)?.toInstant()
                             "senderName" -> senderName = infoElement.childValue(0)
                             "headline" -> headline = infoElement.childValue(0)
                             "description" -> description = infoElement.childValue(0) ?: ""

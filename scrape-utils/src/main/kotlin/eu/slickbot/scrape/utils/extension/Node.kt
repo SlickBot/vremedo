@@ -1,4 +1,4 @@
-package eu.slickbot.arso.extension
+package eu.slickbot.scrape.utils.extension
 
 import org.w3c.dom.Element
 import org.w3c.dom.Node

@@ -36,9 +36,10 @@ dependencies {
 
     /* Network */
 
-    api "org.jsoup:jsoup:1.13.1"
-    api "com.google.code.gson:gson:2.8.9"
-    api "com.squareup.okhttp3:okhttp:4.10.0"
+//    api "org.jsoup:jsoup:1.13.1"
+//    api "com.google.code.gson:gson:2.8.9"
+//    api "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation project(":scrape-utils")
 
     /* Test */
 

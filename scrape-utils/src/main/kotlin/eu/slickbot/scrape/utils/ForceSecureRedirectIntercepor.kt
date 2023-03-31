@@ -1,7 +1,7 @@
-package eu.slickbot.arso.util
+package eu.slickbot.scrape.utils
 
-import eu.slickbot.arso.extension.findHeader
-import eu.slickbot.arso.extension.replacePrefix
+import eu.slickbot.scrape.utils.extension.findHeader
+import eu.slickbot.scrape.utils.extension.replacePrefix
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -23,4 +23,5 @@ class ForceSecureRedirectInterceptor : Interceptor {
 
         return response
     }
+
 }

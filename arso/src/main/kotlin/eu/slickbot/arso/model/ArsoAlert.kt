@@ -1,11 +1,11 @@
 package eu.slickbot.arso.model
 
-import java.util.*
+import kotlinx.datetime.Instant
 
 data class ArsoAlert(
     val identifier: String,
     val sender: String,
-    val sent: Date,
+    val sent: Instant,
     val status: String,
     val msgType: String,
     val scope: String,
@@ -20,9 +20,9 @@ data class ArsoAlert(
         val urgency: String,
         val severity: String,
         val certainty: String,
-        val effective: Date,
-        val onset: Date,
-        val expires: Date,
+        val effective: Instant,
+        val onset: Instant,
+        val expires: Instant,
         val senderName: String,
         val headline: String,
         val description: String,

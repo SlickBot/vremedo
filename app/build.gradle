@@ -53,6 +53,11 @@ android {
 
 dependencies {
 
+    /* Projects */
+
+    implementation project(":arso")
+    implementation project(":pro-vreme")
+
     /* Android */
 
     implementation "androidx.core:core-ktx:1.9.0"
@@ -84,6 +89,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
 
     /* Logging */
+
     implementation "com.jakewharton.timber:timber:5.0.1"
 
     /* Testing */

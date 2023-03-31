@@ -4,17 +4,17 @@ import eu.slickbot.provreme.Constants.API_BASE_URL
 import eu.slickbot.provreme.Constants.API_DAY_URL
 import eu.slickbot.provreme.Constants.API_INDEX_URL
 import eu.slickbot.provreme.Constants.API_WEEK_URL
-import eu.slickbot.provreme.extension.getResponseDocument
 import eu.slickbot.provreme.model.ProCity
 import eu.slickbot.provreme.model.ProData
 import eu.slickbot.provreme.model.ProDay
 import eu.slickbot.provreme.model.ProHours
+import eu.slickbot.scrape.utils.extension.getResponseDocument
 import okhttp3.OkHttpClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-class ProVreme(private val client: OkHttpClient) {
+class ProVreme(private val client: OkHttpClient = OkHttpClient()) {
 
     fun getCities(): List<ProCity> {
         return client.getResponseDocument(API_INDEX_URL)
