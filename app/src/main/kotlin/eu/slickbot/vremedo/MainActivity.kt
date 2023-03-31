@@ -58,7 +58,9 @@ fun Greeting(
     )
 
     Text(
-        modifier = Modifier.rotate(angle).then(modifier),
+        modifier = Modifier
+            .rotate(angle)
+            .then(modifier),
         text = "Hello $name!",
     )
 }
