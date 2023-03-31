@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.runners.MethodSorters
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class ArsoScraperTest {
+class ArsoTest {
 
     companion object {
 //        private lateinit var temperatures: List<ArsoTemperature>
