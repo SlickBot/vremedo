@@ -1,6 +1,6 @@
 package eu.slickbot.scrape.utils
 
-import eu.slickbot.scrape.utils.extension.findHeader
+import eu.slickbot.scrape.utils.extension.getHeaderValue
 import eu.slickbot.scrape.utils.extension.replacePrefix
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,7 +14,7 @@ class ForceSecureRedirectInterceptor : Interceptor {
         while (response.code == 301) {
             response.close() // close previous call
 
-            val location = response.findHeader("location", ignoreCase = true) ?: return response
+            val location = response.getHeaderValue("location", ignoreCase = true) ?: return response
             val url = location.replacePrefix("http://", "https://")
 
             request = request.newBuilder().url(url).build()

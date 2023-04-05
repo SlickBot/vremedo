@@ -21,6 +21,7 @@ class ProVreme(private val client: OkHttpClient = OkHttpClient()) {
             .select("#profkoKraj > option")
             .filterFillers()
             .map { ProCity(it.`val`().toInt(), it.text()) }
+            .distinctBy { it.id }
     }
 
     fun getDaysFor(cityId: Int): List<ProDay> {
