@@ -40,7 +40,15 @@ class ProVreme(private val client: OkHttpClient = OkHttpClient()) {
 
     private fun Elements.filterFillers(): List<Element> {
         return filter {
-            it.text().contains("-----").not() && it.text().contains("Izberi").not()
+            try {
+                require("------" !in it.text())
+                require("Izberi" !in it.text())
+                require(it.`val`().isNotBlank())
+                require(it.text().isNotBlank())
+                true
+            } catch (e: Exception) {
+                false
+            }
         }
     }
 
