@@ -7,7 +7,7 @@ android {
     namespace "eu.slickbot.scrape.utils"
 
     defaultConfig {
-        minSdk 24
+        minSdk 26
         targetSdk 33
         compileSdk 33
 

@@ -8,7 +8,7 @@ android {
         namespace "eu.slickbot.vremedo"
         applicationId "eu.slickbot.vremedo"
 
-        minSdk 24
+        minSdk 26
         targetSdk 33
         compileSdk 33
 
@@ -87,6 +87,10 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_material_version"
     implementation "androidx.compose.material3:material3:$compose_material3_version"
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
+
+    /* Koin */
+
+    implementation "io.insert-koin:koin-androidx-compose:3.4.0"
 
     /* Logging */
 
