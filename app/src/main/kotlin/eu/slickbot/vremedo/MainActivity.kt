@@ -3,72 +3,64 @@ package eu.slickbot.vremedo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.tooling.preview.Preview
-import eu.slickbot.vremedo.ui.theme.VremedoTheme
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import eu.slickbot.vremedo.theme.VremedoTheme
+import eu.slickbot.vremedo.screen.Screen
+import eu.slickbot.vremedo.utils.AppLifecycle
+import eu.slickbot.vremedo.utils.AppNavigation
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
+    private val appLifecycle: AppLifecycle by inject()
+    private val appNavigation: AppNavigation by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appLifecycle.bind(this)
+
+        installSplashScreen().apply {
+            // remove system splash icon without animation
+            setOnExitAnimationListener { it.remove() }
+        }
 
         setContent {
-            VremedoTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
+            val navController = rememberNavController()
+            appNavigation.bind(navController)
+
+            VremedoTheme(darkTheme = true) {
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Splash.route,
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        Greeting(
-                            modifier = Modifier.align(Alignment.Center),
-                            name = "Android",
-                        )
-                    }
+                    screen(Screen.Splash)
+                    screen(Screen.Weather)
+//                    screen(Screen.Images)
+//                    screen(Screen.Image)
                 }
             }
         }
     }
 
-}
-
-@Composable
-fun Greeting(
-    name: String,
-    modifier: Modifier = Modifier,
-) {
-    val infiniteTransition = rememberInfiniteTransition()
-    val angle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = LinearEasing)
-        )
-    )
-
-    Text(
-        modifier = Modifier
-            .rotate(angle)
-            .then(modifier),
-        text = "Hello $name!",
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    VremedoTheme {
-        Greeting("Android")
+    override fun onDestroy() {
+        super.onDestroy()
+        appLifecycle.unbind(this)
     }
+
+    /* Helpers */
+
+    private fun NavGraphBuilder.screen(
+        screen: Screen,
+        arguments: List<NamedNavArgument> = emptyList(),
+        deepLinks: List<NavDeepLink> = emptyList(),
+    ) {
+        composable(screen.route, arguments, deepLinks, screen.screen)
+    }
+
 }

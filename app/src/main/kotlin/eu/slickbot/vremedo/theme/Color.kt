@@ -1,4 +1,4 @@
-package eu.slickbot.vremedo.ui.theme
+package eu.slickbot.vremedo.theme
 
 import androidx.compose.ui.graphics.Color
 
