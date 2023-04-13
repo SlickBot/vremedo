@@ -60,7 +60,7 @@ dependencies {
 
     /* Android */
 
-    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "androidx.core:core-ktx:1.10.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation "androidx.activity:activity-compose:1.7.0"
     implementation "androidx.core:core-splashscreen:1.0.0"
@@ -70,11 +70,11 @@ dependencies {
     // https://www.jetpackcomposeversion.com/
     // https://developer.android.com/jetpack/androidx/releases/compose#versions
 
-    var compose_ui_version = "1.4.0"
-    var compose_runtime_version = "1.4.0"
-    var compose_foundation_version = "1.4.0"
-    var compose_animation_version = "1.4.0"
-    var compose_material_version = "1.4.0"
+    var compose_ui_version = "1.4.1"
+    var compose_runtime_version = "1.4.1"
+    var compose_foundation_version = "1.4.1"
+    var compose_animation_version = "1.4.1"
+    var compose_material_version = "1.4.1"
     var compose_material3_version = "1.0.1"
     var compose_navigation_version = "2.5.3"
 
