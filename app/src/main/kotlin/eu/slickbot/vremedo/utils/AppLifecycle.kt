@@ -16,6 +16,7 @@ class AppLifecycle : LifecycleEventObserver {
         activity.lifecycle.addObserver(this)
         changeState(activity.lifecycle.currentState)
     }
+
     fun unbind(activity: ComponentActivity) {
         activity.lifecycle.removeObserver(this)
         changeState(activity.lifecycle.currentState)
@@ -23,6 +24,10 @@ class AppLifecycle : LifecycleEventObserver {
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         changeState(event.targetState)
+    }
+
+    fun isAtLeast(state: Lifecycle.State): Boolean {
+        return _state.value >= state
     }
 
     private fun changeState(state: Lifecycle.State) {

@@ -13,15 +13,15 @@ class SplashViewModel(
 
     private var splashJob: Job? = null
 
-    override fun onScreenCreate() {
+    override fun onComposableCreate() {
         splashJob?.cancel()
         splashJob = viewModelScope.launch {
-            delay(2000)
+            delay(0)
             navigator.navigateToWeather()
         }
     }
 
-    override fun onScreenDispose() {
+    override fun onComposableDispose() {
         splashJob?.cancel()
     }
 

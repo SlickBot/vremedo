@@ -8,14 +8,14 @@
         <item name="postSplashScreenTheme">@style/Theme.AppMain</item>
 
         <!-- Status bar and Nav bar configs -->
-        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.AppMain" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/white</item>
+    <style name="Theme.AppMain" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>

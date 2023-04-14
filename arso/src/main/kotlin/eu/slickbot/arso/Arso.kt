@@ -1,11 +1,13 @@
 package eu.slickbot.arso
 
-import eu.slickbot.scrape.utils.extension.*
 import eu.slickbot.arso.model.*
+import eu.slickbot.scrape.utils.extension.*
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toInstant
 import okhttp3.OkHttpClient
 import org.xml.sax.InputSource
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.StringReader
 import java.lang.Integer.min
 import javax.xml.parsers.DocumentBuilderFactory
@@ -21,6 +23,17 @@ class Arso(private val client: OkHttpClient = OkHttpClient()) {
         private const val BASE_OBSERV_URL = "$BASE_URL/uploads/probase/www/observ"
         private const val BASE_MODEL_URL = "$BASE_URL/uploads/probase/www/model"
 
+    }
+
+    private val service = Retrofit.Builder()
+        .baseUrl("https://vreme.arso.gov.si/api/1.0/")
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(ArsoService::class.java)
+
+    suspend fun getLocationInfo(language: String, location: String): ArsoLocationInfo {
+        return service.locationInfo(language, location)
     }
 
     fun getCategoryGroups(): List<ArsoCategoryGroup> {

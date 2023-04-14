@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 
 abstract class ComponentViewModel : ViewModel() {
 
-    abstract fun onScreenCreate()
-    abstract fun onScreenDispose()
+    abstract fun onComposableCreate()
+    abstract fun onComposableDispose()
 
 }

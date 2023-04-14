@@ -9,7 +9,7 @@
         <item name="android:windowSplashScreenBehavior">icon_preferred</item>
 
         <!-- Status bar and Nav bar configs -->
-        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>

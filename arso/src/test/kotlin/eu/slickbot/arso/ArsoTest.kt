@@ -2,7 +2,10 @@ package eu.slickbot.arso
 
 import eu.slickbot.arso.model.*
 import eu.slickbot.scrape.utils.UserAgentInterceptor
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -19,8 +22,17 @@ class ArsoTest {
     fun setup() {
         val client = OkHttpClient.Builder()
             .addInterceptor(UserAgentInterceptor(USER_AGENT))
+            .addInterceptor(HttpLoggingInterceptor().apply { setLevel(Level.BODY) })
             .build()
         arso = Arso(client)
+    }
+
+    @Test
+    fun test_location_info() = runBlocking {
+        val info = arso.getLocationInfo("sl", "Novo mesto")
+//        Assert.assertNotEquals(urls.size, 0)
+//        urls.forEach(::println)
+        println(info)
     }
 
     @Test
