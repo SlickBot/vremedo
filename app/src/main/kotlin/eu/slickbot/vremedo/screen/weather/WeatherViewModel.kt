@@ -1,11 +1,19 @@
 package eu.slickbot.vremedo.screen.weather
 
 import androidx.lifecycle.viewModelScope
-import eu.slickbot.provreme.model.ProCity
+import eu.slickbot.vremedo.extension.asyncDistinct
+import eu.slickbot.vremedo.extension.asyncMap
+import eu.slickbot.vremedo.model.WeatherCity
+import eu.slickbot.vremedo.model.WeatherDay
+import eu.slickbot.vremedo.model.WeatherHours
+import eu.slickbot.vremedo.model.WeatherItem
 import eu.slickbot.vremedo.repository.WeatherRepository
 import eu.slickbot.vremedo.utils.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -17,90 +25,147 @@ class WeatherViewModel(
     private val weatherRepository: WeatherRepository,
 ) : ComponentViewModel() {
 
-    private val _weatherText = MutableStateFlow("")
-    val weatherText = _weatherText.asStateFlow()
+    enum class Mode {
+        DAY, HOURS,
+    }
 
-    private val _cities = MutableStateFlow(emptyList<ProCity>())
+    private var _mode = MutableStateFlow(Mode.HOURS)
+    val mode = _mode.asStateFlow()
+
+    private val _searchInput = MutableStateFlow("")
+    val searchInput = _searchInput.asStateFlow()
+
+    private val _cities = MutableStateFlow(emptyList<WeatherCity>())
     val cities = _cities.asStateFlow()
 
-    private val _filter = MutableStateFlow("")
-    val filter = _filter.asStateFlow()
+    private val _selectedCity = MutableStateFlow<WeatherCity?>(null)
+    val selectedCity = _selectedCity.asStateFlow()
 
-    val filteredCities = combine(_cities, _filter) { cities, filter ->
+    private val _weatherItems = MutableStateFlow(emptyList<WeatherItem>())
+    val weatherItems = _weatherItems.asStateFlow()
+
+    private var _weatherDays = MutableStateFlow(emptyList<WeatherDay>())
+    val weatherDays = _weatherDays.asStateFlow()
+
+    private var _weatherHours = MutableStateFlow(emptyList<WeatherHours>())
+    val weatherHours = _weatherHours.asStateFlow()
+
+
+    private var _graphTempMin = MutableStateFlow(0f)
+    val graphTempMin = _graphTempMin.asStateFlow()
+
+    private var _graphTempMax = MutableStateFlow(0f)
+    val graphTempMax = _graphTempMax.asStateFlow()
+
+
+    private val _isLoadingCities = MutableStateFlow(false)
+    val isLoadingCities = _isLoadingCities.asStateFlow()
+
+    private val _isLoadingWeather = MutableStateFlow(false)
+    val isLoadingWeather = _isLoadingWeather.asStateFlow()
+
+
+    val filteredCities = combine(_cities, _searchInput) { cities, input ->
         when {
-            filter.isBlank() -> cities
+            input.isBlank() -> cities
             else -> withContext(Dispatchers.Default) {
                 cities
-                    .filter { it.name.contains(filter, ignoreCase = true) }
-                    .sortedBy { it.name.indexOf(filter, ignoreCase = true) }
+                    .filter { it.name.contains(input, ignoreCase = true) }
+                    .sortedBy { it.name.indexOf(input, ignoreCase = true) }
             }
         }
     }
 
-    private val _selectedCity = MutableStateFlow<ProCity?>(null)
-    val selectedCity = _selectedCity.asStateFlow()
 
-    private var numberJob: Job? = null
-    private var weatherJob: Job? = null
     private var citiesJob: Job? = null
+    private var weatherItemsJob: Job? = null
+
 
     override fun onComposableCreate() {
-        updateWeatherInfo()
         updateCities()
     }
 
-    private fun updateWeatherInfo() {
-        weatherJob?.cancel()
-        weatherJob = viewModelScope.launch {
-            try {
-                val data = weatherRepository.getSunInfo("sl", "Novo mesto")
-                _weatherText.update {
-                    data.joinToString("\n\n") { "${it.sunrise}\n${it.sunset}" }
-                }
-            } catch (e: Throwable) {
-                // TODO: handle
-                e.printStackTrace()
-            }
+    override fun onComposableDispose() {
+        citiesJob?.cancel()
+    }
+
+    fun setFilter(filter: String) {
+        _searchInput.update { filter }
+    }
+
+    fun onModeChangeClick() {
+        _mode.value = when (_mode.value) {
+            Mode.DAY -> Mode.HOURS
+            Mode.HOURS -> Mode.DAY
         }
+    }
+
+    fun onCityClick(city: WeatherCity) {
+        _selectedCity.update { city }
+        _searchInput.update { "" }
+        updateWeatherItems()
     }
 
     private fun updateCities() {
         citiesJob?.cancel()
         citiesJob = viewModelScope.launch {
+            _isLoadingCities.update { true }
             try {
                 val cities = weatherRepository.getCities()
                 _cities.update { cities }
-                _selectedCity.update {
-                    cities.find { it.name == "Novo mesto" }
-                        ?: cities.firstOrNull()
-                }
+                _selectedCity.update { cities.find { it.name == "Novo mesto" } ?: cities.firstOrNull() }
+                updateWeatherItems()
             } catch (e: Throwable) {
                 // TODO: handle
                 e.printStackTrace()
             }
+            _isLoadingCities.update { false }
         }
     }
 
-    override fun onComposableDispose() {
-        numberJob?.cancel()
-        weatherJob?.cancel()
-        citiesJob?.cancel()
+    private fun updateWeatherItems() {
+        weatherItemsJob?.cancel()
+        weatherItemsJob = viewModelScope.launch {
+            _isLoadingWeather.update { true }
+            try {
+                val cityId = _selectedCity.value?.id!!
+                updateWeatherItemsState(emptyList())
+                val weatherItems = weatherRepository.getWeatherItems(cityId)
+                updateWeatherItemsState(weatherItems)
+            } catch (e: Throwable) {
+                // TODO: handle
+                e.printStackTrace()
+            }
+            _isLoadingWeather.update { false }
+        }
     }
 
-    fun setFilter(filter: String) {
-        _filter.update { filter }
-    }
-
-    fun onCityClick(city: ProCity) {
-        _selectedCity.update { city }
-//        _filter.update { city.name }
-    }
-
-    fun onSearchOpened() {
-
-    }
-    fun onSearchClosed() {
-
+    private suspend fun updateWeatherItemsState(weatherItems: List<WeatherItem>) {
+        _weatherItems.update { weatherItems }
+        _weatherDays.update {
+            withContext(Dispatchers.Default) {
+                weatherItems.map { it.day }.distinct()
+            }
+        }
+        _weatherHours.update {
+            withContext(Dispatchers.Default) {
+                weatherItems.map { it.hours }.distinct()
+            }
+        }
+        _graphTempMin.update {
+            withContext(Dispatchers.Default) {
+                weatherItems.minOfOrNull {
+                    it.hours.temperature ?: Float.MAX_VALUE
+                }?.let { it - 10 } ?: -20f
+            }
+        }
+        _graphTempMax.update {
+            withContext(Dispatchers.Default) {
+                weatherItems.maxOfOrNull {
+                    it.hours.temperature ?: Float.MAX_VALUE
+                }?.let { it + 10 } ?: 40f
+            }
+        }
     }
 
 }
