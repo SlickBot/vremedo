@@ -74,27 +74,36 @@ class WeatherRepository(
             val firstDay = today ?: days.first()
             val firstDayIdx = days.indexOf(firstDay)
 
-            for ((i, day) in days.withIndex()) {
+            for ((dayIdx, day) in days.withIndex()) {
                 val dayHours = getHours(cityId, day.id)
-                val dayDate = localDateNow() + DatePeriod(days = i - firstDayIdx)
+                val daysDiff = dayIdx - firstDayIdx
+                val dayDate = localDateNow() + DatePeriod(days = daysDiff)
 
-                for (hourSpan in dayHours) {
+                for ((hourSpanIdx, hourSpan) in dayHours.withIndex()) {
                     val hoursLength = (hourSpan.endHour - hourSpan.startHour).let {
                         if (it < 0) 24 + it else it
                     }
                     for (hourIdx in 0 until hoursLength) {
                         val hour = (hourSpan.startHour + hourIdx) % 24
 
-//                        if (weatherData.lastOrNull()?.dateTime?.hour == hour)
+//                        if (items.lastOrNull()?.dateTime?.hour == hour)
 //                            continue
 
-                        items += if (hour in 22..23) {
+                        items += if (hourSpanIdx == 0 && hour > hourSpan.endHour) {
                             WeatherItem(
                                 LocalDateTime(dayDate - DatePeriod(days = 1), LocalTime(hour, 0)),
-                                days.getOrNull(i - 1) ?: continue,
+                                days.getOrNull(dayIdx - 1) ?: continue,
                                 hourSpan,
                             )
-                        } else {
+                        }
+                        else if (hourSpanIdx == dayHours.lastIndex && hour < hourSpan.startHour) {
+                            WeatherItem(
+                                LocalDateTime(dayDate + DatePeriod(days = 1), LocalTime(hour, 0)),
+                                days.getOrNull(dayIdx + 1) ?: continue,
+                                hourSpan,
+                            )
+                        }
+                        else {
                             WeatherItem(
                                 LocalDateTime(dayDate, LocalTime(hour, 0)),
                                 day,
@@ -105,9 +114,7 @@ class WeatherRepository(
                 }
             }
 
-            println(items.joinToString("\n"))
-
-            items
+             items
         }
     }
 

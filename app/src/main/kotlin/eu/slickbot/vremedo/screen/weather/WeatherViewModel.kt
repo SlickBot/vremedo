@@ -1,8 +1,6 @@
 package eu.slickbot.vremedo.screen.weather
 
 import androidx.lifecycle.viewModelScope
-import eu.slickbot.vremedo.extension.asyncDistinct
-import eu.slickbot.vremedo.extension.asyncMap
 import eu.slickbot.vremedo.model.WeatherCity
 import eu.slickbot.vremedo.model.WeatherDay
 import eu.slickbot.vremedo.model.WeatherHours
@@ -11,9 +9,6 @@ import eu.slickbot.vremedo.repository.WeatherRepository
 import eu.slickbot.vremedo.utils.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -162,7 +157,7 @@ class WeatherViewModel(
         _graphTempMax.update {
             withContext(Dispatchers.Default) {
                 weatherItems.maxOfOrNull {
-                    it.hours.temperature ?: Float.MAX_VALUE
+                    it.hours.temperature ?: Float.MIN_VALUE
                 }?.let { it + 10 } ?: 40f
             }
         }
