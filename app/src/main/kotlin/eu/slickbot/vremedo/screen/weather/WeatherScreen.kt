@@ -3,7 +3,6 @@ package eu.slickbot.vremedo.screen.weather
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -21,13 +20,19 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -74,8 +79,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.koinViewModel
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMotionApi::class)
 @Composable
@@ -131,8 +134,9 @@ fun WeatherScreen(
 
         fun onDayClick(day: WeatherDay) {
             scope.launch {
-                val index = weatherItems.indexOfFirst { it.day == day }
-                val percentage = index / weatherItems.lastIndex.toFloat()
+                val firstIdx = weatherItems.indexOfFirst { it.day == day }
+                val lastIdx = weatherItems.indexOfLast { it.day == day } + 1
+                val percentage = (lastIdx + firstIdx) / 2f / weatherItems.lastIndex.toFloat()
                 graphState.animateScrollTo(percentage * 1.001f)
             }
         }
@@ -191,7 +195,6 @@ fun WeatherScreen(
                     false -> DashboardContent(
                         weatherItems = weatherItems,
                         selectedItem = selectedItem,
-                        mode = mode,
                         days = weatherDays,
                         graphState = graphState,
                         graphMin = graphTempMin,
@@ -318,7 +321,7 @@ private fun ToolbarTitle(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
-        textStyle = MaterialTheme.typography.headlineSmall,
+        textStyle = MaterialTheme.typography.displayMedium,
     )
 }
 
@@ -363,7 +366,6 @@ private fun CityItem(city: WeatherCity, onClick: () -> Unit) {
 private fun DashboardContent(
     weatherItems: List<WeatherItem>,
     selectedItem: WeatherItem? = null,
-    mode: WeatherViewModel.Mode,
     days: List<WeatherDay>,
     graphState: WeatherGraphState,
     graphMin: Float,
@@ -371,25 +373,27 @@ private fun DashboardContent(
     onDayClick: (WeatherDay) -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
+            .padding(top = 10.dp)
     ) {
-        WeatherDataHeader(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(tween(durationMillis = 100)),
-            selectedItem = selectedItem,
-            mode = mode,
+        WeatherDayHeader(
+            modifier = Modifier.fillMaxWidth(),
+            item = selectedItem,
         )
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .weight(1f)
+        WeatherHoursHeader(
+            modifier = Modifier.fillMaxWidth(),
+            item = selectedItem,
+        )
+        WeatherContent(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            item = selectedItem,
         )
         WeatherGraph(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .padding(bottom = 10.dp, start = 0.dp, end = 0.dp),
+                .padding(bottom = 20.dp, start = 0.dp, end = 0.dp),
             items = weatherItems,
             state = graphState,
             valueMin = graphMin,
@@ -398,9 +402,9 @@ private fun DashboardContent(
             windImageSize = DpSize(16.dp, 16.dp),
             paddingValues = PaddingValues(start = LocalConfiguration.current.screenWidthDp.dp / 2, end = LocalConfiguration.current.screenWidthDp.dp / 2),
             lineOffset = LocalConfiguration.current.screenWidthDp.dp / 2,
-            itemSpacing = 16.dp,
+            itemSpacing = 14.dp,
         )
-        DaysBottomNavigation(
+        WeatherDaysNavbar(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             selectedItem = selectedItem,
             days = days,
@@ -410,12 +414,49 @@ private fun DashboardContent(
 }
 
 @Composable
-fun WeatherDataHeader(
-    modifier: Modifier,
-    selectedItem: WeatherItem?,
-    mode: WeatherViewModel.Mode,
+fun WeatherContent(
+    item: WeatherItem?,
+    modifier: Modifier = Modifier,
 ) {
-    if (selectedItem == null)
+    if (item == null) return
+    Card(
+        modifier = Modifier
+            .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+            .then(modifier),
+        colors = CardDefaults.cardColors(
+            containerColor = NavigationRailDefaults.ContainerColor.copy(alpha = .3f)
+        )
+    ) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 150.dp),
+            contentPadding = PaddingValues(10.dp)
+        ) {
+            items(item.hours.dataList) { item ->
+                Column(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        item.title,
+                        fontSize = 12.sp,
+                        lineHeight = 13.sp,
+                    )
+                    Text(
+                        item.text,
+                        fontSize = 15.sp,
+                        lineHeight = 16.sp,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeatherDayHeader(
+    modifier: Modifier,
+    item: WeatherItem?,
+) {
+    if (item == null)
         return
 
     Row(
@@ -424,45 +465,29 @@ fun WeatherDataHeader(
     ) {
         Column {
             Text(
-                selectedItem.day.name,
+                item.day.name,
                 style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier
                     .padding(horizontal = 20.dp),
             )
-            if (mode == WeatherViewModel.Mode.HOURS) {
-                Text(
-                    selectedItem.hours.name,
-                    style = MaterialTheme.typography.displaySmall,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp),
-                )
-            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        val temperatureText = remember(selectedItem, mode) {
-            when (mode) {
-                WeatherViewModel.Mode.DAY -> {
-                    val minTemp = selectedItem.day.minTemperatureText
-                    val maxTemp = selectedItem.day.maxTemperatureText
-                    "$minTemp / $maxTemp"
-                }
-                WeatherViewModel.Mode.HOURS -> selectedItem.hours.temperatureText
-            }
+        val temperatureText = remember(item) {
+            val minTemp = item.day.minTemperatureText
+            val maxTemp = item.day.maxTemperatureText
+            "$minTemp / $maxTemp"
         }
         Text(
-            temperatureText ?: "",
+            temperatureText,
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier
                 .padding(horizontal = 20.dp),
         )
 
-        val weatherIcon = remember(selectedItem, mode) {
-            when (mode) {
-                WeatherViewModel.Mode.DAY -> selectedItem.day.iconUrl
-                WeatherViewModel.Mode.HOURS -> selectedItem.hours.iconUrl
-            }
+        val weatherIcon = remember(item) {
+            item.day.iconUrl
         }
         Image(
             painter = rememberAsyncImagePainter(weatherIcon),
@@ -476,7 +501,28 @@ fun WeatherDataHeader(
 }
 
 @Composable
-private fun DaysBottomNavigation(
+private fun WeatherHoursHeader(
+    modifier: Modifier,
+    item: WeatherItem?,
+) {
+    if (item == null)
+        return
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            item.hours.name,
+            style = MaterialTheme.typography.displaySmall,
+            modifier = Modifier
+                .padding(horizontal = 20.dp),
+        )
+    }
+}
+
+@Composable
+private fun WeatherDaysNavbar(
     modifier: Modifier,
     selectedItem: WeatherItem?,
     days: List<WeatherDay>,

@@ -24,7 +24,7 @@ fun SplashScreen(
                     .size(192.dp)
                     .align(Alignment.Center)
                     .rotate(180f),
-                painter = painterResource(R.mipmap.ic_launcher_round),
+                painter = painterResource(android.R.mipmap.sym_def_app_icon),
                 contentDescription = null,
             )
         }

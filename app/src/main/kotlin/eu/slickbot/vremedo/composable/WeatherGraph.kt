@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.*
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import coil.ImageLoader
+import coil.compose.LocalImageLoader
+import coil.imageLoader
 import coil.request.CachePolicy
 import eu.slickbot.vremedo.R
 import eu.slickbot.vremedo.extension.*
@@ -77,7 +79,6 @@ fun WeatherGraph(
     lineOffset: Dp,
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues = PaddingValues(0.dp),
-//    onIndexChange: (Int) -> Unit = {},
 ) {
     if (items.isEmpty())
         return
@@ -145,7 +146,6 @@ fun WeatherGraph(
     val index = (items.lastIndex * state.percentage).toInt()
     if (index != state.currentIndex) {
         state.currentIndex = index
-//        onIndexChange(index)
     }
 
     Box(modifier) {
@@ -171,9 +171,11 @@ fun WeatherGraph(
                     Size(chartWidth.toPx(), size.height)
                 )
 
-                // draw X texts
+                // draw hours
                 for (i in items.indices) {
-                    val text = items[i].dateTime.hour.toString()
+                    val hour = items[i].dateTime.hour
+                    if (hour % 2 == 1) continue
+                    val text = hour.toString()
                     val textBounds = xLabelsPaint.getTextBounds(text)
                     drawContext.canvas.nativeCanvas.drawText(
                         text,
