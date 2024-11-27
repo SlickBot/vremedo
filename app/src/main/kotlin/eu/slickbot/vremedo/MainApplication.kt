@@ -7,14 +7,14 @@ import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
-        
-        startKoin {
-            androidLogger()
-            androidContext(this@MainApplication)
-            modules(appModule)
-        }
+  override fun onCreate() {
+    super.onCreate()
+
+    startKoin {
+      androidLogger()
+      androidContext(this@MainApplication)
+      modules(appModule)
     }
+  }
 
 }

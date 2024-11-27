@@ -11,14 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 suspend fun ImageLoader.getImageBitmap(context: Context, data: Any?): ImageBitmap {
-    return withContext(Dispatchers.Default) {
-        val request = ImageRequest.Builder(context)
-            .data(data)
-            .size(Size.ORIGINAL)
-            .build()
+  return withContext(Dispatchers.Default) {
+    val request = ImageRequest.Builder(context)
+      .data(data)
+      .size(Size.ORIGINAL)
+      .build()
 
-        val drawable = execute(request).drawable!!
+    val drawable = execute(request).drawable!!
 
-        drawable.toBitmap().asImageBitmap()
-    }
+    drawable.toBitmap().asImageBitmap()
+  }
 }

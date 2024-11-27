@@ -8,14 +8,14 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 suspend fun <T, R> Iterable<T>.asyncMap(
-    context: CoroutineContext = Dispatchers.Default,
-    transform: suspend CoroutineScope.(T) -> R,
+  context: CoroutineContext = Dispatchers.Default,
+  transform: suspend CoroutineScope.(T) -> R,
 ): List<R> {
-    return withContext(context) { map { async { transform(it) } }.awaitAll() }
+  return withContext(context) { map { async { transform(it) } }.awaitAll() }
 }
 
 suspend fun <T> Iterable<T>.asyncDistinct(
-    context: CoroutineContext = Dispatchers.Default,
+  context: CoroutineContext = Dispatchers.Default,
 ): List<T> {
-    return withContext(context) { distinct() }
+  return withContext(context) { distinct() }
 }

@@ -7,10 +7,10 @@ import androidx.compose.ui.graphics.Paint as ComposePaint
 
 @Composable
 fun rememberAndroidPaint(builder: AndroidPaint.() -> Unit): AndroidPaint {
-    return remember { AndroidPaint().apply(builder) }
+  return remember { AndroidPaint().apply(builder) }
 }
 
 @Composable
 fun rememberPaint(builder: ComposePaint.() -> Unit): ComposePaint {
-    return remember { ComposePaint().apply(builder) }
+  return remember { ComposePaint().apply(builder) }
 }

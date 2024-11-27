@@ -10,25 +10,25 @@ import eu.slickbot.vremedo.R
 
 @Composable
 fun BackgroundBox(
-    isNight: Boolean = true,
-    content: @Composable BoxScope.() -> Unit,
+  isNight: Boolean = true,
+  content: @Composable BoxScope.() -> Unit,
 ) {
-    val images = remember {
-        listOf(
-            R.drawable.background_dark,
-            R.drawable.background_light,
-        )
-    }
+  val images = remember {
+    listOf(
+      R.drawable.background_dark,
+      R.drawable.background_light,
+    )
+  }
 
-    Surface(Modifier.fillMaxSize()) {
-        if (images.isNotEmpty()) {
-            AnimatedImage(
-                modifier = Modifier.fillMaxSize(),
-                images = images,
-                idx = if (isNight) 0 else 1,
-                durationMillis = 1000,
-            )
-        }
-        FullSizeBox(content = content)
+  Surface(Modifier.fillMaxSize()) {
+    if (images.isNotEmpty()) {
+      AnimatedImage(
+        modifier = Modifier.fillMaxSize(),
+        images = images,
+        idx = if (isNight) 0 else 1,
+        durationMillis = 1000,
+      )
     }
+    FullSizeBox(content = content)
+  }
 }

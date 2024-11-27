@@ -9,69 +9,69 @@ import androidx.compose.ui.unit.sp
 import eu.slickbot.vremedo.R
 
 val fontAdventPro = FontFamily(
-    Font(R.font.advent_pro_extralight),
-    Font(R.font.advent_pro_extralight, weight = FontWeight.ExtraLight),
-    Font(R.font.advent_pro_medium, weight = FontWeight.Medium),
+  Font(R.font.advent_pro_extralight),
+  Font(R.font.advent_pro_extralight, weight = FontWeight.ExtraLight),
+  Font(R.font.advent_pro_medium, weight = FontWeight.Medium),
 )
 
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
+  bodyLarge = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    letterSpacing = 0.5.sp
+  ),
 
-    displayLarge = TextStyle(
-        fontFamily = fontAdventPro,
-        fontWeight = FontWeight.Medium,
-        fontSize = 40.sp,
-        lineHeight = 46.sp,
-        letterSpacing = 0.5.sp
-    ),
-    displayMedium = TextStyle(
-        fontFamily = fontAdventPro,
-        fontWeight = FontWeight.Medium,
-        fontSize = 34.sp,
-        lineHeight = 38.sp,
-        letterSpacing = 0.5.sp,
-    ),
-    displaySmall = TextStyle(
-        fontFamily = fontAdventPro,
-        fontWeight = FontWeight.Medium,
-        fontSize = 26.sp,
-        lineHeight = 30.sp,
-        letterSpacing = 0.5.sp
-    ),
+  displayLarge = TextStyle(
+    fontFamily = fontAdventPro,
+    fontWeight = FontWeight.Medium,
+    fontSize = 40.sp,
+    lineHeight = 46.sp,
+    letterSpacing = 0.5.sp
+  ),
+  displayMedium = TextStyle(
+    fontFamily = fontAdventPro,
+    fontWeight = FontWeight.Medium,
+    fontSize = 34.sp,
+    lineHeight = 38.sp,
+    letterSpacing = 0.5.sp,
+  ),
+  displaySmall = TextStyle(
+    fontFamily = fontAdventPro,
+    fontWeight = FontWeight.Medium,
+    fontSize = 26.sp,
+    lineHeight = 30.sp,
+    letterSpacing = 0.5.sp
+  ),
 
-    titleLarge = TextStyle(
-        fontFamily = fontAdventPro,
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.5.sp
-    ),
-    titleMedium = TextStyle(
-        fontFamily = fontAdventPro,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
-    titleSmall = TextStyle(
-        fontFamily = fontAdventPro,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.5.sp
-    ),
+  titleLarge = TextStyle(
+    fontFamily = fontAdventPro,
+    fontWeight = FontWeight.Medium,
+    fontSize = 22.sp,
+    lineHeight = 28.sp,
+    letterSpacing = 0.5.sp
+  ),
+  titleMedium = TextStyle(
+    fontFamily = fontAdventPro,
+    fontWeight = FontWeight.Medium,
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    letterSpacing = 0.5.sp
+  ),
+  titleSmall = TextStyle(
+    fontFamily = fontAdventPro,
+    fontWeight = FontWeight.Medium,
+    fontSize = 14.sp,
+    lineHeight = 20.sp,
+    letterSpacing = 0.5.sp
+  ),
 
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    ),
+  labelSmall = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Medium,
+    fontSize = 11.sp,
+    lineHeight = 16.sp,
+    letterSpacing = 0.5.sp
+  ),
 )

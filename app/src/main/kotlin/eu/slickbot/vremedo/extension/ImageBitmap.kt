@@ -7,12 +7,12 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 
 fun ImageBitmap.createPainter(
-    srcOffset: IntOffset = IntOffset.Zero,
-    srcSize: IntSize = IntSize(width, height),
-    filterQuality: FilterQuality = FilterQuality.Low
+  srcOffset: IntOffset = IntOffset.Zero,
+  srcSize: IntSize = IntSize(width, height),
+  filterQuality: FilterQuality = FilterQuality.Low
 ): BitmapPainter {
-    return BitmapPainter(this, srcOffset, srcSize, filterQuality)
+  return BitmapPainter(this, srcOffset, srcSize, filterQuality)
 }
 
 val ImageBitmap.size: IntSize
-    get() = IntSize(width, height)
+  get() = IntSize(width, height)

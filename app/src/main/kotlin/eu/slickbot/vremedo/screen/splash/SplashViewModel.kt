@@ -8,21 +8,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
-    private val navigator: AppNavigation,
+  private val navigator: AppNavigation,
 ) : ComponentViewModel() {
 
-    private var splashJob: Job? = null
+  private var splashJob: Job? = null
 
-    override fun onComposableCreate() {
-        splashJob?.cancel()
-        splashJob = viewModelScope.launch {
-            delay(0)
-            navigator.navigateToWeather()
-        }
+  override fun onComposableCreate() {
+    splashJob?.cancel()
+    splashJob = viewModelScope.launch {
+//      delay(0)
+      navigator.navigateToWeather()
     }
+  }
 
-    override fun onComposableDispose() {
-        splashJob?.cancel()
-    }
+  override fun onComposableDispose() {
+    splashJob?.cancel()
+  }
 
 }

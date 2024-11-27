@@ -15,18 +15,18 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
-    vm: SplashViewModel = koinViewModel(),
+  vm: SplashViewModel = koinViewModel(),
 ) {
-    BaseScreen(vm, fitsSystemWindows = false) {
-        FullSizeBox {
-            Image(
-                modifier = Modifier
-                    .size(192.dp)
-                    .align(Alignment.Center)
-                    .rotate(180f),
-                painter = painterResource(android.R.mipmap.sym_def_app_icon),
-                contentDescription = null,
-            )
-        }
+  BaseScreen(vm, fitsSystemWindows = false) {
+    FullSizeBox {
+      Image(
+        modifier = Modifier
+            .size(192.dp)
+            .align(Alignment.Center)
+            .rotate(180f),
+        painter = painterResource(android.R.mipmap.sym_def_app_icon),
+        contentDescription = null,
+      )
     }
+  }
 }

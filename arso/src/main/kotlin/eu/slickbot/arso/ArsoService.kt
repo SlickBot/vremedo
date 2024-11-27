@@ -6,10 +6,10 @@ import retrofit2.http.Query
 
 interface ArsoService {
 
-    @GET("location/")
-    suspend fun locationInfo(
-        @Query("lang") lang: String,
-        @Query("location") location: String,
-    ): ArsoLocationInfo
+  @GET("location/")
+  suspend fun locationInfo(
+    @Query("lang") lang: String,
+    @Query("location") location: String,
+  ): ArsoLocationInfo
 
 }

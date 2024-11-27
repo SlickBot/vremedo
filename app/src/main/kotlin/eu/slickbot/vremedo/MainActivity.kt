@@ -21,60 +21,60 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private val appLifecycle: AppLifecycle by inject()
-    private val appNavigation: AppNavigation by inject()
-    private val weatherRepository: WeatherRepository by inject()
+  private val appLifecycle: AppLifecycle by inject()
+  private val appNavigation: AppNavigation by inject()
+  private val weatherRepository: WeatherRepository by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        appLifecycle.bind(this)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    appLifecycle.bind(this)
 
-        installSplashScreen().apply {
-            // remove system splash icon without animation
-            setOnExitAnimationListener { it.remove() }
+    installSplashScreen().apply {
+      // remove system splash icon without animation
+      setOnExitAnimationListener { it.remove() }
+    }
+
+    setContent {
+      val navController = rememberNavController()
+      appNavigation.bind(navController)
+
+      val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsState(false)
+//      val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsState(false, lifecycleScope.coroutineContext)
+
+      VremedoTheme(
+        darkTheme = isNight,
+        lightStatusBar = false,
+        lightNavigationBar = false,
+        fitsSystemWindows = false,
+      ) {
+        BackgroundBox(isNight = isNight) {
+          NavHost(
+            navController = navController,
+            startDestination = Screen.Splash.route,
+          ) {
+            screen(Screen.Splash)
+            screen(Screen.Weather)
+//            screen(Screen.Images)
+//            screen(Screen.Image)
+          }
         }
-
-        setContent {
-            val navController = rememberNavController()
-            appNavigation.bind(navController)
-
-            val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsState(false)
-//            val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsState(false, lifecycleScope.coroutineContext)
-
-            VremedoTheme(
-                darkTheme = isNight,
-                lightStatusBar = false,
-                lightNavigationBar = false,
-                fitsSystemWindows = false,
-            ) {
-                BackgroundBox(isNight = isNight) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Splash.route,
-                    ) {
-                        screen(Screen.Splash)
-                        screen(Screen.Weather)
-//                        screen(Screen.Images)
-//                        screen(Screen.Image)
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        appLifecycle.unbind(this)
-    }
+  override fun onDestroy() {
+    super.onDestroy()
+    appLifecycle.unbind(this)
+  }
 
-    /* Helpers */
+  /* Helpers */
 
-    private fun NavGraphBuilder.screen(
-        screen: Screen,
-        arguments: List<NamedNavArgument> = emptyList(),
-        deepLinks: List<NavDeepLink> = emptyList(),
-    ) {
-        composable(screen.route, arguments, deepLinks, screen.screen)
-    }
+  private fun NavGraphBuilder.screen(
+    screen: Screen,
+    arguments: List<NamedNavArgument> = emptyList(),
+    deepLinks: List<NavDeepLink> = emptyList(),
+  ) {
+    composable(screen.route, arguments, deepLinks, screen.screen)
+  }
 
 }

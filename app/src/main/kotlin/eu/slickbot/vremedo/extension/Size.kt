@@ -7,9 +7,9 @@ import androidx.compose.ui.unit.IntSize
 import kotlin.math.roundToInt
 
 fun Offset.toIntOffset(): IntOffset {
-    return IntOffset(x.roundToInt(), y.roundToInt())
+  return IntOffset(x.roundToInt(), y.roundToInt())
 }
 
 fun Size.toIntSize(): IntSize {
-    return IntSize(width.roundToInt(), height.roundToInt())
+  return IntSize(width.roundToInt(), height.roundToInt())
 }

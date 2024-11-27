@@ -11,17 +11,18 @@ import eu.slickbot.vremedo.utils.ComponentViewModel
 
 @Composable
 fun <T : ComponentViewModel> BaseScreen(
-    viewModel: T,
-    fitsSystemWindows: Boolean,
-    content: @Composable T.() -> Unit,
+  viewModel: T,
+  fitsSystemWindows: Boolean,
+  content: @Composable T.() -> Unit,
 ) {
-    DisposableEffect(Unit) {
-        /* create */ viewModel.onComposableCreate()
-        onDispose { viewModel.onComposableDispose() }
-    }
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .runIf(fitsSystemWindows) { systemBarsPadding() },
-        content = { content(viewModel) },
-    )
+  DisposableEffect(Unit) {
+    /* create */ viewModel.onComposableCreate()
+    onDispose { viewModel.onComposableDispose() }
+  }
+  Box(
+    modifier = Modifier
+        .fillMaxSize()
+        .runIf(fitsSystemWindows) { systemBarsPadding() },
+    content = { content(viewModel) },
+  )
 }

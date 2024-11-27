@@ -17,36 +17,36 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModelModules()
-    repositoryModules()
-    utilityModules()
+  viewModelModules()
+  repositoryModules()
+  utilityModules()
 }
 
 fun Module.viewModelModules() {
-    viewModelOf(::SplashViewModel)
-    viewModelOf(::WeatherViewModel)
+  viewModelOf(::SplashViewModel)
+  viewModelOf(::WeatherViewModel)
 }
 
 fun Module.repositoryModules() {
-    singleOf(::WeatherRepository)
+  singleOf(::WeatherRepository)
 }
 
 fun Module.utilityModules() {
-    singleOf(::defaultHttpClient)
+  singleOf(::defaultHttpClient)
 
-    singleOf(::AppLifecycle)
-    singleOf(::AppNavigation)
+  singleOf(::AppLifecycle)
+  singleOf(::AppNavigation)
 
-    singleOf(::Arso)
-    singleOf(::ProVreme)
+  singleOf(::Arso)
+  singleOf(::ProVreme)
 }
 
 private fun defaultHttpClient(): OkHttpClient {
-    return OkHttpClient.Builder()
-        .runIf(BuildConfig.DEBUG) {
-            addInterceptor(
-                HttpLoggingInterceptor().apply { setLevel(Level.BODY) }
-            )
-        }
-        .build()
+  return OkHttpClient.Builder()
+    .runIf(BuildConfig.DEBUG) {
+      addInterceptor(
+        HttpLoggingInterceptor().apply { setLevel(Level.BODY) }
+      )
+    }
+    .build()
 }

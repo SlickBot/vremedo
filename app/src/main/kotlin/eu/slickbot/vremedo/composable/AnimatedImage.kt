@@ -10,21 +10,21 @@ import androidx.compose.ui.res.painterResource
 
 @Composable
 fun AnimatedImage(
-    images: List<Int>,
-    idx: Int,
-    modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Crop,
-    durationMillis: Int = 350,
+  images: List<Int>,
+  idx: Int,
+  modifier: Modifier = Modifier,
+  contentScale: ContentScale = ContentScale.Crop,
+  durationMillis: Int = 350,
 ) {
-    Crossfade(
-        targetState = idx,
-        animationSpec = tween(durationMillis = durationMillis)
-    ) { target ->
-        Image(
-            modifier = modifier,
-            painter = painterResource(images[target]),
-            contentDescription = null,
-            contentScale = contentScale,
-        )
-    }
+  Crossfade(
+    targetState = idx,
+    animationSpec = tween(durationMillis = durationMillis)
+  ) { target ->
+    Image(
+      modifier = modifier,
+      painter = painterResource(images[target]),
+      contentDescription = null,
+      contentScale = contentScale,
+    )
+  }
 }

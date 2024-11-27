@@ -12,22 +12,22 @@ import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 
 fun String.toKotlinLocalDateTime(): LocalDateTime {
-    return OffsetDateTime.parse(this)
-        .toLocalDateTime()
-        .toKotlinLocalDateTime()
+  return OffsetDateTime.parse(this)
+    .toLocalDateTime()
+    .toKotlinLocalDateTime()
 }
 
 fun localDateTimeNow(): LocalDateTime {
-    return JavaLocalDateTime.now()
-        .toKotlinLocalDateTime()
+  return JavaLocalDateTime.now()
+    .toKotlinLocalDateTime()
 }
 
 fun localTimeNow(): LocalTime {
-    return JavaLocalTime.now()
-        .toKotlinLocalTime()
+  return JavaLocalTime.now()
+    .toKotlinLocalTime()
 }
 
 fun localDateNow(): LocalDate {
-    return JavaLocalDate.now()
-        .toKotlinLocalDate()
+  return JavaLocalDate.now()
+    .toKotlinLocalDate()
 }

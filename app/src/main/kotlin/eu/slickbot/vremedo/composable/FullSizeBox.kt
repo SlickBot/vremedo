@@ -8,11 +8,13 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun FullSizeBox(
-    modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit = {},
+  modifier: Modifier = Modifier,
+  content: @Composable BoxScope.() -> Unit = {},
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize().then(modifier),
-        content = content,
-    )
+  Box(
+    modifier = Modifier
+        .fillMaxSize()
+        .then(modifier),
+    content = content,
+  )
 }

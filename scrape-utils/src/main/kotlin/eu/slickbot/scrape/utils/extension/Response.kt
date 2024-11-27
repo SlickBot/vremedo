@@ -5,5 +5,5 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 fun Response.toDocument(): Document {
-    return Jsoup.parse(requireNotNull(body).string())
+  return Jsoup.parse(requireNotNull(body).string())
 }
