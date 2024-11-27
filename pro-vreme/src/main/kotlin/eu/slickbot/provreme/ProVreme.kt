@@ -15,7 +15,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-class ProVreme(private val client: OkHttpClient = OkHttpClient()) {
+class ProVreme(private val client: OkHttpClient) {
 
   fun getCities(): List<ProCity> {
     return client.getResponseDocument(API_INDEX_URL)

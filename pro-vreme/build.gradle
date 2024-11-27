@@ -9,8 +9,8 @@ android {
 
   defaultConfig {
     minSdk 26
-    targetSdk 33
-    compileSdk 33
+    targetSdk 35
+    compileSdk 35
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles "consumer-rules.pro"
@@ -36,9 +36,6 @@ dependencies {
 
   /* Network */
 
-//    api "org.jsoup:jsoup:1.13.1"
-//    api "com.google.code.gson:gson:2.8.9"
-//    api "com.squareup.okhttp3:okhttp:4.10.0"
   api project(":scrape-utils")
 
   /* Test */

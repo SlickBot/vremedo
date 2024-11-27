@@ -45,21 +45,18 @@ class WeatherRepository(
   }
 
   suspend fun getCities(): List<WeatherCity> {
-    return withContext(Dispatchers.IO) {
-      proVreme.getCities().map { it.mapCity() }
-    }
+    val cities = withContext(Dispatchers.IO) { proVreme.getCities() }
+    return withContext(Dispatchers.Default) { cities.map { it.mapCity() } }
   }
 
   suspend fun getDays(cityId: Int): List<WeatherDay> {
-    return withContext(Dispatchers.IO) {
-      proVreme.getDaysFor(cityId).map { it.mapDay() }
-    }
+    val days = withContext(Dispatchers.IO) { proVreme.getDaysFor(cityId) }
+    return withContext(Dispatchers.Default) { days.map { it.mapDay() } }
   }
 
   suspend fun getHours(cityId: Int, dayId: Int): List<WeatherHours> {
-    return withContext(Dispatchers.IO) {
-      proVreme.getHoursFor(cityId, dayId).map { it.mapHours() }
-    }
+    val hours = withContext(Dispatchers.IO) { proVreme.getHoursFor(cityId, dayId) }
+    return withContext(Dispatchers.Default) { hours.map { it.mapHours() } }
   }
 
   suspend fun getWeatherItems(cityId: Int): List<WeatherItem> {
@@ -132,7 +129,7 @@ class WeatherRepository(
     language: String,
     location: String
   ): List<SunriseSunsetTime> {
-    return withContext(Dispatchers.IO) {
+    return withContext(Dispatchers.Default) {
       arso.getLocationInfo(language, location)
         .forecast6h.features.first() // there is always only one element
         .properties.days.map { day ->

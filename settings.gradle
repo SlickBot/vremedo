@@ -15,4 +15,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "vremedo-compose"
-include ":app", ":scrape-utils", ":pro-vreme", ":arso"
+include ":app"
+include ":scrape-utils"
+include ":pro-vreme"
+include ":arso"

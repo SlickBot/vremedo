@@ -3,7 +3,6 @@ package eu.slickbot.vremedo.composable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
@@ -15,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UndecoratedTextField(
   value: String,
@@ -36,12 +34,14 @@ fun UndecoratedTextField(
   singleLine: Boolean = false,
   maxLines: Int = Int.MAX_VALUE,
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-  colors: TextFieldColors = TextFieldDefaults.textFieldColors(
+  colors: TextFieldColors = TextFieldDefaults.colors(
 //    disabledTextColor = Color.Transparent,
-    containerColor = Color.Transparent,
     focusedIndicatorColor = Color.Transparent,
+    focusedContainerColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
+    unfocusedContainerColor = Color.Transparent,
     disabledIndicatorColor = Color.Transparent,
+    disabledContainerColor = Color.Transparent,
   )
 ) {
   TextField(

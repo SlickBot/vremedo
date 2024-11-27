@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class AppNavigation {
 
-  private var navController: NavHostController? = null
+  private lateinit var navController: NavHostController
 
   private val _screen = MutableStateFlow<Screen>(Screen.Splash)
   val screen = _screen.asStateFlow()
@@ -22,7 +22,7 @@ class AppNavigation {
 
   fun navigateToWeather() {
     navigate(Screen.Weather) {
-      popUpTo(Screen.Splash) { inclusive = true }
+      popUpToScreen(Screen.Splash) { inclusive = true }
       launchSingleTop = true
     }
   }
@@ -34,11 +34,11 @@ class AppNavigation {
     extras: Navigator.Extras? = null,
     options: NavOptionsBuilder.() -> Unit = {},
   ) {
-    navController!!.navigate(screen.route, navOptions(options), extras)
+    navController.navigate(screen.route, navOptions(options), extras)
     _screen.value = screen
   }
 
-  private fun NavOptionsBuilder.popUpTo(
+  private fun NavOptionsBuilder.popUpToScreen(
     screen: Screen,
     builder: PopUpToBuilder.() -> Unit = {},
   ) {

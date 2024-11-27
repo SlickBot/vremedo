@@ -12,7 +12,7 @@ import java.io.StringReader
 import java.lang.Integer.min
 import javax.xml.parsers.DocumentBuilderFactory
 
-class Arso(private val client: OkHttpClient = OkHttpClient()) {
+class Arso(private val client: OkHttpClient) {
 
   companion object {
     private const val BASE_URL = "https://meteo.arso.gov.si"

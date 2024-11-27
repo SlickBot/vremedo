@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
@@ -38,8 +39,7 @@ class MainActivity : ComponentActivity() {
       val navController = rememberNavController()
       appNavigation.bind(navController)
 
-      val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsState(false)
-//      val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsState(false, lifecycleScope.coroutineContext)
+      val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsStateWithLifecycle(false)
 
       VremedoTheme(
         darkTheme = isNight,
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
   ) {
-    composable(screen.route, arguments, deepLinks, screen.screen)
+    composable(screen.route, arguments, deepLinks, content = screen.screen)
   }
 
 }

@@ -1,33 +1,67 @@
 package eu.slickbot.vremedo.composable
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Path
 import android.graphics.PointF
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.AndroidPath
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.NativeCanvas
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.asComposePath
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.*
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.roundToIntSize
+import androidx.compose.ui.unit.times
 import coil.ImageLoader
 import coil.request.CachePolicy
 import eu.slickbot.vremedo.R
-import eu.slickbot.vremedo.extension.*
+import eu.slickbot.vremedo.extension.getImageBitmap
+import eu.slickbot.vremedo.extension.getTextBounds
+import eu.slickbot.vremedo.extension.roundToIntOffset
+import eu.slickbot.vremedo.extension.size
 import eu.slickbot.vremedo.model.WeatherItem
+import eu.slickbot.vremedo.utils.getBitmapFromVectorDrawable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -122,11 +156,9 @@ fun WeatherGraph(
 
   var arrowBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
   LaunchedEffect(items) {
-    arrowBitmap = getBitmapFromVectorDrawable(context, R.drawable.ic_arrow_upward).asImageBitmap()
+    arrowBitmap = context.getBitmapFromVectorDrawable(R.drawable.ic_arrow_upward).asImageBitmap()
   }
 
-  val topPadding = paddingValues.calculateTopPadding()
-  val bottomPadding = paddingValues.calculateBottomPadding()
   val startPadding = paddingValues.calculateStartPadding(LayoutDirection.Ltr)
   val endPadding = paddingValues.calculateEndPadding(LayoutDirection.Ltr)
 
@@ -276,8 +308,8 @@ fun WeatherGraph(
             dstOffset = Offset(
               coordinate.x - (imageResized.width * 0.5f),
               coordinate.y - (imageResized.height * 1.5f)
-            ).toIntOffset(),
-            dstSize = imageResized.toIntSize(),
+            ).roundToIntOffset(),
+            dstSize = imageResized.roundToIntSize(),
           )
         }
 
@@ -318,8 +350,8 @@ fun WeatherGraph(
           rotate(degrees = windDirection.toFloat(), pivot = pivot) {
             drawImage(
               image = bitmap,
-              dstOffset = offset.toIntOffset(),
-              dstSize = imageResized.toIntSize(),
+              dstOffset = offset.roundToIntOffset(),
+              dstSize = imageResized.roundToIntSize(),
             )
           }
         }
@@ -344,17 +376,4 @@ private fun Float.rangeMap(
   outMin: Float, outMax: Float
 ): Float {
   return (this - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
-}
-
-private fun getBitmapFromVectorDrawable(context: Context, @DrawableRes drawableId: Int): Bitmap {
-  val drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, drawableId)!!).mutate()
-  val bitmap = Bitmap.createBitmap(
-    drawable.intrinsicWidth,
-    drawable.intrinsicHeight,
-    Bitmap.Config.ARGB_8888
-  )
-  val canvas = android.graphics.Canvas(bitmap)
-  drawable.setBounds(0, 0, canvas.width, canvas.height)
-  drawable.draw(canvas)
-  return bitmap
 }
