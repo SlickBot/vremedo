@@ -7,7 +7,6 @@ import eu.slickbot.provreme.ProVreme
 import eu.slickbot.vremedo.extension.runIf
 import eu.slickbot.vremedo.repository.WeatherRepository
 import eu.slickbot.vremedo.screen.images.ImagesViewModel
-import eu.slickbot.vremedo.screen.splash.SplashViewModel
 import eu.slickbot.vremedo.screen.weather.WeatherViewModel
 import eu.slickbot.vremedo.utils.AppLifecycle
 import eu.slickbot.vremedo.utils.AppNavigation
@@ -26,7 +25,6 @@ val appModule = module {
 }
 
 fun Module.viewModelModules() {
-  viewModelOf(::SplashViewModel)
   viewModelOf(::WeatherViewModel)
   viewModelOf(::ImagesViewModel)
 }

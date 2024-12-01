@@ -28,7 +28,6 @@ class AppNavigation() {
         .collect { backStackEntry ->
           _screen.update { screen ->
             when (backStackEntry.destination.route) {
-              Screen.Splash.route -> Screen.Splash
               Screen.Weather.route -> Screen.Weather
               Screen.Images.route -> Screen.Images
               else -> screen
@@ -38,15 +37,9 @@ class AppNavigation() {
     }
   }
 
-  fun navigateToSplash() {
-    if (screen.value == Screen.Splash) return
-    navigate(Screen.Splash)
-  }
-
   fun navigateToWeather() {
     if (screen.value == Screen.Weather) return
     navigate(Screen.Weather) {
-      popUpToScreen(Screen.Splash) { inclusive = true }
       launchSingleTop = true
     }
   }
@@ -54,7 +47,6 @@ class AppNavigation() {
   fun navigateToImages() {
     if (screen.value == Screen.Images) return
     navigate(Screen.Images) {
-      popUpToScreen(Screen.Splash) { inclusive = true }
       launchSingleTop = true
     }
   }

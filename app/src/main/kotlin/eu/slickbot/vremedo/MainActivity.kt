@@ -63,7 +63,6 @@ class MainActivity : ComponentActivity() {
             navController = navController,
             startDestination = Screen.Weather.route,
           ) {
-            screen(Screen.Splash)
             screen(Screen.Weather)
             screen(Screen.Images)
 //            screen(Screen.Image)
