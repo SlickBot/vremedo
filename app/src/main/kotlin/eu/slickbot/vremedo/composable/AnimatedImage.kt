@@ -15,10 +15,12 @@ fun AnimatedImage(
   modifier: Modifier = Modifier,
   contentScale: ContentScale = ContentScale.Crop,
   durationMillis: Int = 350,
+  label: String = "AnimatedImage",
 ) {
   Crossfade(
     targetState = idx,
-    animationSpec = tween(durationMillis = durationMillis)
+    animationSpec = tween(durationMillis = durationMillis),
+    label = label,
   ) { target ->
     Image(
       modifier = modifier,

@@ -1,9 +1,16 @@
 package eu.slickbot.vremedo
 
+import android.animation.ObjectAnimator
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.*
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
@@ -26,31 +33,35 @@ class MainActivity : ComponentActivity() {
   private val appNavigation: AppNavigation by inject()
   private val weatherRepository: WeatherRepository by inject()
 
+  @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
   override fun onCreate(savedInstanceState: Bundle?) {
+
     super.onCreate(savedInstanceState)
     appLifecycle.bind(this)
 
     installSplashScreen().apply {
-      // remove system splash icon without animation
-      setOnExitAnimationListener { it.remove() }
+      setOnExitAnimationListener { splashScreenView ->
+        ObjectAnimator.ofFloat(splashScreenView.view, View.ALPHA, 1f, 0f).apply {
+          duration = 300
+          doOnEnd { splashScreenView.remove() }
+        }.start()
+      }
     }
+
+    enableEdgeToEdge()
 
     setContent {
       val navController = rememberNavController()
       appNavigation.bind(navController)
 
-      val isNight by weatherRepository.isNightFlow("Novo mesto").collectAsStateWithLifecycle(false)
-
+      val isNight by remember { weatherRepository.isNightFlow("Novo mesto") }.collectAsStateWithLifecycle(null)
       VremedoTheme(
-        darkTheme = isNight,
-        lightStatusBar = false,
-        lightNavigationBar = false,
-        fitsSystemWindows = false,
+        darkTheme = isNight ?: isSystemInDarkTheme(),
       ) {
         BackgroundBox(isNight = isNight) {
           NavHost(
             navController = navController,
-            startDestination = Screen.Splash.route,
+            startDestination = Screen.Weather.route,
           ) {
             screen(Screen.Splash)
             screen(Screen.Weather)

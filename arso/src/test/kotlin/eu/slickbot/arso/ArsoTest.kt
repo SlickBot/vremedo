@@ -31,8 +31,6 @@ class ArsoTest {
   @Test
   fun test_location_info() = runBlocking {
     val info = arso.getLocationInfo("sl", "Novo mesto")
-//        assertNotEquals(urls.size, 0)
-//        urls.forEach(::println)
     println(info)
   }
 

@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,7 +63,7 @@ import eu.slickbot.vremedo.extension.getTextBounds
 import eu.slickbot.vremedo.extension.roundToIntOffset
 import eu.slickbot.vremedo.extension.size
 import eu.slickbot.vremedo.model.WeatherItem
-import eu.slickbot.vremedo.utils.getBitmapFromVectorDrawable
+import eu.slickbot.vremedo.extension.getBitmapFromVectorDrawable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -75,16 +77,13 @@ fun rememberWeatherGraphState(): WeatherGraphState {
 @Stable
 class WeatherGraphState {
 
-  var _onScrollTo: (Int) -> Unit = {}
-
   val scroll = ScrollState(initial = 0)
 
-  var percentage: Float by mutableStateOf(0f)
+  var percentage: Float by mutableFloatStateOf(0f)
     internal set
 
-  var currentIndex: Int by mutableStateOf(0)
+  var currentIndex: Int by mutableIntStateOf(0)
     internal set
-
 
   suspend fun scrollTo(percentage: Float) {
     val value = scroll.maxValue * percentage

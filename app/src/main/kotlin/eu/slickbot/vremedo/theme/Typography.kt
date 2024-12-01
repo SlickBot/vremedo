@@ -12,6 +12,9 @@ val fontAdventPro = FontFamily(
   Font(R.font.advent_pro_extralight),
   Font(R.font.advent_pro_extralight, weight = FontWeight.ExtraLight),
   Font(R.font.advent_pro_medium, weight = FontWeight.Medium),
+  Font(R.font.advent_pro_semibold, weight = FontWeight.SemiBold),
+  Font(R.font.advent_pro_bold, weight = FontWeight.Bold),
+  Font(R.font.advent_pro_black, weight = FontWeight.Black),
 )
 
 val Typography = Typography(
@@ -25,14 +28,14 @@ val Typography = Typography(
 
   displayLarge = TextStyle(
     fontFamily = fontAdventPro,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.SemiBold,
     fontSize = 40.sp,
     lineHeight = 46.sp,
     letterSpacing = 0.5.sp
   ),
   displayMedium = TextStyle(
     fontFamily = fontAdventPro,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.SemiBold,
     fontSize = 34.sp,
     lineHeight = 38.sp,
     letterSpacing = 0.5.sp,

@@ -2,23 +2,18 @@
 <resources>
 
     <style name="Theme.AppSplash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="windowSplashScreenBackground">@color/app_primary_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/edo</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.AppMain</item>
 
         <!-- Status bar and Nav bar configs -->
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
+<!--        <item name="android:windowBackground">@color/white</item>-->
+<!--        <item name="android:statusBarColor">@color/white</item>-->
+<!--        <item name="android:navigationBarColor">@color/white</item>-->
+<!--        <item name="android:windowLightStatusBar">true</item>-->
     </style>
 
-    <style name="Theme.AppMain" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
+    <style name="Theme.AppMain" parent="android:Theme.Material.Light.NoActionBar" />
 
 </resources>

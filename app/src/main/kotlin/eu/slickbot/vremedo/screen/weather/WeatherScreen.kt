@@ -2,7 +2,6 @@ package eu.slickbot.vremedo.screen.weather
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,15 +23,20 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -64,11 +67,12 @@ import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
 import coil.compose.rememberAsyncImagePainter
-import eu.slickbot.vremedo.composable.BaseScreen
-import eu.slickbot.vremedo.composable.FullSizeBox
+import eu.slickbot.vremedo.composable.BaseScaffold
+import eu.slickbot.vremedo.composable.Loader
 import eu.slickbot.vremedo.composable.UndecoratedTextField
 import eu.slickbot.vremedo.composable.WeatherGraph
 import eu.slickbot.vremedo.composable.WeatherGraphState
+import eu.slickbot.vremedo.composable.keyboardOnlyPadding
 import eu.slickbot.vremedo.composable.rememberWeatherGraphState
 import eu.slickbot.vremedo.extension.localDateTimeNow
 import eu.slickbot.vremedo.model.WeatherCity
@@ -80,28 +84,31 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMotionApi::class)
+@OptIn(ExperimentalMotionApi::class)
 @Composable
 fun WeatherScreen(
   vm: WeatherViewModel = koinViewModel(),
 ) {
-  val scope = rememberCoroutineScope()
-  val graphState = rememberWeatherGraphState()
+  BaseScaffold(vm) { paddingValues ->
+    val scope = rememberCoroutineScope()
+    val graphState = rememberWeatherGraphState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-  BaseScreen(vm, fitsSystemWindows = true) {
     var isSearchOpen by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    val filter by searchInput.collectAsState()
-    val filteredCities by filteredCities.collectAsState(emptyList())
-    val mode by mode.collectAsState()
-    val selectedCity by selectedCity.collectAsState()
-    val weatherItems by weatherItems.collectAsState()
-    val weatherDays by weatherDays.collectAsState()
-    val graphTempMin by graphTempMin.collectAsState()
-    val graphTempMax by graphTempMax.collectAsState()
+    val filter by vm.searchInput.collectAsState()
+    val filteredCities by vm.filteredCities.collectAsState(emptyList())
+    val mode by vm.mode.collectAsState()
+    val selectedCity by vm.selectedCity.collectAsState()
+    val weatherItems by vm.weatherItems.collectAsState()
+    val weatherDays by vm.weatherDays.collectAsState()
+    val graphTempMin by vm.graphTempMin.collectAsState()
+    val graphTempMax by vm.graphTempMax.collectAsState()
+    val isLoadingCities by vm.isLoadingCities.collectAsState()
+    val isLoadingWeather by vm.isLoadingWeather.collectAsState()
 
     val selectedItem = remember(weatherItems, graphState.currentIndex) {
       weatherItems.getOrNull(graphState.currentIndex)
@@ -111,23 +118,29 @@ fun WeatherScreen(
       if (weatherItems.isEmpty()) return@LaunchedEffect
 
       delay(1)
-      val totalDuration =
-        weatherItems.last().dateTime.toInstant(TimeZone.UTC).epochSeconds - weatherItems.first().dateTime.toInstant(
-          TimeZone.UTC
-        ).epochSeconds
-      val partDuration =
-        localDateTimeNow().toInstant(TimeZone.UTC).epochSeconds - weatherItems.first().dateTime.toInstant(
-          TimeZone.UTC
-        ).epochSeconds
+
+      val lastItemTime = weatherItems.last().dateTime.toInstant(TimeZone.UTC)
+      val firstItemTime = weatherItems.first().dateTime.toInstant(TimeZone.UTC)
+      val nowTime = localDateTimeNow().toInstant(TimeZone.UTC)
+
+      val totalDuration = lastItemTime.epochSeconds - firstItemTime.epochSeconds
+      val partDuration = nowTime.epochSeconds - firstItemTime.epochSeconds
 
       if (totalDuration > 0 && partDuration > 0) {
         graphState.scrollTo(partDuration / totalDuration.toFloat())
       }
     }
 
+    fun openMenu() {
+      scope.launch { drawerState.open() }
+    }
+
+    fun closeMenu() {
+      scope.launch { drawerState.close() }
+    }
+
     fun openSearch() {
       if (!isSearchOpen) {
-        focusRequester.requestFocus()
         isSearchOpen = true
       }
     }
@@ -148,68 +161,93 @@ fun WeatherScreen(
       }
     }
 
-    BackHandler(isSearchOpen) {
-      closeSearch()
+    BackHandler(enabled = isSearchOpen || drawerState.isOpen) {
+      if (drawerState.isOpen) {
+        scope.launch { drawerState.close() }
+      } else {
+        closeSearch()
+      }
     }
 
-    val progress by animateFloatAsState(
+    val searchOpenProgress by animateFloatAsState(
       targetValue = if (isSearchOpen) 1f else 0f,
-      animationSpec = tween(350),
+      animationSpec = tween(250),
+      label = "search_progress",
     )
 
-    MotionLayout(
-      modifier = Modifier.fillMaxSize(),
-      start = startConstraintSet(),
-      end = endConstraintSet(),
-      progress = progress,
-    ) {
-      ToolbarIcon(
-        modifier = Modifier.layoutId("menu"),
-        imageVector = Icons.Default.Menu,
-        contentDescription = "menu",
-        onClick = { println("click") },
-      )
-      ToolbarIcon(
-        modifier = Modifier.layoutId("images"),
-        imageVector = Icons.Default.Build,
-        contentDescription = "images",
-        onClick = { println("click") },
-      )
-      ToolbarIcon(
-        modifier = Modifier.layoutId("close"),
-        imageVector = Icons.Default.Close,
-        contentDescription = "close",
-        onClick = { closeSearch() },
-      )
-      ToolbarTitle(
-        modifier = Modifier.layoutId("title"),
-        value = if (!isSearchOpen) selectedCity?.name.orEmpty() else filter,
-        onValueChange = { setFilter(it) },
-        onFocusChange = { if (it.hasFocus) openSearch() },
-        focusRequester = focusRequester,
-      )
-
-      AnimatedContent(
-        modifier = Modifier.layoutId("content"),
-        targetState = isSearchOpen,
-      ) { isSearch ->
-        when (isSearch) {
-          true -> SearchContent(
-            filteredCities,
-            closeSearch = ::closeSearch,
-            onCityClick = ::onCityClick,
-          )
-
-          false -> DashboardContent(
-            weatherItems = weatherItems,
-            selectedItem = selectedItem,
-            days = weatherDays,
-            graphState = graphState,
-            graphMin = graphTempMin,
-            graphMax = graphTempMax,
-            onDayClick = ::onDayClick,
+    ModalNavigationDrawer(
+      drawerState = drawerState,
+      drawerContent = {
+        ModalDrawerSheet(
+          modifier = Modifier.padding(paddingValues),
+        ) {
+          Text("Drawer title", modifier = Modifier.padding(16.dp))
+          HorizontalDivider()
+          NavigationDrawerItem(
+            label = { Text(text = "Drawer Item") },
+            selected = false,
+            onClick = { /*TODO*/ }
           )
         }
+      }
+    ) {
+      Box {
+        MotionLayout(
+          modifier = Modifier.fillMaxSize().padding(paddingValues),
+          start = startConstraintSet(),
+          end = endConstraintSet(),
+          progress = searchOpenProgress,
+        ) {
+          ToolbarIcon(
+            modifier = Modifier.layoutId("menu"),
+            imageVector = Icons.Default.Menu,
+            contentDescription = "menu",
+            onClick = { openMenu() },
+          )
+//          ToolbarIcon(
+//            modifier = Modifier.layoutId("images"),
+//            imageVector = Icons.Default.Build,
+//            contentDescription = "images",
+//            onClick = { println("click") },
+//          )
+          ToolbarIcon(
+            modifier = Modifier.layoutId("close"),
+            imageVector = Icons.Default.Close,
+            contentDescription = "close",
+            onClick = { closeSearch() },
+          )
+          ToolbarTitle(
+            modifier = Modifier.layoutId("title"),
+            value = if (!isSearchOpen) selectedCity?.name.orEmpty() else filter,
+            onValueChange = { vm.setFilter(it) },
+            onFocusChange = { if (it.hasFocus) openSearch() },
+            focusRequester = focusRequester,
+          )
+
+          AnimatedContent(
+            modifier = Modifier.layoutId("content"),
+            targetState = isSearchOpen,
+            label = "weather_content",
+          ) { isSearch ->
+            if (isSearch) SearchContent(
+              filteredCities,
+              closeSearch = ::closeSearch,
+              onCityClick = vm::onCityClick,
+            )
+            else DashboardContent(
+              weatherItems = weatherItems,
+              selectedItem = selectedItem,
+              days = weatherDays,
+              graphState = graphState,
+              graphMin = graphTempMin,
+              graphMax = graphTempMax,
+              onDayClick = ::onDayClick,
+            )
+          }
+        }
+        Loader(
+          show = isLoadingCities || isLoadingWeather,
+        )
       }
     }
   }
@@ -218,7 +256,7 @@ fun WeatherScreen(
 private fun startConstraintSet() = ConstraintSet {
   val topLeft = createRefFor("menu")
   val topCenter = createRefFor("title")
-  val topRight = createRefFor("images")
+//  val topRight = createRefFor("images")
   val topRight2 = createRefFor("close")
   val content = createRefFor("content")
 
@@ -226,10 +264,10 @@ private fun startConstraintSet() = ConstraintSet {
     start.linkTo(parent.start)
     top.linkTo(parent.top)
   }
-  constrain(topRight) {
-    end.linkTo(parent.end)
-    top.linkTo(parent.top)
-  }
+//  constrain(topRight) {
+//    end.linkTo(parent.end)
+//    top.linkTo(parent.top)
+//  }
   constrain(topRight2) {
     start.linkTo(parent.end)
     top.linkTo(parent.top)
@@ -241,7 +279,7 @@ private fun startConstraintSet() = ConstraintSet {
     top.linkTo(parent.top)
     bottom.linkTo(topLeft.bottom)
     start.linkTo(topLeft.end)
-    end.linkTo(topRight.start)
+    end.linkTo(parent.end)
   }
   constrain(content) {
     width = Dimension.fillToConstraints
@@ -257,7 +295,7 @@ private fun startConstraintSet() = ConstraintSet {
 private fun endConstraintSet() = ConstraintSet {
   val topLeft = createRefFor("menu")
   val topCenter = createRefFor("title")
-  val topRight = createRefFor("images")
+//  val topRight = createRefFor("images")
   val topRight2 = createRefFor("close")
   val content = createRefFor("content")
 
@@ -265,10 +303,10 @@ private fun endConstraintSet() = ConstraintSet {
     end.linkTo(parent.start)
     top.linkTo(parent.top)
   }
-  constrain(topRight) {
-    start.linkTo(parent.end)
-    top.linkTo(parent.top)
-  }
+//  constrain(topRight) {
+//    start.linkTo(parent.end)
+//    top.linkTo(parent.top)
+//  }
   constrain(topRight2) {
     end.linkTo(parent.end)
     top.linkTo(parent.top)
@@ -337,10 +375,10 @@ private fun SearchContent(
   closeSearch: () -> Unit,
   onCityClick: (WeatherCity) -> Unit,
 ) {
-  FullSizeBox(
-    Modifier
-//      .background(Color.Red.copy(alpha = .3f))
-      .imePadding()
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .keyboardOnlyPadding()
   ) {
     LazyColumn {
       items(cities) { city ->

@@ -1,5 +1,6 @@
 package eu.slickbot.vremedo.repository
 
+import android.content.SharedPreferences
 import androidx.lifecycle.Lifecycle
 import eu.slickbot.arso.Arso
 import eu.slickbot.provreme.ProVreme
@@ -9,6 +10,7 @@ import eu.slickbot.provreme.model.ProDay
 import eu.slickbot.provreme.model.ProHours
 import eu.slickbot.vremedo.extension.localDateNow
 import eu.slickbot.vremedo.extension.localDateTimeNow
+import eu.slickbot.vremedo.extension.localTimeNow
 import eu.slickbot.vremedo.extension.toKotlinLocalDateTime
 import eu.slickbot.vremedo.model.SunriseSunsetTime
 import eu.slickbot.vremedo.model.WeatherCity
@@ -33,9 +35,35 @@ class WeatherRepository(
   private val lifecycle: AppLifecycle,
   private val arso: Arso,
   private val proVreme: ProVreme,
+  private val sharedPrefs: SharedPreferences,
 ) {
 
+  private fun isNightCached(location: String): Boolean? {
+//    val dayLocation = sharedPrefs.getString("day_location", null) ?: return null
+//    if (location != dayLocation) return null
+
+    val dayStart = sharedPrefs.getString("day_sunrise", null) ?: return null
+    val dayEnd = sharedPrefs.getString("day_sunset", null) ?: return null
+
+    return localTimeNow() !in LocalTime.parse(dayStart) .. LocalTime.parse(dayEnd)
+//    return false
+  }
+
+  private suspend fun cacheSunriseSunsetTime(
+    location: String,
+    time: SunriseSunsetTime,
+  ) {
+    withContext(Dispatchers.Default) {
+      sharedPrefs.edit()
+//        .putString("day_location", location)
+        .putString("day_sunrise", time.sunrise.time.toString())
+        .putString("day_sunset", time.sunset.time.toString())
+        .commit()
+    }
+  }
+
   fun isNightFlow(location: String): Flow<Boolean> = flow {
+    isNightCached(location)?.let { emit(it) }
     while (true) {
       if (lifecycle.isAtLeast(Lifecycle.State.STARTED)) {
         emit(isNight(location))
@@ -139,6 +167,7 @@ class WeatherRepository(
           )
         }
         .distinct()
+        .onEach { day -> cacheSunriseSunsetTime(location, day) }
     }
   }
 

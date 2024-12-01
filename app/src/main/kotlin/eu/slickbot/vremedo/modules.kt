@@ -1,5 +1,7 @@
 package eu.slickbot.vremedo
 
+import android.content.Context
+import android.content.SharedPreferences
 import eu.slickbot.arso.Arso
 import eu.slickbot.provreme.ProVreme
 import eu.slickbot.vremedo.extension.runIf
@@ -32,6 +34,7 @@ fun Module.repositoryModules() {
 }
 
 fun Module.utilityModules() {
+  singleOf(::defaultSharedPrefs)
   singleOf(::defaultHttpClient)
 
   singleOf(::AppLifecycle)
@@ -39,6 +42,10 @@ fun Module.utilityModules() {
 
   singleOf(::Arso)
   singleOf(::ProVreme)
+}
+
+private fun defaultSharedPrefs(context: Context): SharedPreferences {
+  return context.getSharedPreferences("prefs-vremedo", Context.MODE_PRIVATE)
 }
 
 private fun defaultHttpClient(): OkHttpClient {

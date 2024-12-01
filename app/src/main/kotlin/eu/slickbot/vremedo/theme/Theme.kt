@@ -1,16 +1,17 @@
 package eu.slickbot.vremedo.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+
+val colorDarkOverlay = Color.Black.copy(alpha = .1f)
+val colorLightOverlay = Color.White.copy(alpha = .1f)
+
+val colorDarkPrimary = Color(0xFF282F4C)
+val colorLightPrimary = Color(0xFF657B3D)
 
 private val DarkColorScheme = darkColorScheme(
   primary = Purple80,
@@ -41,33 +42,15 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun VremedoTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  lightStatusBar: Boolean = darkTheme,
-  lightNavigationBar: Boolean = darkTheme,
-  fitsSystemWindows: Boolean = true,
   content: @Composable () -> Unit,
 ) {
-  val view = LocalView.current
-  val activity = view.context as Activity
+  val useDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-  val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
   val colorScheme = when {
-    dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-    dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
+    useDynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
+    useDynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
     darkTheme -> DarkColorScheme
     else -> LightColorScheme
-  }
-
-  if (!view.isInEditMode) {
-    SideEffect {
-      val systemBarsColor = if (fitsSystemWindows) colorScheme.primary else Color.Transparent
-      (view.context as Activity).window.statusBarColor = systemBarsColor.toArgb()
-      (view.context as Activity).window.navigationBarColor = systemBarsColor.toArgb()
-      WindowCompat.setDecorFitsSystemWindows(activity.window, fitsSystemWindows)
-      WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars =
-        lightStatusBar
-      WindowCompat.getInsetsController(activity.window, view).isAppearanceLightNavigationBars =
-        lightNavigationBar
-    }
   }
 
   MaterialTheme(
