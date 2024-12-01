@@ -1,12 +1,14 @@
 package eu.slickbot.vremedo.composable
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -47,27 +49,26 @@ fun Loader(
   Box(
     modifier = modifier.fillMaxSize()
   ) {
-    AnimatedContent(
-      targetState = show,
-      label = "LoaderContent",
-    ) { shouldShow ->
-      if (shouldShow) {
-        Box(
-          modifier = modifier
-            .fillMaxSize()
-            .runIf(showOverlay) {
-              background(if (isDarkMode) colorDarkOverlay else colorLightOverlay)
-            }
-        ) {
-          Image(
-            modifier = modifier
-              .size(160.dp)
-              .graphicsLayer { rotationZ = angle.value }
-              .align(Alignment.Center),
-            painter = painterResource(R.drawable.edo),
-            contentDescription = null,
-          )
-        }
+    AnimatedVisibility(
+      visible = show,
+      enter = fadeIn(),
+      exit = fadeOut(),
+    ) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .runIf(showOverlay) {
+            background(if (isDarkMode) colorDarkOverlay else colorLightOverlay)
+          }
+      ) {
+        Image(
+          modifier = Modifier
+            .size(160.dp)
+            .graphicsLayer { rotationZ = angle.value }
+            .align(Alignment.Center),
+          painter = painterResource(R.drawable.edo),
+          contentDescription = null,
+        )
       }
     }
   }

@@ -5,14 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.slickbot.vremedo.composable.BaseScaffold
+import eu.slickbot.vremedo.composable.ViewModelScaffold
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
   vm: SplashViewModel = koinViewModel(),
 ) {
-  BaseScaffold(vm) { paddingValues ->
+  ViewModelScaffold(vm) { paddingValues ->
     Box(
       modifier = Modifier
         .fillMaxSize()

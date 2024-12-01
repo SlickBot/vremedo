@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
           ) {
             screen(Screen.Splash)
             screen(Screen.Weather)
-//            screen(Screen.Images)
+            screen(Screen.Images)
 //            screen(Screen.Image)
           }
         }

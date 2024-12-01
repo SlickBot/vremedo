@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-val colorDarkOverlay = Color.Black.copy(alpha = .1f)
-val colorLightOverlay = Color.White.copy(alpha = .1f)
+val colorDarkOverlay = Color.Black.copy(alpha = .2f)
+val colorLightOverlay = Color.White.copy(alpha = .2f)
 
 val colorDarkPrimary = Color(0xFF282F4C)
 val colorLightPrimary = Color(0xFF657B3D)

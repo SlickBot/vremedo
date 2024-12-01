@@ -28,12 +28,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -52,7 +47,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -67,12 +61,15 @@ import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
 import coil.compose.rememberAsyncImagePainter
-import eu.slickbot.vremedo.composable.BaseScaffold
+import eu.slickbot.vremedo.composable.AppDrawer
 import eu.slickbot.vremedo.composable.Loader
+import eu.slickbot.vremedo.composable.ToolbarIcon
 import eu.slickbot.vremedo.composable.UndecoratedTextField
+import eu.slickbot.vremedo.composable.ViewModelScaffold
 import eu.slickbot.vremedo.composable.WeatherGraph
 import eu.slickbot.vremedo.composable.WeatherGraphState
 import eu.slickbot.vremedo.composable.keyboardOnlyPadding
+import eu.slickbot.vremedo.composable.rememberFocusRequester
 import eu.slickbot.vremedo.composable.rememberWeatherGraphState
 import eu.slickbot.vremedo.extension.localDateTimeNow
 import eu.slickbot.vremedo.model.WeatherCity
@@ -89,14 +86,14 @@ import org.koin.androidx.compose.koinViewModel
 fun WeatherScreen(
   vm: WeatherViewModel = koinViewModel(),
 ) {
-  BaseScaffold(vm) { paddingValues ->
+  ViewModelScaffold(vm) { paddingValues ->
     val scope = rememberCoroutineScope()
     val graphState = rememberWeatherGraphState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     var isSearchOpen by remember { mutableStateOf(false) }
 
-    val focusRequester = remember { FocusRequester() }
+    val focusRequester = rememberFocusRequester()
     val focusManager = LocalFocusManager.current
 
     val filter by vm.searchInput.collectAsState()
@@ -109,6 +106,7 @@ fun WeatherScreen(
     val graphTempMax by vm.graphTempMax.collectAsState()
     val isLoadingCities by vm.isLoadingCities.collectAsState()
     val isLoadingWeather by vm.isLoadingWeather.collectAsState()
+    val isNight by vm.isNight.collectAsState()
 
     val selectedItem = remember(weatherItems, graphState.currentIndex) {
       weatherItems.getOrNull(graphState.currentIndex)
@@ -175,78 +173,64 @@ fun WeatherScreen(
       label = "search_progress",
     )
 
-    ModalNavigationDrawer(
-      drawerState = drawerState,
-      drawerContent = {
-        ModalDrawerSheet(
-          modifier = Modifier.padding(paddingValues),
-        ) {
-          Text("Drawer title", modifier = Modifier.padding(16.dp))
-          HorizontalDivider()
-          NavigationDrawerItem(
-            label = { Text(text = "Drawer Item") },
-            selected = false,
-            onClick = { /*TODO*/ }
-          )
-        }
-      }
-    ) {
-      Box {
-        MotionLayout(
-          modifier = Modifier.fillMaxSize().padding(paddingValues),
-          start = startConstraintSet(),
-          end = endConstraintSet(),
-          progress = searchOpenProgress,
-        ) {
-          ToolbarIcon(
-            modifier = Modifier.layoutId("menu"),
-            imageVector = Icons.Default.Menu,
-            contentDescription = "menu",
-            onClick = { openMenu() },
-          )
+    AppDrawer(drawerState) {
+      MotionLayout(
+        modifier = Modifier.fillMaxSize().padding(paddingValues),
+        start = startConstraintSet(),
+        end = endConstraintSet(),
+        progress = searchOpenProgress,
+      ) {
+        ToolbarIcon(
+          modifier = Modifier.layoutId("menu"),
+          imageVector = Icons.Default.Menu,
+          contentDescription = "menu",
+          onClick = { openMenu() },
+        )
 //          ToolbarIcon(
 //            modifier = Modifier.layoutId("images"),
 //            imageVector = Icons.Default.Build,
 //            contentDescription = "images",
 //            onClick = { println("click") },
 //          )
-          ToolbarIcon(
-            modifier = Modifier.layoutId("close"),
-            imageVector = Icons.Default.Close,
-            contentDescription = "close",
-            onClick = { closeSearch() },
-          )
-          ToolbarTitle(
-            modifier = Modifier.layoutId("title"),
-            value = if (!isSearchOpen) selectedCity?.name.orEmpty() else filter,
-            onValueChange = { vm.setFilter(it) },
-            onFocusChange = { if (it.hasFocus) openSearch() },
-            focusRequester = focusRequester,
-          )
+        ToolbarIcon(
+          modifier = Modifier.layoutId("close"),
+          imageVector = Icons.Default.Close,
+          contentDescription = "close",
+          onClick = { closeSearch() },
+        )
+        ToolbarTitle(
+          modifier = Modifier.layoutId("title"),
+          value = if (!isSearchOpen) selectedCity?.name.orEmpty() else filter,
+          onValueChange = { vm.setFilter(it) },
+          onFocusChange = { if (it.hasFocus) openSearch() },
+          focusRequester = focusRequester,
+        )
 
-          AnimatedContent(
-            modifier = Modifier.layoutId("content"),
-            targetState = isSearchOpen,
-            label = "weather_content",
-          ) { isSearch ->
-            if (isSearch) SearchContent(
-              filteredCities,
-              closeSearch = ::closeSearch,
-              onCityClick = vm::onCityClick,
-            )
-            else DashboardContent(
-              weatherItems = weatherItems,
-              selectedItem = selectedItem,
-              days = weatherDays,
-              graphState = graphState,
-              graphMin = graphTempMin,
-              graphMax = graphTempMax,
-              onDayClick = ::onDayClick,
-            )
-          }
+        AnimatedContent(
+          modifier = Modifier.layoutId("content"),
+          targetState = isSearchOpen,
+          label = "weather_content",
+        ) { isSearch ->
+          if (isSearch) SearchContent(
+            filteredCities,
+            closeSearch = ::closeSearch,
+            onCityClick = vm::onCityClick,
+          )
+          else DashboardContent(
+            weatherItems = weatherItems,
+            selectedItem = selectedItem,
+            days = weatherDays,
+            graphState = graphState,
+            graphMin = graphTempMin,
+            graphMax = graphTempMax,
+            onDayClick = ::onDayClick,
+          )
         }
+
         Loader(
+          modifier = Modifier.layoutId("loader"),
           show = isLoadingCities || isLoadingWeather,
+          isDarkMode = isNight == true,
         )
       }
     }
@@ -259,6 +243,7 @@ private fun startConstraintSet() = ConstraintSet {
 //  val topRight = createRefFor("images")
   val topRight2 = createRefFor("close")
   val content = createRefFor("content")
+  val loader = createRefFor("loader")
 
   constrain(topLeft) {
     start.linkTo(parent.start)
@@ -290,6 +275,15 @@ private fun startConstraintSet() = ConstraintSet {
     start.linkTo(parent.start)
     end.linkTo(parent.end)
   }
+  constrain(loader) {
+    width = Dimension.fillToConstraints
+    height = Dimension.fillToConstraints
+
+    top.linkTo(parent.top)
+    bottom.linkTo(parent.bottom)
+    start.linkTo(parent.start)
+    end.linkTo(parent.end)
+  }
 }
 
 private fun endConstraintSet() = ConstraintSet {
@@ -298,6 +292,7 @@ private fun endConstraintSet() = ConstraintSet {
 //  val topRight = createRefFor("images")
   val topRight2 = createRefFor("close")
   val content = createRefFor("content")
+  val loader = createRefFor("loader")
 
   constrain(topLeft) {
     end.linkTo(parent.start)
@@ -329,25 +324,34 @@ private fun endConstraintSet() = ConstraintSet {
     start.linkTo(parent.start)
     end.linkTo(parent.end)
   }
+  constrain(loader) {
+    width = Dimension.fillToConstraints
+    height = Dimension.fillToConstraints
+
+    top.linkTo(parent.top)
+    bottom.linkTo(parent.bottom)
+    start.linkTo(parent.start)
+    end.linkTo(parent.end)
+  }
 }
 
-@Composable
-private fun ToolbarIcon(
-  imageVector: ImageVector,
-  contentDescription: String,
-  modifier: Modifier = Modifier,
-  onClick: () -> Unit,
-) {
-  Icon(
-    imageVector = imageVector,
-    contentDescription = contentDescription,
-    modifier = Modifier
-      .clickable(onClick = onClick)
-      .padding(20.dp)
-      .size(30.dp)
-      .then(modifier)
-  )
-}
+//@Composable
+//private fun ToolbarIcon(
+//  imageVector: ImageVector,
+//  contentDescription: String,
+//  modifier: Modifier = Modifier,
+//  onClick: () -> Unit,
+//) {
+//  Icon(
+//    imageVector = imageVector,
+//    contentDescription = contentDescription,
+//    modifier = Modifier
+//      .clickable(onClick = onClick)
+//      .padding(20.dp)
+//      .size(30.dp)
+//      .then(modifier)
+//  )
+//}
 
 @Composable
 private fun ToolbarTitle(

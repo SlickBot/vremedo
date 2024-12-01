@@ -10,8 +10,10 @@ import eu.slickbot.vremedo.utils.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,6 +61,8 @@ class WeatherViewModel(
   private val _isLoadingWeather = MutableStateFlow(false)
   val isLoadingWeather = _isLoadingWeather.asStateFlow()
 
+  val isNight = weatherRepository.isNightFlow("Novo mesto")
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), null)
 
   val filteredCities = combine(_cities, _searchInput) { cities, input ->
     when {
