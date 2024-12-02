@@ -50,7 +50,7 @@ val Typography = Typography(
 
   titleLarge = TextStyle(
     fontFamily = fontAdventPro,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.Bold,
     fontSize = 22.sp,
     lineHeight = 28.sp,
     letterSpacing = 0.5.sp

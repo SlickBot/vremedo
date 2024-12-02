@@ -19,17 +19,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRailDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -43,14 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -62,23 +58,27 @@ import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
 import coil.compose.rememberAsyncImagePainter
 import eu.slickbot.vremedo.composable.AppDrawer
+import eu.slickbot.vremedo.composable.ClickableCard
 import eu.slickbot.vremedo.composable.Loader
 import eu.slickbot.vremedo.composable.ToolbarIcon
-import eu.slickbot.vremedo.composable.UndecoratedTextField
+import eu.slickbot.vremedo.composable.ToolbarTitle
 import eu.slickbot.vremedo.composable.ViewModelScaffold
+import eu.slickbot.vremedo.composable.WeatherCard
 import eu.slickbot.vremedo.composable.WeatherGraph
 import eu.slickbot.vremedo.composable.WeatherGraphState
 import eu.slickbot.vremedo.composable.keyboardOnlyPadding
 import eu.slickbot.vremedo.composable.rememberFocusRequester
 import eu.slickbot.vremedo.composable.rememberWeatherGraphState
 import eu.slickbot.vremedo.extension.localDateTimeNow
+import eu.slickbot.vremedo.extension.toInstant
+import eu.slickbot.vremedo.model.WeatherAttribute
 import eu.slickbot.vremedo.model.WeatherCity
 import eu.slickbot.vremedo.model.WeatherDay
+import eu.slickbot.vremedo.model.WeatherHours
 import eu.slickbot.vremedo.model.WeatherItem
+import eu.slickbot.vremedo.theme.App
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMotionApi::class)
@@ -117,9 +117,9 @@ fun WeatherScreen(
 
       delay(1)
 
-      val lastItemTime = weatherItems.last().dateTime.toInstant(TimeZone.UTC)
-      val firstItemTime = weatherItems.first().dateTime.toInstant(TimeZone.UTC)
-      val nowTime = localDateTimeNow().toInstant(TimeZone.UTC)
+      val lastItemTime = weatherItems.last().dateTime.toInstant()
+      val firstItemTime = weatherItems.first().dateTime.toInstant()
+      val nowTime = localDateTimeNow().toInstant()
 
       val totalDuration = lastItemTime.epochSeconds - firstItemTime.epochSeconds
       val partDuration = nowTime.epochSeconds - firstItemTime.epochSeconds
@@ -335,44 +335,6 @@ private fun endConstraintSet() = ConstraintSet {
   }
 }
 
-//@Composable
-//private fun ToolbarIcon(
-//  imageVector: ImageVector,
-//  contentDescription: String,
-//  modifier: Modifier = Modifier,
-//  onClick: () -> Unit,
-//) {
-//  Icon(
-//    imageVector = imageVector,
-//    contentDescription = contentDescription,
-//    modifier = Modifier
-//      .clickable(onClick = onClick)
-//      .padding(20.dp)
-//      .size(30.dp)
-//      .then(modifier)
-//  )
-//}
-
-@Composable
-private fun ToolbarTitle(
-  value: String,
-  onValueChange: (String) -> Unit,
-  onFocusChange: (FocusState) -> Unit,
-  focusRequester: FocusRequester,
-  modifier: Modifier = Modifier,
-) {
-  UndecoratedTextField(
-    modifier = Modifier
-      .onFocusChanged(onFocusChange)
-      .focusRequester(focusRequester)
-      .then(modifier),
-    value = value,
-    onValueChange = onValueChange,
-    singleLine = true,
-    textStyle = MaterialTheme.typography.displayMedium,
-  )
-}
-
 @Composable
 private fun SearchContent(
   cities: List<WeatherCity>,
@@ -429,10 +391,10 @@ private fun DashboardContent(
       modifier = Modifier.fillMaxWidth(),
       item = selectedItem,
     )
-    WeatherHoursHeader(
-      modifier = Modifier.fillMaxWidth(),
-      item = selectedItem,
-    )
+//    WeatherHoursHeader(
+//      modifier = Modifier.fillMaxWidth(),
+//      item = selectedItem,
+//    )
     WeatherContent(
       modifier = Modifier
         .fillMaxWidth()
@@ -472,35 +434,97 @@ fun WeatherContent(
   modifier: Modifier = Modifier,
 ) {
   if (item == null) return
-  Card(
-    modifier = Modifier
-      .padding(top = 20.dp, start = 10.dp, end = 10.dp)
-      .then(modifier),
-    colors = CardDefaults.cardColors(
-      containerColor = NavigationRailDefaults.ContainerColor.copy(alpha = .3f)
+
+//  Card(
+//    modifier = Modifier
+//      .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+//      .then(modifier),
+//    colors = CardDefaults.cardColors(
+//      containerColor = NavigationRailDefaults.ContainerColor.copy(alpha = .3f)
+//    )
+//  ) {
+//    LazyVerticalGrid(
+//      columns = GridCells.Adaptive(minSize = 150.dp),
+//      contentPadding = PaddingValues(10.dp)
+//    ) {
+//      items(item.hours.dataList) { item ->
+//        Column(
+//          modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+//        ) {
+//          Text(
+//            item.title,
+//            fontSize = 12.sp,
+//            lineHeight = 13.sp,
+//          )
+//          Text(
+//            item.text,
+//            fontSize = 15.sp,
+//            lineHeight = 16.sp,
+//          )
+//        }
+//      }
+//    }
+//  }
+//  return
+
+  val weatherAttributes = remember {
+    listOf(
+      WeatherAttribute(Icons.App.Temperature, item.hours.temperatureText, "Temperature"),
+      WeatherAttribute(Icons.App.Humidity, item.hours.humidityText, "Humidity"),
+      WeatherAttribute(Icons.App.Wind, item.hours.windSpeedText, "Wind speed"),
+      WeatherAttribute(Icons.App.Direction, item.hours.windDirectionText, "Wind direction"),
+      WeatherAttribute(Icons.App.Gauge, item.hours.pressureText, "Pressure"),
+      WeatherAttribute(Icons.App.Rain, item.hours.rainText, "Rain"),
+      WeatherAttribute(Icons.App.Snow, item.hours.snowText, "Snow"),
+      WeatherAttribute(Icons.App.Visibility, item.hours.visibilityText, "Visibility")
     )
+  }
+
+  LazyVerticalGrid(
+    modifier = modifier.padding(horizontal = 16.dp).padding(top = 20.dp),
+    columns = GridCells.Fixed(2),
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
   ) {
-    LazyVerticalGrid(
-      columns = GridCells.Adaptive(minSize = 150.dp),
-      contentPadding = PaddingValues(10.dp)
-    ) {
-      items(item.hours.dataList) { item ->
-        Column(
-          modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-        ) {
-          Text(
-            item.title,
-            fontSize = 12.sp,
-            lineHeight = 13.sp,
-          )
-          Text(
-            item.text,
-            fontSize = 15.sp,
-            lineHeight = 16.sp,
-          )
-        }
+    hoursCard(item.hours)
+    weatherAttributes.forEach { attribute ->
+      attribute.value?.let {
+        weatherCard(attribute)
       }
     }
+  }
+}
+
+private fun LazyGridScope.hoursCard(
+  hours: WeatherHours,
+) {
+  item(span = { GridItemSpan(2) }) {
+    ClickableCard(
+      colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
+      ),
+    ) {
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(16.dp),
+        text = hours.name,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.displayMedium,
+      )
+    }
+  }
+}
+
+private fun LazyGridScope.weatherCard(
+  attribute: WeatherAttribute,
+) {
+  item {
+    WeatherCard(
+      imageVector = attribute.imageVector,
+      value = attribute.value ?: "-",
+      label = attribute.label,
+    )
   }
 }
 

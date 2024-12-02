@@ -1,8 +1,11 @@
 package eu.slickbot.vremedo.extension
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
@@ -30,4 +33,8 @@ fun localTimeNow(): LocalTime {
 fun localDateNow(): LocalDate {
   return JavaLocalDate.now()
     .toKotlinLocalDate()
+}
+
+fun LocalDateTime.toInstant(): Instant {
+  return toInstant(TimeZone.UTC)
 }

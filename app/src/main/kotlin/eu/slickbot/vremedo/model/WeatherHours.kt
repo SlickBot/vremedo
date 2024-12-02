@@ -17,14 +17,21 @@ data class WeatherHours(
     get() = dataList.firstOrNull { it.title.startsWith("Temperatura") }?.text
 
   val temperature: Float?
-    get() = temperatureText?.removeSuffix("°C")?.toFloat()
+    get() = temperatureText?.removeSuffix("°C")?.toFloatOrNull()
+
+
+  val humidityText: String?
+    get() = dataList.firstOrNull { it.title.startsWith("Relativna vlažnost") }?.text
+
+  val humidity: Int?
+    get() = humidityText?.removeSuffix("%")?.toIntOrNull()
 
 
   val windSpeedText: String?
     get() = dataList.firstOrNull { it.title.equals("Hitrost vetra:", ignoreCase = true) }?.text
 
-  val windSpeed: Int?
-    get() = windSpeedText?.removeSuffix(" m/s")?.toIntOrNull()
+  val windSpeed: Float?
+    get() = windSpeedText?.removeSuffix(" m/s")?.toFloatOrNull()
 
 
   val windDirectionText: String?
@@ -32,5 +39,34 @@ data class WeatherHours(
 
   val windDirection: Int?
     get() = windDirectionText?.removeSuffix("°")?.toIntOrNull()
+
+
+  val pressureText: String?
+    get() = dataList.firstOrNull { it.title.equals("Tlak:", ignoreCase = true) }?.text
+
+  val pressure: Int?
+    get() = pressureText?.removeSuffix(" hPa")?.toIntOrNull()
+
+
+  val rainText: String?
+    get() = dataList.firstOrNull { it.title.equals("Padavine:", ignoreCase = true) }?.text
+
+  val rain: Float?
+    get() = rainText?.removeSuffix(" mm")?.toFloatOrNull()
+
+
+  val snowText: String?
+    get() = dataList.firstOrNull { it.title.equals("Napoved snega:", ignoreCase = true) }?.text
+      ?.replace("m^2", "m²")
+
+  val snow: Float?
+    get() = snowText?.removeSuffix(" kg/m^2")?.toFloatOrNull()
+
+
+  val visibilityText: String?
+    get() = dataList.firstOrNull { it.title.equals("Vidljivost:", ignoreCase = true) }?.text
+
+  val visibility: Int?
+    get() = visibilityText?.removeSuffix(" m")?.toIntOrNull()
 
 }
