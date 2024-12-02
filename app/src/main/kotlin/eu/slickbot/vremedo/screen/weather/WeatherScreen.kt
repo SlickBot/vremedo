@@ -59,6 +59,7 @@ import androidx.constraintlayout.compose.layoutId
 import coil.compose.rememberAsyncImagePainter
 import eu.slickbot.vremedo.composable.AppDrawer
 import eu.slickbot.vremedo.composable.ClickableCard
+import eu.slickbot.vremedo.composable.EasterEgg
 import eu.slickbot.vremedo.composable.Loader
 import eu.slickbot.vremedo.composable.ToolbarIcon
 import eu.slickbot.vremedo.composable.ToolbarTitle
@@ -92,6 +93,7 @@ fun WeatherScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     var isSearchOpen by remember { mutableStateOf(false) }
+    var isEasterEggOpen by remember { mutableStateOf(false) }
 
     val focusRequester = rememberFocusRequester()
     val focusManager = LocalFocusManager.current
@@ -138,9 +140,7 @@ fun WeatherScreen(
     }
 
     fun openSearch() {
-      if (!isSearchOpen) {
-        isSearchOpen = true
-      }
+      isSearchOpen = true
     }
 
     fun closeSearch() {
@@ -148,6 +148,14 @@ fun WeatherScreen(
         focusManager.clearFocus(true)
         isSearchOpen = false
       }
+    }
+
+    fun showEasterEgg() {
+      isEasterEggOpen = true
+    }
+
+    fun hideEasterEgg() {
+      isEasterEggOpen = false
     }
 
     fun onDayClick(day: WeatherDay) {
@@ -173,66 +181,75 @@ fun WeatherScreen(
       label = "search_progress",
     )
 
-    AppDrawer(drawerState) {
-      MotionLayout(
-        modifier = Modifier.fillMaxSize().padding(paddingValues),
-        start = startConstraintSet(),
-        end = endConstraintSet(),
-        progress = searchOpenProgress,
-      ) {
-        ToolbarIcon(
-          modifier = Modifier.layoutId("menu"),
-          imageVector = Icons.Default.Menu,
-          contentDescription = "menu",
-          onClick = { openMenu() },
-        )
+    Box {
+      AppDrawer(drawerState) {
+        MotionLayout(
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+          start = startConstraintSet(),
+          end = endConstraintSet(),
+          progress = searchOpenProgress,
+        ) {
+          ToolbarIcon(
+            modifier = Modifier.layoutId("menu"),
+            imageVector = Icons.Default.Menu,
+            contentDescription = "menu",
+            onClick = { openMenu() },
+            onLongClick = { showEasterEgg() },
+          )
 //          ToolbarIcon(
 //            modifier = Modifier.layoutId("images"),
 //            imageVector = Icons.Default.Build,
 //            contentDescription = "images",
 //            onClick = { println("click") },
 //          )
-        ToolbarIcon(
-          modifier = Modifier.layoutId("close"),
-          imageVector = Icons.Default.Close,
-          contentDescription = "close",
-          onClick = { closeSearch() },
-        )
-        ToolbarTitle(
-          modifier = Modifier.layoutId("title"),
-          value = if (!isSearchOpen) selectedCity?.name.orEmpty() else filter,
-          onValueChange = { vm.setFilter(it) },
-          onFocusChange = { if (it.hasFocus) openSearch() },
-          focusRequester = focusRequester,
-        )
-
-        AnimatedContent(
-          modifier = Modifier.layoutId("content"),
-          targetState = isSearchOpen,
-          label = "weather_content",
-        ) { isSearch ->
-          if (isSearch) SearchContent(
-            filteredCities,
-            closeSearch = ::closeSearch,
-            onCityClick = vm::onCityClick,
+          ToolbarIcon(
+            modifier = Modifier.layoutId("close"),
+            imageVector = Icons.Default.Close,
+            contentDescription = "close",
+            onClick = { closeSearch() },
           )
-          else DashboardContent(
-            weatherItems = weatherItems,
-            selectedItem = selectedItem,
-            days = weatherDays,
-            graphState = graphState,
-            graphMin = graphTempMin,
-            graphMax = graphTempMax,
-            onDayClick = ::onDayClick,
+          ToolbarTitle(
+            modifier = Modifier.layoutId("title"),
+            value = if (!isSearchOpen) selectedCity?.name.orEmpty() else filter,
+            onValueChange = { vm.setFilter(it) },
+            onFocusChange = { if (it.hasFocus) openSearch() },
+            focusRequester = focusRequester,
+          )
+
+          AnimatedContent(
+            modifier = Modifier.layoutId("content"),
+            targetState = isSearchOpen,
+            label = "weather_content",
+          ) { isSearch ->
+            if (isSearch) SearchContent(
+              filteredCities,
+              closeSearch = ::closeSearch,
+              onCityClick = vm::onCityClick,
+            )
+            else DashboardContent(
+              weatherItems = weatherItems,
+              selectedItem = selectedItem,
+              days = weatherDays,
+              graphState = graphState,
+              graphMin = graphTempMin,
+              graphMax = graphTempMax,
+              onDayClick = ::onDayClick,
+            )
+          }
+
+          Loader(
+            modifier = Modifier.layoutId("loader"),
+            show = isLoadingCities || isLoadingWeather,
+            isDarkMode = isNight == true,
           )
         }
-
-        Loader(
-          modifier = Modifier.layoutId("loader"),
-          show = isLoadingCities || isLoadingWeather,
-          isDarkMode = isNight == true,
-        )
       }
+      EasterEgg(
+        show = isEasterEggOpen,
+        onHide = ::hideEasterEgg,
+      )
     }
   }
 }

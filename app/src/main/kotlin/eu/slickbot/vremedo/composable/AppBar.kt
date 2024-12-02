@@ -1,6 +1,7 @@
 package eu.slickbot.vremedo.composable
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,18 +40,23 @@ fun AppBar(
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToolbarIcon(
   imageVector: ImageVector,
   contentDescription: String,
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
+  onLongClick: (() -> Unit)? = null,
 ) {
   Icon(
     imageVector = imageVector,
     contentDescription = contentDescription,
     modifier = Modifier
-      .clickable(onClick = onClick)
+      .combinedClickable(
+        onClick = onClick,
+        onLongClick = onLongClick,
+      )
       .padding(20.dp)
       .size(30.dp)
       .then(modifier)
