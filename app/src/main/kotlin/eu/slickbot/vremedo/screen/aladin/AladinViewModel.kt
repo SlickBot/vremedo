@@ -22,10 +22,6 @@ class AladinViewModel(
     updateImages()
   }
 
-  override fun onComposableCreate() {}
-
-  override fun onComposableDispose() {}
-
   private fun updateImages() {
     updateImageJob?.cancel()
     updateImageJob = viewModelScope.launch {

@@ -59,17 +59,12 @@ import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
 import coil.compose.rememberAsyncImagePainter
 import eu.slickbot.vremedo.composable.AppDrawer
-import eu.slickbot.vremedo.composable.ClickableCard
-import eu.slickbot.vremedo.composable.EasterEgg
 import eu.slickbot.vremedo.composable.AppLoader
+import eu.slickbot.vremedo.composable.AppScaffold
+import eu.slickbot.vremedo.composable.EasterEgg
 import eu.slickbot.vremedo.composable.ToolbarIcon
 import eu.slickbot.vremedo.composable.ToolbarTitle
-import eu.slickbot.vremedo.composable.ViewModelScaffold
-import eu.slickbot.vremedo.composable.WeatherCard
-import eu.slickbot.vremedo.composable.WeatherGraph
-import eu.slickbot.vremedo.composable.WeatherGraphState
 import eu.slickbot.vremedo.composable.keyboardOnlyPadding
-import eu.slickbot.vremedo.composable.rememberWeatherGraphState
 import eu.slickbot.vremedo.extension.localDateTimeNow
 import eu.slickbot.vremedo.extension.toInstant
 import eu.slickbot.vremedo.model.WeatherAttribute
@@ -87,7 +82,7 @@ import org.koin.androidx.compose.koinViewModel
 fun WeatherScreen(
   vm: WeatherViewModel = koinViewModel(),
 ) {
-  ViewModelScaffold(vm) { paddingValues ->
+  AppScaffold { paddingValues ->
     val scope = rememberCoroutineScope()
     val graphState = rememberWeatherGraphState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -590,27 +585,6 @@ private fun WeatherDayHeader(
         .size(60.dp)
         .scale(1.3f)
         .padding(end = 20.dp)
-    )
-  }
-}
-
-@Composable
-private fun WeatherHoursHeader(
-  modifier: Modifier,
-  item: WeatherItem?,
-) {
-  if (item == null)
-    return
-
-  Row(
-    modifier = modifier,
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    Text(
-      item.hours.name,
-      style = MaterialTheme.typography.displaySmall,
-      modifier = Modifier
-        .padding(horizontal = 20.dp),
     )
   }
 }

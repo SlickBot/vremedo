@@ -26,14 +26,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import eu.slickbot.vremedo.composable.AppBar
 import eu.slickbot.vremedo.composable.AppDrawer
-import eu.slickbot.vremedo.composable.ViewModelScaffold
+import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.theme.VremedoTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ImagesScreen(vm: ImagesViewModel = koinViewModel()) {
-  ViewModelScaffold(vm) { paddingValues ->
+  AppScaffold { paddingValues ->
     Content(
       paddingValues = paddingValues,
       onAladinClick = vm::onAladinClick,

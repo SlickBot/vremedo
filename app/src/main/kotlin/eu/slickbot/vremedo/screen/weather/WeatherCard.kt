@@ -1,4 +1,4 @@
-package eu.slickbot.vremedo.composable
+package eu.slickbot.vremedo.screen.weather
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import eu.slickbot.vremedo.theme.App
 import eu.slickbot.vremedo.theme.VremedoTheme
 import eu.slickbot.vremedo.theme.appPrimary
@@ -55,7 +56,7 @@ fun WeatherCard(
   label: String,
   containerColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
   modifier: Modifier = Modifier,
-  valueTextStyle: TextStyle = MaterialTheme.typography.titleLarge,
+  valueTextStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(fontSize = 26.sp),
   labelTextStyle: TextStyle = MaterialTheme.typography.titleSmall,
   contentDescription: String? = null,
   onClick: (() -> Unit)? = null,
@@ -80,7 +81,7 @@ fun WeatherCard(
       Column(
         modifier = Modifier.weight(1f),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+//        verticalArrangement = Arrangement.spacedBy(4.dp),
       ) {
         Text(
           text = value,

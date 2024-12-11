@@ -19,7 +19,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import eu.slickbot.vremedo.composable.BackgroundBox
+import eu.slickbot.vremedo.composable.AppBackgroundBox
 import eu.slickbot.vremedo.repository.WeatherRepository
 import eu.slickbot.vremedo.screen.Screen
 import eu.slickbot.vremedo.theme.VremedoTheme
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
       VremedoTheme(
         darkTheme = isNight ?: isSystemInDarkTheme(),
       ) {
-        BackgroundBox(isNight = isNight) {
+        AppBackgroundBox(isNight = isNight) {
           NavHost(
             navController = navController,
             startDestination = Screen.Weather.route,

@@ -7,14 +7,6 @@ class ImagesViewModel(
   private val navigation: AppNavigation,
 ) : ComponentViewModel() {
 
-  override fun onComposableCreate() {
-
-  }
-
-  override fun onComposableDispose() {
-
-  }
-
   fun onAladinClick() {
     navigation.navigateToAladin()
   }

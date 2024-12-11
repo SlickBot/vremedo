@@ -11,7 +11,7 @@ import eu.slickbot.vremedo.theme.VremedoTheme
 import kotlinx.parcelize.Parcelize
 
 @Composable
-fun SliderBar(
+fun AppSlider(
   state: SliderBarState,
   modifier: Modifier = Modifier,
 ) {
@@ -33,7 +33,7 @@ fun SliderBar(
 }
 
 @Parcelize
-class SliderBarStateSavable(
+class AppSliderStateSavable(
   private val value: Float,
   private val minValue: Float,
   private val maxValue: Float,
@@ -59,15 +59,15 @@ class SliderBarState {
   var maxValue by mutableFloatStateOf(0f)
 
   companion object {
-    val Saver: Saver<SliderBarState, SliderBarStateSavable> = Saver(
-      save = { SliderBarStateSavable(it) },
+    val Saver: Saver<SliderBarState, AppSliderStateSavable> = Saver(
+      save = { AppSliderStateSavable(it) },
       restore = { it.toState() },
     )
   }
 }
 
 @Composable
-inline fun rememberSliderBarState(
+inline fun rememberAppSliderState(
   key: String? = null,
   crossinline init: SliderBarState.() -> Unit = {}
 ): SliderBarState = rememberSaveable(key, saver = SliderBarState.Saver) {
@@ -76,14 +76,14 @@ inline fun rememberSliderBarState(
 
 @Preview(showBackground = true)
 @Composable
-private fun SliderBarPreview() {
-  val state = rememberSliderBarState("slider") {
+private fun AppSliderPreview() {
+  val state = rememberAppSliderState("AppSlider") {
     minValue = 0f
     maxValue = 1f
     value = .7f
   }
 
   VremedoTheme {
-    SliderBar(state)
+    AppSlider(state)
   }
 }

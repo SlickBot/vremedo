@@ -76,7 +76,7 @@ fun ToolbarTitle(
   onFocusChange: (FocusState) -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
-  UndecoratedTextField(
+  AppUndecoratedTextField(
     modifier = Modifier
       .onFocusChanged(onFocusChange)
       .runIf(focusRequester != null) {

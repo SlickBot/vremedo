@@ -83,12 +83,6 @@ class WeatherViewModel(
     updateCities()
   }
 
-  override fun onComposableCreate() {}
-
-  override fun onComposableDispose() {
-//    citiesJob?.cancel()
-  }
-
   fun setFilter(filter: String) {
     _searchInput.update { filter }
   }

@@ -1,4 +1,4 @@
-package eu.slickbot.vremedo.composable
+package eu.slickbot.vremedo.screen.weather
 
 import android.graphics.Path
 import android.graphics.PointF
@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.times
 import coil.ImageLoader
 import coil.request.CachePolicy
 import eu.slickbot.vremedo.R
+import eu.slickbot.vremedo.composable.rememberAndroidPaint
 import eu.slickbot.vremedo.extension.getImageBitmap
 import eu.slickbot.vremedo.extension.getTextBounds
 import eu.slickbot.vremedo.extension.roundToIntOffset
