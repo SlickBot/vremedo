@@ -17,8 +17,11 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.slickbot.vremedo.extension.runIf
+import eu.slickbot.vremedo.theme.VremedoTheme
+import eu.slickbot.vremedo.theme.toolbarTitle
 
 @Composable
 fun AppBar(
@@ -36,6 +39,7 @@ fun AppBar(
     )
     ToolbarTitle(
       value = title,
+      readOnly = true,
     )
   }
 }
@@ -66,7 +70,7 @@ fun ToolbarIcon(
 @Composable
 fun ToolbarTitle(
   value: String,
-  readOnly: Boolean = true,
+  readOnly: Boolean = false,
   focusRequester: FocusRequester? = null,
   onValueChange: (String) -> Unit = {},
   onFocusChange: (FocusState) -> Unit = {},
@@ -82,7 +86,18 @@ fun ToolbarTitle(
     value = value,
     onValueChange = onValueChange,
     singleLine = true,
-    textStyle = MaterialTheme.typography.displayMedium,
+    textStyle = MaterialTheme.typography.toolbarTitle,
     readOnly = readOnly,
   )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppBarPreview() {
+  VremedoTheme {
+    AppBar(
+      title = "Title",
+      onMenuClick = {},
+    )
+  }
 }

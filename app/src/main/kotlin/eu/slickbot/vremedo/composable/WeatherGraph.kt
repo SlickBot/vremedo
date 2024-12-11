@@ -165,8 +165,7 @@ fun WeatherGraph(
   val canvasWidth = chartWidth + startPadding + endPadding
 
   val chartWidthPx = with(LocalDensity.current) { chartWidth.toPx() }
-  val lineOffsetPx =
-    with(LocalDensity.current) { state.scroll.value + lineOffset.toPx() - startPadding.toPx() }
+  val lineOffsetPx = with(LocalDensity.current) { state.scroll.value + lineOffset.toPx() - startPadding.toPx() }
 
   val percentage = if (lineOffsetPx < 0) 0f else lineOffsetPx / chartWidthPx
   if (percentage != state.percentage) {
@@ -227,7 +226,7 @@ fun WeatherGraph(
               valueMin,
               valueMax,
               chartRect.top,
-              chartRect.bottom
+              chartRect.bottom,
             )
           )
         }
@@ -252,7 +251,7 @@ fun WeatherGraph(
             cubicTo(
               controlPoints1[i].x, controlPoints1[i].y,
               controlPoints2[i].x, controlPoints2[i].y,
-              coordinates[i + 1].x, coordinates[i + 1].y
+              coordinates[i + 1].x, coordinates[i + 1].y,
             )
           }
           lineTo(chartRect.right, coordinates.last().y)
@@ -283,7 +282,7 @@ fun WeatherGraph(
           Brush.verticalGradient(
             0f to Color.Yellow.copy(alpha = .5f),
             1f to Color.Yellow.copy(alpha = .0f),
-            endY = chartRect.bottom
+            endY = chartRect.bottom,
           ),
         )
 
@@ -306,7 +305,7 @@ fun WeatherGraph(
             srcSize = bitmap.size,
             dstOffset = Offset(
               coordinate.x - (imageResized.width * 0.5f),
-              coordinate.y - (imageResized.height * 1.5f)
+              coordinate.y - (imageResized.height * 1.5f),
             ).roundToIntOffset(),
             dstSize = imageResized.roundToIntSize(),
           )
@@ -339,7 +338,7 @@ fun WeatherGraph(
 
           val offset = Offset(
             coordinate.x - (imageResized.width * 0.5f),
-            coordinate.y + (imageResized.height * 2f)
+            coordinate.y + (imageResized.height * 2f),
           )
           val pivot = Offset(
             offset.x + (width.toPx() / 2),
@@ -372,7 +371,7 @@ private fun NativeCanvas.drawString(text: String, x: Float, y: Float, textPaint:
 
 private fun Float.rangeMap(
   inMin: Float, inMax: Float,
-  outMin: Float, outMax: Float
+  outMin: Float, outMax: Float,
 ): Float {
   return (this - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }

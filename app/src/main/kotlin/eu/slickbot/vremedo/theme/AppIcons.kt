@@ -60,13 +60,15 @@ object AppIcons {
   val Direction: ImageVector by lazy {
     Builder(
       name = "Direction",
-      defaultWidth = 800.0.dp, defaultHeight = 800.0.dp,
-      viewportWidth = 24.0f, viewportHeight = 24.0f,
+      defaultWidth = 800.0.dp,
+      defaultHeight = 800.0.dp,
+      viewportWidth = 24.0f,
+      viewportHeight = 24.0f,
     ).apply {
       path(
         fill = SolidColor(Color(0x00000000)),
         stroke = SolidColor(Color(0xFF464455)),
-        strokeLineWidth = 1.0f,
+        strokeLineWidth = 2.0f,
         strokeLineCap = Round,
         strokeLineJoin = StrokeJoin.Companion.Round,
         strokeLineMiter = 4.0f,
@@ -147,34 +149,37 @@ object AppIcons {
   val Rain: ImageVector by lazy {
     Builder(
       name = "Rain",
-      defaultWidth = 800.0.dp, defaultHeight = 800.0.dp,
-      viewportWidth = 32.0f, viewportHeight = 32.0f,
+      defaultWidth = 800.0.dp,
+      defaultHeight = 800.0.dp,
+      viewportWidth = 32.0f,
+      viewportHeight = 32.0f,
     ).apply {
       path(
         fill = SolidColor(Color(0xFF000000)),
-        stroke = SolidColor(Color(0x00000000)),
-        strokeLineWidth = 1.0f,
-        strokeLineCap = Butt,
-        strokeLineJoin = Miter,
+        stroke = SolidColor(Color(0xFF000000)),
+        strokeLineWidth = 0.6f,
+        strokeLineCap = Round,
+        strokeLineJoin = StrokeJoin.Companion.Round,
         strokeLineMiter = 4.0f,
-        pathFillType = EvenOdd,
+        pathFillType = NonZero,
       ) {
-        moveTo(19.0f, 27.0f)
-        curveTo(18.448f, 27.0f, 18.0f, 27.447f, 18.0f, 28.0f)
-        lineTo(18.0f, 31.0f)
-        curveTo(18.0f, 31.553f, 18.448f, 32.0f, 19.0f, 32.0f)
-        curveTo(19.552f, 32.0f, 20.0f, 31.553f, 20.0f, 31.0f)
-        lineTo(20.0f, 28.0f)
-        curveTo(20.0f, 27.447f, 19.552f, 27.0f, 19.0f, 27.0f)
-        lineTo(19.0f, 27.0f)
+        moveTo(22.0f, 22.0f)
+        lineTo(8.0f, 22.0f)
+        curveTo(8.0f, 22.0f, 1.962f, 21.381f, 2.0f, 16.0f)
+        curveTo(2.021f, 12.964f, 4.813f, 10.25f, 8.0f, 10.0f)
+        curveTo(8.0f, 5.858f, 10.651f, 2.0f, 15.0f, 2.0f)
+        curveTo(18.433f, 2.0f, 20.723f, 4.096f, 21.539f, 7.014f)
+        curveTo(26.493f, 6.798f, 29.844f, 10.718f, 30.0f, 14.0f)
+        curveTo(30.21f, 18.413f, 25.601f, 22.0f, 22.0f, 22.0f)
+        lineTo(22.0f, 22.0f)
         close()
         moveTo(23.067f, 5.028f)
         curveTo(21.599f, 2.053f, 18.543f, 0.0f, 15.0f, 0.0f)
         curveTo(10.25f, 0.0f, 6.37f, 3.682f, 6.033f, 8.345f)
         curveTo(2.542f, 9.34f, 0.0f, 12.39f, 0.0f, 16.0f)
         curveTo(0.0f, 20.26f, 3.54f, 23.731f, 8.0f, 23.977f)
-        curveTo(8.0f, 23.977f, 22.331f, 24.0f, 22.5f, 24.0f)
-        curveTo(27.747f, 24.0f, 32.0f, 19.747f, 32.0f, 14.5f)
+        curveTo(8.0f, 23.977f, 21.831f, 24.0f, 22.0f, 24.0f)
+        curveTo(27.247f, 24.0f, 32.0f, 19.747f, 32.0f, 14.5f)
         curveTo(32.0f, 9.445f, 28.048f, 5.323f, 23.067f, 5.028f)
         lineTo(23.067f, 5.028f)
         close()
@@ -186,6 +191,15 @@ object AppIcons {
         lineTo(26.0f, 28.0f)
         curveTo(26.0f, 27.447f, 25.552f, 27.0f, 25.0f, 27.0f)
         lineTo(25.0f, 27.0f)
+        close()
+        moveTo(19.0f, 27.0f)
+        curveTo(18.448f, 27.0f, 18.0f, 27.447f, 18.0f, 28.0f)
+        lineTo(18.0f, 31.0f)
+        curveTo(18.0f, 31.553f, 18.448f, 32.0f, 19.0f, 32.0f)
+        curveTo(19.552f, 32.0f, 20.0f, 31.553f, 20.0f, 31.0f)
+        lineTo(20.0f, 28.0f)
+        curveTo(20.0f, 27.447f, 19.552f, 27.0f, 19.0f, 27.0f)
+        lineTo(19.0f, 27.0f)
         close()
         moveTo(7.0f, 27.0f)
         curveTo(6.448f, 27.0f, 6.0f, 27.447f, 6.0f, 28.0f)

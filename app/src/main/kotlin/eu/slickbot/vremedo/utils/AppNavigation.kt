@@ -51,6 +51,26 @@ class AppNavigation() {
     }
   }
 
+  fun navigateToAladin() {
+    if (screen.value == Screen.Aladin) return
+    navigate(Screen.Aladin) {
+      launchSingleTop = true
+    }
+  }
+
+  fun navigateToRadar() {
+
+  }
+
+  fun navigateToSatellite() {
+
+  }
+
+  fun navigateToCameras() {
+
+  }
+
+
   /* Helpers */
 
   private fun navigate(

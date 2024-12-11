@@ -14,7 +14,7 @@ fun <T : ComponentViewModel> ViewModelScaffold(
     /* create */ viewModel.onComposableCreate()
     onDispose { viewModel.onComposableDispose() }
   }
-  BaseScaffold(
+  AppScaffold(
     content = { paddingValues -> content(paddingValues) },
   )
 }

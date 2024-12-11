@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +61,7 @@ import coil.compose.rememberAsyncImagePainter
 import eu.slickbot.vremedo.composable.AppDrawer
 import eu.slickbot.vremedo.composable.ClickableCard
 import eu.slickbot.vremedo.composable.EasterEgg
-import eu.slickbot.vremedo.composable.Loader
+import eu.slickbot.vremedo.composable.AppLoader
 import eu.slickbot.vremedo.composable.ToolbarIcon
 import eu.slickbot.vremedo.composable.ToolbarTitle
 import eu.slickbot.vremedo.composable.ViewModelScaffold
@@ -68,7 +69,6 @@ import eu.slickbot.vremedo.composable.WeatherCard
 import eu.slickbot.vremedo.composable.WeatherGraph
 import eu.slickbot.vremedo.composable.WeatherGraphState
 import eu.slickbot.vremedo.composable.keyboardOnlyPadding
-import eu.slickbot.vremedo.composable.rememberFocusRequester
 import eu.slickbot.vremedo.composable.rememberWeatherGraphState
 import eu.slickbot.vremedo.extension.localDateTimeNow
 import eu.slickbot.vremedo.extension.toInstant
@@ -95,7 +95,7 @@ fun WeatherScreen(
     var isSearchOpen by remember { mutableStateOf(false) }
     var isEasterEggOpen by remember { mutableStateOf(false) }
 
-    val focusRequester = rememberFocusRequester()
+    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     val filter by vm.searchInput.collectAsState()
@@ -239,7 +239,7 @@ fun WeatherScreen(
             )
           }
 
-          Loader(
+          AppLoader(
             modifier = Modifier.layoutId("loader"),
             show = isLoadingCities || isLoadingWeather,
             isDarkMode = isNight == true,
@@ -484,16 +484,16 @@ fun WeatherContent(
 //  }
 //  return
 
-  val weatherAttributes = remember {
+  val weatherAttributes = remember(item.hours) {
     listOf(
       WeatherAttribute(Icons.App.Temperature, item.hours.temperatureText, "Temperature"),
-      WeatherAttribute(Icons.App.Humidity, item.hours.humidityText, "Humidity"),
+      WeatherAttribute(Icons.App.Gauge, item.hours.pressureText, "Pressure"),
       WeatherAttribute(Icons.App.Wind, item.hours.windSpeedText, "Wind speed"),
       WeatherAttribute(Icons.App.Direction, item.hours.windDirectionText, "Wind direction"),
-      WeatherAttribute(Icons.App.Gauge, item.hours.pressureText, "Pressure"),
       WeatherAttribute(Icons.App.Rain, item.hours.rainText, "Rain"),
       WeatherAttribute(Icons.App.Snow, item.hours.snowText, "Snow"),
-      WeatherAttribute(Icons.App.Visibility, item.hours.visibilityText, "Visibility")
+      WeatherAttribute(Icons.App.Humidity, item.hours.humidityText, "Humidity"),
+      WeatherAttribute(Icons.App.Visibility, item.hours.visibilityText, "Visibility"),
     )
   }
 

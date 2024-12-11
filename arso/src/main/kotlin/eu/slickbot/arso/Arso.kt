@@ -195,8 +195,7 @@ class Arso(private val client: OkHttpClient) {
 
     // excluded ids
 
-    val excludedStartIdx =
-      orientationsResponse.indexOf("excludeTimeline=[", startIndex = domsEndIdx)
+    val excludedStartIdx = orientationsResponse.indexOf("excludeTimeline=[", startIndex = domsEndIdx)
     val excludedEndIdx = orientationsResponse.indexOf("]", startIndex = excludedStartIdx)
     val excludedText = orientationsResponse.substring(excludedStartIdx, excludedEndIdx + 1)
 

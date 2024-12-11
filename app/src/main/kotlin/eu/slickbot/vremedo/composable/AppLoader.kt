@@ -19,14 +19,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.slickbot.vremedo.R
 import eu.slickbot.vremedo.extension.runIf
+import eu.slickbot.vremedo.theme.VremedoTheme
 import eu.slickbot.vremedo.theme.colorDarkOverlay
 import eu.slickbot.vremedo.theme.colorLightOverlay
 
 @Composable
-fun Loader(
+fun AppLoader(
   show: Boolean,
   modifier: Modifier = Modifier,
   showOverlay: Boolean = false,
@@ -34,7 +36,7 @@ fun Loader(
   rotationDuration: Int = 1000,
 ) {
   val transition = rememberInfiniteTransition(
-    label = "LoaderTransition",
+    label = "AppLoaderTransition",
   )
   val angle = transition.animateFloat(
     initialValue = 0f,
@@ -43,7 +45,7 @@ fun Loader(
       animation = tween(rotationDuration, easing = LinearEasing),
       repeatMode = RepeatMode.Restart,
     ),
-    label = "LoaderAngle",
+    label = "AppLoaderAngle",
   )
 
   Box(
@@ -71,5 +73,16 @@ fun Loader(
         )
       }
     }
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppLoaderPreview() {
+  VremedoTheme {
+    AppLoader(
+      show = true,
+      showOverlay = true,
+    )
   }
 }

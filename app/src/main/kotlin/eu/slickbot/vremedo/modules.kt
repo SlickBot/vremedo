@@ -5,7 +5,9 @@ import android.content.SharedPreferences
 import eu.slickbot.arso.Arso
 import eu.slickbot.provreme.ProVreme
 import eu.slickbot.vremedo.extension.runIf
+import eu.slickbot.vremedo.repository.ArsoRepository
 import eu.slickbot.vremedo.repository.WeatherRepository
+import eu.slickbot.vremedo.screen.aladin.AladinViewModel
 import eu.slickbot.vremedo.screen.images.ImagesViewModel
 import eu.slickbot.vremedo.screen.weather.WeatherViewModel
 import eu.slickbot.vremedo.utils.AppLifecycle
@@ -27,10 +29,12 @@ val appModule = module {
 fun Module.viewModelModules() {
   viewModelOf(::WeatherViewModel)
   viewModelOf(::ImagesViewModel)
+  viewModelOf(::AladinViewModel)
 }
 
 fun Module.repositoryModules() {
   singleOf(::WeatherRepository)
+  singleOf(::ArsoRepository)
 }
 
 fun Module.utilityModules() {

@@ -79,13 +79,14 @@ class WeatherViewModel(
   private var citiesJob: Job? = null
   private var weatherItemsJob: Job? = null
 
-
-  override fun onComposableCreate() {
+  init {
     updateCities()
   }
 
+  override fun onComposableCreate() {}
+
   override fun onComposableDispose() {
-    citiesJob?.cancel()
+//    citiesJob?.cancel()
   }
 
   fun setFilter(filter: String) {

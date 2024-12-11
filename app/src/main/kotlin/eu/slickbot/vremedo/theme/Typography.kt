@@ -78,3 +78,9 @@ val Typography = Typography(
     letterSpacing = 0.5.sp
   ),
 )
+
+val Typography.toolbarTitle
+  get() = displayMedium.copy(
+    fontSize = 32.sp,
+    lineHeight = 32.sp,
+  )

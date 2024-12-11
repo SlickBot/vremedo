@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun BaseScaffold(
-  content: @Composable (PaddingValues) -> Unit,
+fun AppScaffold(
   modifier: Modifier = Modifier,
+  content: @Composable (PaddingValues) -> Unit,
 ) {
   Scaffold(
     modifier = modifier.fillMaxSize(),

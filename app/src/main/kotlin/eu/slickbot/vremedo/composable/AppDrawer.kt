@@ -18,9 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.slickbot.vremedo.R
 import eu.slickbot.vremedo.screen.Screen
+import eu.slickbot.vremedo.theme.VremedoTheme
 import eu.slickbot.vremedo.utils.AppNavigation
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
@@ -41,46 +43,73 @@ fun AppDrawer(
     modifier = modifier,
     drawerState = state,
     drawerContent = {
-      ModalDrawerSheet(
-        modifier = Modifier.padding(paddingValues),
-      ) {
-        Spacer(Modifier.height(12.dp))
-        Image(
-          modifier = modifier.fillMaxWidth(),
-          painter = painterResource(R.drawable.edo),
-          contentDescription = "Edo",
-        )
-        Text(
-          modifier = Modifier.padding(
-            bottom = 16.dp,
-            start = 16.dp,
-            end = 16.dp,
-          ),
-          text = "Vremedo",
-          style = MaterialTheme.typography.displayLarge,
-        )
-//        HorizontalDivider()
-        Spacer(Modifier.height(12.dp))
-        NavigationDrawerItem(
-          modifier = Modifier.padding(horizontal = 8.dp),
-          label = { Text(text = "Weather") },
-          selected = currentScreen == Screen.Weather,
-          onClick = {
-            appNavigation.navigateToWeather()
-            scope.launch { state.close() }
-          },
-        )
-        NavigationDrawerItem(
-          modifier = Modifier.padding(horizontal = 8.dp),
-          label = { Text(text = "Images") },
-          selected = currentScreen == Screen.Images,
-          onClick = {
-            appNavigation.navigateToImages()
-            scope.launch { state.close() }
-          },
-        )
-      }
+      DrawerContent(
+        currentScreen = currentScreen,
+        paddingValues = paddingValues,
+        onWeatherItemClick = {
+          appNavigation.navigateToWeather()
+          scope.launch { state.close() }
+        },
+        onImagesItemClick = {
+          appNavigation.navigateToImages()
+          scope.launch { state.close() }
+        }
+      )
     },
     content = content,
   )
+}
+
+@Composable
+private fun DrawerContent(
+  currentScreen: Screen,
+  paddingValues: PaddingValues,
+  onWeatherItemClick: () -> Unit,
+  onImagesItemClick: () -> Unit,
+) {
+  ModalDrawerSheet(
+    modifier = Modifier.padding(paddingValues),
+  ) {
+    Spacer(Modifier.height(12.dp))
+    Image(
+      modifier = Modifier.fillMaxWidth(),
+      painter = painterResource(R.drawable.edo),
+      contentDescription = "Edo",
+    )
+    Text(
+      modifier = Modifier.padding(
+        bottom = 16.dp,
+        start = 16.dp,
+        end = 16.dp,
+      ),
+      text = "Vremedo",
+      style = MaterialTheme.typography.displayLarge,
+    )
+    Spacer(Modifier.height(12.dp))
+    NavigationDrawerItem(
+      modifier = Modifier.padding(horizontal = 8.dp),
+      label = { Text(text = "Weather") },
+      selected = currentScreen == Screen.Weather,
+      onClick = onWeatherItemClick,
+    )
+    NavigationDrawerItem(
+      modifier = Modifier.padding(horizontal = 8.dp),
+      label = { Text(text = "Images") },
+      selected = currentScreen == Screen.Images,
+      onClick = onImagesItemClick,
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppDrawerPreview() {
+  VremedoTheme {
+    DrawerContent(
+      currentScreen = Screen.Weather,
+      paddingValues = PaddingValues(),
+      onWeatherItemClick = {},
+      onImagesItemClick = {},
+    )
+  }
 }
