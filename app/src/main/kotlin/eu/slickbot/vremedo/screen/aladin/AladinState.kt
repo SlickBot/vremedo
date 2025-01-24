@@ -6,6 +6,6 @@ import eu.slickbot.arso.model.ArsoAladinScope
 data class AladinState(
   val isLoading: Boolean = false,
   val scope: ArsoAladinScope = ArsoAladinScope.SLOVENIA,
-  val mode: ArsoAladinMode = ArsoAladinMode.TEMPERATURE,
+  val mode: ArsoAladinMode = ArsoAladinMode.RAIN,
   val imageUrls: List<String> = emptyList(),
 )

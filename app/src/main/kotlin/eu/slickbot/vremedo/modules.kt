@@ -8,7 +8,10 @@ import eu.slickbot.vremedo.extension.runIf
 import eu.slickbot.vremedo.repository.ArsoRepository
 import eu.slickbot.vremedo.repository.WeatherRepository
 import eu.slickbot.vremedo.screen.aladin.AladinViewModel
+import eu.slickbot.vremedo.screen.cameras.CamerasViewModel
 import eu.slickbot.vremedo.screen.images.ImagesViewModel
+import eu.slickbot.vremedo.screen.radar.RadarViewModel
+import eu.slickbot.vremedo.screen.satellite.SatelliteViewModel
 import eu.slickbot.vremedo.screen.weather.WeatherViewModel
 import eu.slickbot.vremedo.utils.AppLifecycle
 import eu.slickbot.vremedo.utils.AppNavigation
@@ -30,6 +33,9 @@ fun Module.viewModelModules() {
   viewModelOf(::WeatherViewModel)
   viewModelOf(::ImagesViewModel)
   viewModelOf(::AladinViewModel)
+  viewModelOf(::RadarViewModel)
+  viewModelOf(::SatelliteViewModel)
+  viewModelOf(::CamerasViewModel)
 }
 
 fun Module.repositoryModules() {

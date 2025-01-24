@@ -5,7 +5,7 @@ enum class ArsoLanguage {
 }
 
 enum class ArsoRadarLength {
-  LATEST, SHORT, LONG,
+  LONG, SHORT, LATEST,
 }
 
 enum class ArsoRadarScope {
@@ -13,7 +13,7 @@ enum class ArsoRadarScope {
 }
 
 enum class ArsoSatelliteLength {
-  LATEST, LONG,
+  LONG, LATEST,
 }
 
 enum class ArsoSatelliteScope {
@@ -29,7 +29,7 @@ enum class ArsoAladinMode {
 }
 
 enum class ArsoCameraLength {
-  LATEST, SHORT, LONG,
+  LONG, SHORT, LATEST,
 }
 
 enum class ArsoCameraOrientation {

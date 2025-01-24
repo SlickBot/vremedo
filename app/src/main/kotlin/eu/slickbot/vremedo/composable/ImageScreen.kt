@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -29,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.slickbot.vremedo.theme.VremedoTheme
@@ -39,21 +42,8 @@ fun ImageScreen(
   imageUrls: List<String>,
   isLoading: Boolean,
   modifier: Modifier = Modifier,
-) {
-  Content(
-    innerPadding = innerPadding,
-    imageUrls = imageUrls,
-    isLoading = isLoading,
-    modifier = modifier,
-  )
-}
-
-@Composable
-private fun Content(
-  innerPadding: PaddingValues,
-  imageUrls: List<String>,
-  isLoading: Boolean,
-  modifier: Modifier = Modifier,
+  buttonLeft: ImageScreenButton? = null,
+  buttonRight: ImageScreenButton? = null,
 ) {
   val sliderState = rememberAppSliderState("image-controls") {
     minValue = 1f
@@ -69,9 +59,6 @@ private fun Content(
     isPlaying = isPlaying,
     delay = (1000 / sliderState.value).toLong()
   )
-
-  var showScopesDialog by rememberSaveable { mutableStateOf(false) }
-  var showModesDialog by rememberSaveable { mutableStateOf(false) }
 
   fun onPlayClick() {
     isPlaying = !isPlaying
@@ -96,20 +83,29 @@ private fun Content(
     )
     Controls(
       modifier = Modifier
-        .fillMaxWidth()
-        .padding(innerPadding)
-        .align(Alignment.BottomCenter),
+        .fillMaxSize()
+        .padding(innerPadding),
       show = showControls,
       sliderState = sliderState,
       isPlaying = isPlaying,
+      painter = animationPainter,
+      buttonLeft = buttonLeft,
+      buttonRight = buttonRight,
       onPreviousClick = ::onPreviousClick,
       onPlayClick = ::onPlayClick,
       onNextClick = ::onNextClick,
     )
-    Loader(
-      modifier = Modifier.fillMaxSize(),
-      visible = isLoading,
-    )
+    AppAnimatedVisibility(visible = isLoading) {
+      Box(modifier = Modifier.fillMaxSize()) {
+        AppCircularLoader(
+          modifier = Modifier
+            .size(100.dp)
+            .align(Alignment.Center),
+        )
+      }
+    }
+    buttonLeft?.dialog()
+    buttonRight?.dialog()
   }
 }
 
@@ -167,12 +163,22 @@ private fun Animation(
   }
 }
 
+data class ImageScreenButton(
+  val text: String,
+  val icon: ImageVector,
+  val onClick: () -> Unit,
+  val dialog: @Composable () -> Unit,
+)
+
 @Composable
 private fun Controls(
   modifier: Modifier,
   show: Boolean,
   sliderState: SliderBarState,
   isPlaying: Boolean,
+  painter: ImageAnimationPainter,
+  buttonLeft: ImageScreenButton?,
+  buttonRight: ImageScreenButton?,
   onPreviousClick: () -> Unit,
   onPlayClick: () -> Unit,
   onNextClick: () -> Unit,
@@ -191,11 +197,30 @@ private fun Controls(
           state = sliderState,
         )
       }
-
+      Spacer(Modifier.weight(1f))
+      ClickableLinearProgressIndicator(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(16.dp)
+          .padding(horizontal = 24.dp),
+        currentValue = painter.getIndex(),
+        maxValue = painter.imageUrls.lastIndex,
+        onValueChange = { painter.setIndex(it) },
+      )
+      Spacer(Modifier.height(20.dp))
       Row(
-        modifier = Modifier.padding(bottom = 20.dp),
+        modifier = Modifier.padding(bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
+        buttonLeft?.let {
+          SmallFloatingActionButton(
+            modifier = Modifier.padding(horizontal = 10.dp),
+            onClick = it.onClick,
+          ) {
+            Icon(it.icon, it.text)
+          }
+        }
+        Spacer(Modifier.weight(1f))
         AppAnimatedVisibility(!isPlaying) {
           SmallFloatingActionButton(
             modifier = Modifier.padding(horizontal = 10.dp),
@@ -227,35 +252,16 @@ private fun Controls(
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "Next")
           }
         }
+        Spacer(Modifier.weight(1f))
+        buttonRight?.let {
+          SmallFloatingActionButton(
+            modifier = Modifier.padding(horizontal = 10.dp),
+            onClick = it.onClick,
+          ) {
+            Icon(it.icon, it.text)
+          }
+        }
       }
-
-//      ClickableLinearProgressIndicator(
-//        currentValue = animationPainter.getIndex(),
-//        maxValue = imageUrls.lastIndex,
-//        onValueChange = { animationPainter.setIndex(it) },
-//        modifier = Modifier
-//          .fillMaxWidth()
-//          .height(10.dp)
-//      )
-    }
-  }
-}
-
-@Composable
-private fun Loader(
-  modifier: Modifier,
-  visible: Boolean,
-) {
-  AppAnimatedVisibility(
-    modifier = modifier,
-    visible = visible,
-  ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-      AppCircularLoader(
-        modifier = Modifier
-          .size(100.dp)
-          .align(Alignment.Center),
-      )
     }
   }
 }

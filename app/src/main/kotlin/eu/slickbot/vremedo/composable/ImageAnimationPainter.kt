@@ -40,7 +40,7 @@ fun rememberImageAnimationPainter(
 }
 
 class ImageAnimationPainter(
-  private val imageUrls: List<String>,
+  val imageUrls: List<String>,
   private val imageLoader: ImageLoader,
 ) : Painter(), RememberObserver {
 

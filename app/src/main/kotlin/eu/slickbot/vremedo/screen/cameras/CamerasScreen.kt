@@ -1,9 +1,9 @@
-package eu.slickbot.vremedo.screen.aladin
+package eu.slickbot.vremedo.screen.cameras
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Radar
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,8 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import eu.slickbot.arso.model.ArsoAladinMode
-import eu.slickbot.arso.model.ArsoAladinScope
+import eu.slickbot.arso.model.ArsoCameraLength
+import eu.slickbot.arso.model.ArsoCameraOrientation
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
@@ -20,11 +20,11 @@ import eu.slickbot.vremedo.composable.SimpleListDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
+fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
   val state by vm.state.collectAsStateWithLifecycle()
 
-  var showScopesDialog by rememberSaveable { mutableStateOf(false) }
-  var showModesDialog by rememberSaveable { mutableStateOf(false) }
+  var showOrientationDialog by rememberSaveable { mutableStateOf(false) }
+  var showLengthsDialog by rememberSaveable { mutableStateOf(false) }
 
   AppScaffold { innerPadding ->
     ImageScreen(
@@ -35,42 +35,42 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
       buttonLeft = ImageScreenButton(
         text = "Scope",
         icon = Icons.Filled.Map,
-        onClick = { showScopesDialog = true },
-
+        onClick = { showOrientationDialog = true },
         dialog = {
           SimpleListDialog(
-            items = ArsoAladinScope.entries,
+            items = ArsoCameraOrientation.entries,
             itemText = { it.name },
             onItemClick = {
-              vm.setScope(it)
-              showScopesDialog = false
+              vm.setOrientation(it)
+              showOrientationDialog = false
             },
             onDismissRequest = {
-              showScopesDialog = false
+              showOrientationDialog = false
             },
-            isVisible = showScopesDialog,
+            isVisible = showOrientationDialog,
           )
         }
       ),
       buttonRight = ImageScreenButton(
         text = "Mode",
-        icon = Icons.Filled.Radar,
-        onClick = { showModesDialog = true },
+        icon = Icons.Filled.Timelapse,
+        onClick = { showLengthsDialog = true },
         dialog = {
           SimpleListDialog(
-            items = ArsoAladinMode.entries,
+            items = ArsoCameraLength.entries,
             itemText = { it.name },
             onItemClick = {
-              vm.setMode(it)
-              showModesDialog = false
+              vm.setLength(it)
+              showLengthsDialog = false
             },
             onDismissRequest = {
-              showModesDialog = false
+              showLengthsDialog = false
             },
-            isVisible = showModesDialog,
+            isVisible = showLengthsDialog,
           )
         }
       )
     )
   }
+
 }

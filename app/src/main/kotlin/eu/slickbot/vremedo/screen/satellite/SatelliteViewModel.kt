@@ -1,8 +1,8 @@
-package eu.slickbot.vremedo.screen.aladin
+package eu.slickbot.vremedo.screen.satellite
 
 import androidx.lifecycle.viewModelScope
-import eu.slickbot.arso.model.ArsoAladinMode
-import eu.slickbot.arso.model.ArsoAladinScope
+import eu.slickbot.arso.model.ArsoSatelliteLength
+import eu.slickbot.arso.model.ArsoSatelliteScope
 import eu.slickbot.vremedo.repository.ArsoRepository
 import eu.slickbot.vremedo.utils.ComponentViewModel
 import kotlinx.coroutines.Job
@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AladinViewModel(
+class SatelliteViewModel(
   private val arsoRepo: ArsoRepository,
 ) : ComponentViewModel() {
 
-  private val _state: MutableStateFlow<AladinState> = MutableStateFlow(AladinState())
+  private val _state: MutableStateFlow<SatelliteState> = MutableStateFlow(SatelliteState())
   val state = _state.asStateFlow()
 
   private var updateImageJob: Job? = null
@@ -29,9 +29,9 @@ class AladinViewModel(
     updateImageJob = viewModelScope.launch {
       _state.update { it.copy(isLoading = true) }
       runCatching {
-        arsoRepo.getAladinImages(
+        arsoRepo.getSatelliteImages(
           scope = state.value.scope,
-          mode = state.value.mode,
+          length = state.value.length,
         )
       }.fold(
         onSuccess = { imageUrls ->
@@ -45,13 +45,13 @@ class AladinViewModel(
     }
   }
 
-  fun setScope(scope: ArsoAladinScope) {
+  fun setScope(scope: ArsoSatelliteScope) {
     _state.update { it.copy(scope = scope) }
     updateImages()
   }
 
-  fun setMode(mode: ArsoAladinMode) {
-    _state.update { it.copy(mode = mode) }
+  fun setMode(length: ArsoSatelliteLength) {
+    _state.update { it.copy(length = length) }
     updateImages()
   }
 

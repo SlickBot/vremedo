@@ -66,6 +66,9 @@ class MainActivity : ComponentActivity() {
             screen(Screen.Weather)
             screen(Screen.Images)
             screen(Screen.Aladin)
+            screen(Screen.Radar)
+            screen(Screen.Satellite)
+            screen(Screen.Cameras)
           }
         }
       }

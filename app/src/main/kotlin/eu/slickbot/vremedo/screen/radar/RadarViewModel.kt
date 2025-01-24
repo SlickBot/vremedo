@@ -1,21 +1,21 @@
-package eu.slickbot.vremedo.screen.aladin
+package eu.slickbot.vremedo.screen.radar
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import eu.slickbot.arso.model.ArsoAladinMode
-import eu.slickbot.arso.model.ArsoAladinScope
+import eu.slickbot.arso.model.ArsoRadarLength
+import eu.slickbot.arso.model.ArsoRadarScope
 import eu.slickbot.vremedo.repository.ArsoRepository
-import eu.slickbot.vremedo.utils.ComponentViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AladinViewModel(
+class RadarViewModel(
   private val arsoRepo: ArsoRepository,
-) : ComponentViewModel() {
+) : ViewModel() {
 
-  private val _state: MutableStateFlow<AladinState> = MutableStateFlow(AladinState())
+  private val _state: MutableStateFlow<RadarState> = MutableStateFlow(RadarState())
   val state = _state.asStateFlow()
 
   private var updateImageJob: Job? = null
@@ -29,9 +29,9 @@ class AladinViewModel(
     updateImageJob = viewModelScope.launch {
       _state.update { it.copy(isLoading = true) }
       runCatching {
-        arsoRepo.getAladinImages(
+        arsoRepo.getRadarImages(
+          length = state.value.length,
           scope = state.value.scope,
-          mode = state.value.mode,
         )
       }.fold(
         onSuccess = { imageUrls ->
@@ -45,13 +45,13 @@ class AladinViewModel(
     }
   }
 
-  fun setScope(scope: ArsoAladinScope) {
+  fun setScope(scope: ArsoRadarScope) {
     _state.update { it.copy(scope = scope) }
     updateImages()
   }
 
-  fun setMode(mode: ArsoAladinMode) {
-    _state.update { it.copy(mode = mode) }
+  fun setLength(length: ArsoRadarLength) {
+    _state.update { it.copy(length = length) }
     updateImages()
   }
 

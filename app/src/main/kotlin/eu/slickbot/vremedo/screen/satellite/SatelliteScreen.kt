@@ -1,9 +1,9 @@
-package eu.slickbot.vremedo.screen.aladin
+package eu.slickbot.vremedo.screen.satellite
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Radar
+import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,8 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import eu.slickbot.arso.model.ArsoAladinMode
-import eu.slickbot.arso.model.ArsoAladinScope
+import eu.slickbot.arso.model.ArsoSatelliteLength
+import eu.slickbot.arso.model.ArsoSatelliteScope
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
@@ -20,7 +20,7 @@ import eu.slickbot.vremedo.composable.SimpleListDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
+fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
   val state by vm.state.collectAsStateWithLifecycle()
 
   var showScopesDialog by rememberSaveable { mutableStateOf(false) }
@@ -36,10 +36,9 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
         text = "Scope",
         icon = Icons.Filled.Map,
         onClick = { showScopesDialog = true },
-
         dialog = {
           SimpleListDialog(
-            items = ArsoAladinScope.entries,
+            items = ArsoSatelliteScope.entries,
             itemText = { it.name },
             onItemClick = {
               vm.setScope(it)
@@ -54,11 +53,11 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
       ),
       buttonRight = ImageScreenButton(
         text = "Mode",
-        icon = Icons.Filled.Radar,
+        icon = Icons.Filled.Timelapse,
         onClick = { showModesDialog = true },
         dialog = {
           SimpleListDialog(
-            items = ArsoAladinMode.entries,
+            items = ArsoSatelliteLength.entries,
             itemText = { it.name },
             onItemClick = {
               vm.setMode(it)

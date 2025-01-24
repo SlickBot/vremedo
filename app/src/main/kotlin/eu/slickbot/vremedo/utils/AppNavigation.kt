@@ -30,6 +30,9 @@ class AppNavigation() {
             when (backStackEntry.destination.route) {
               Screen.Weather.route -> Screen.Weather
               Screen.Images.route -> Screen.Images
+              Screen.Aladin.route -> Screen.Aladin
+              Screen.Radar.route -> Screen.Radar
+              Screen.Satellite.route -> Screen.Satellite
               else -> screen
             }
           }
@@ -59,15 +62,24 @@ class AppNavigation() {
   }
 
   fun navigateToRadar() {
-
+    if (screen.value == Screen.Radar) return
+    navigate(Screen.Radar) {
+      launchSingleTop = true
+    }
   }
 
   fun navigateToSatellite() {
-
+    if (screen.value == Screen.Satellite) return
+    navigate(Screen.Satellite) {
+      launchSingleTop = true
+    }
   }
 
   fun navigateToCameras() {
-
+    if (screen.value == Screen.Cameras) return
+    navigate(Screen.Cameras) {
+      launchSingleTop = true
+    }
   }
 
 
