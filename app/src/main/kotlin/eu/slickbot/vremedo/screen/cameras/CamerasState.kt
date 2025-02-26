@@ -6,9 +6,9 @@ import eu.slickbot.arso.model.ArsoCameraOrientation
 
 data class CamerasState(
   val isLoading: Boolean = false,
-  val orientation: ArsoCameraOrientation = ArsoCameraOrientation.N,
+  val orientation: ArsoCameraOrientation? = ArsoCameraOrientation.N,
   val length: ArsoCameraLength = ArsoCameraLength.LONG,
-  val imageData: List<ArsoCameraData> = emptyList(),
-  val selectedImageData: ArsoCameraData? = null,
+  val cameraData: List<ArsoCameraData> = emptyList(),
+  val selectedCameraData: ArsoCameraData? = null,
   val imageUrls: List<String> = emptyList(),
 )

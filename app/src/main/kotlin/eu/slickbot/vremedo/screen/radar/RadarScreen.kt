@@ -3,7 +3,7 @@ package eu.slickbot.vremedo.screen.radar
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Timelapse
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +40,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
           SimpleListDialog(
             items = ArsoRadarScope.entries,
             itemText = { it.name },
+            itemSelected = { it == state.scope },
             onItemClick = {
               vm.setScope(it)
               showScopesDialog = false
@@ -53,12 +54,13 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
       ),
       buttonRight = ImageScreenButton(
         text = "Mode",
-        icon = Icons.Filled.Timelapse,
+        icon = Icons.Filled.Timer,
         onClick = { showLengthsDialog = true },
         dialog = {
           SimpleListDialog(
             items = ArsoRadarLength.entries,
             itemText = { it.name },
+            itemSelected = { it == state.length },
             onItemClick = {
               vm.setLength(it)
               showLengthsDialog = false

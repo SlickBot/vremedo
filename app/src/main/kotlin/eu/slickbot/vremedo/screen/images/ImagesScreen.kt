@@ -59,7 +59,7 @@ private fun Content(
     scope.launch { drawerState.open() }
   }
 
-  AppDrawer(drawerState) {
+  AppDrawer(drawerState, onImageClick = {}) {
     Column(
       modifier = Modifier.padding(paddingValues),
     ) {

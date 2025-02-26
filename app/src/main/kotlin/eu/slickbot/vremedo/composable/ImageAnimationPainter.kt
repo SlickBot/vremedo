@@ -46,9 +46,9 @@ class ImageAnimationPainter(
 
   sealed class State {
     object Empty : State()
-    class Loading(val percentage: Float) : State()
+    data class Loading(val percentage: Float) : State()
     object Ready : State()
-    class Error(throwable: Throwable) : State()
+    data class Error(val throwable: Throwable) : State()
   }
 
   internal var delay = 1000L

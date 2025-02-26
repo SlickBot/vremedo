@@ -15,7 +15,7 @@ class SatelliteViewModel(
   private val arsoRepo: ArsoRepository,
 ) : ComponentViewModel() {
 
-  private val _state: MutableStateFlow<SatelliteState> = MutableStateFlow(SatelliteState())
+  private val _state = MutableStateFlow(SatelliteState())
   val state = _state.asStateFlow()
 
   private var updateImageJob: Job? = null

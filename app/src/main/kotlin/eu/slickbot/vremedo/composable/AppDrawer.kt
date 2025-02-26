@@ -1,6 +1,9 @@
 package eu.slickbot.vremedo.composable
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,6 +34,7 @@ import org.koin.compose.getKoin
 @Composable
 fun AppDrawer(
   state: DrawerState,
+  onImageClick: () -> Unit,
   modifier: Modifier = Modifier,
   paddingValues: PaddingValues = PaddingValues(),
   content: @Composable () -> Unit,
@@ -46,6 +51,7 @@ fun AppDrawer(
       DrawerContent(
         currentScreen = currentScreen,
         paddingValues = paddingValues,
+        onImageClick = onImageClick,
         onWeatherItemClick = {
           appNavigation.navigateToWeather()
           scope.launch { state.close() }
@@ -63,6 +69,7 @@ fun AppDrawer(
 @Composable
 private fun DrawerContent(
   currentScreen: Screen,
+  onImageClick: () -> Unit,
   paddingValues: PaddingValues,
   onWeatherItemClick: () -> Unit,
   onImagesItemClick: () -> Unit,
@@ -71,8 +78,16 @@ private fun DrawerContent(
     modifier = Modifier.padding(paddingValues),
   ) {
     Spacer(Modifier.height(12.dp))
+    @OptIn(ExperimentalFoundationApi::class)
     Image(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier
+        .fillMaxWidth()
+        .combinedClickable(
+          interactionSource = remember { MutableInteractionSource() },
+          indication = null,
+          onClick = {},
+          onLongClick = onImageClick,
+        ),
       painter = painterResource(R.drawable.edo),
       contentDescription = "Edo",
     )
@@ -108,6 +123,7 @@ private fun AppDrawerPreview() {
     DrawerContent(
       currentScreen = Screen.Weather,
       paddingValues = PaddingValues(),
+      onImageClick = {},
       onWeatherItemClick = {},
       onImagesItemClick = {},
     )

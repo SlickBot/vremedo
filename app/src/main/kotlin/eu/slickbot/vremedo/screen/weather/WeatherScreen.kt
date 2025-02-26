@@ -177,7 +177,7 @@ fun WeatherScreen(
     )
 
     Box {
-      AppDrawer(drawerState) {
+      AppDrawer(drawerState, onImageClick = { showEasterEgg() }) {
         MotionLayout(
           modifier = Modifier
             .fillMaxSize()
@@ -191,14 +191,8 @@ fun WeatherScreen(
             imageVector = Icons.Default.Menu,
             contentDescription = "menu",
             onClick = { openMenu() },
-            onLongClick = { showEasterEgg() },
+//            onLongClick = { showEasterEgg() },
           )
-//          ToolbarIcon(
-//            modifier = Modifier.layoutId("images"),
-//            imageVector = Icons.Default.Build,
-//            contentDescription = "images",
-//            onClick = { println("click") },
-//          )
           ToolbarIcon(
             modifier = Modifier.layoutId("close"),
             imageVector = Icons.Default.Close,

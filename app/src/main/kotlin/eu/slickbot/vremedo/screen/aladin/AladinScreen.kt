@@ -41,6 +41,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
           SimpleListDialog(
             items = ArsoAladinScope.entries,
             itemText = { it.name },
+            itemSelected = { it == state.scope },
             onItemClick = {
               vm.setScope(it)
               showScopesDialog = false
@@ -60,6 +61,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
           SimpleListDialog(
             items = ArsoAladinMode.entries,
             itemText = { it.name },
+            itemSelected = { it == state.mode },
             onItemClick = {
               vm.setMode(it)
               showModesDialog = false

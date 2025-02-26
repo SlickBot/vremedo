@@ -2,6 +2,7 @@ package eu.slickbot.vremedo.composable
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ fun ImageScreen(
   modifier: Modifier = Modifier,
   buttonLeft: ImageScreenButton? = null,
   buttonRight: ImageScreenButton? = null,
+  extraContent: @Composable () -> Unit = {},
 ) {
   val sliderState = rememberAppSliderState("image-controls") {
     minValue = 1f
@@ -91,6 +94,7 @@ fun ImageScreen(
       painter = animationPainter,
       buttonLeft = buttonLeft,
       buttonRight = buttonRight,
+      extraContent = extraContent,
       onPreviousClick = ::onPreviousClick,
       onPlayClick = ::onPlayClick,
       onNextClick = ::onNextClick,
@@ -179,6 +183,7 @@ private fun Controls(
   painter: ImageAnimationPainter,
   buttonLeft: ImageScreenButton?,
   buttonRight: ImageScreenButton?,
+  extraContent: @Composable () -> Unit,
   onPreviousClick: () -> Unit,
   onPlayClick: () -> Unit,
   onNextClick: () -> Unit,
@@ -197,6 +202,7 @@ private fun Controls(
           state = sliderState,
         )
       }
+      extraContent()
       Spacer(Modifier.weight(1f))
       ClickableLinearProgressIndicator(
         modifier = Modifier
@@ -219,7 +225,11 @@ private fun Controls(
           ) {
             Icon(it.icon, it.text)
           }
-        }
+        } ?: SmallFloatingActionButton(
+          modifier = Modifier.padding(horizontal = 10.dp).alpha(0f),
+          onClick = {},
+          interactionSource = remember { MutableInteractionSource() },
+        ) {}
         Spacer(Modifier.weight(1f))
         AppAnimatedVisibility(!isPlaying) {
           SmallFloatingActionButton(
@@ -260,7 +270,11 @@ private fun Controls(
           ) {
             Icon(it.icon, it.text)
           }
-        }
+        } ?: SmallFloatingActionButton(
+          modifier = Modifier.padding(horizontal = 10.dp).alpha(0f),
+          onClick = {},
+          interactionSource = remember { MutableInteractionSource() },
+        ) {}
       }
     }
   }

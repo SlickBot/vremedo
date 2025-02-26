@@ -2,6 +2,7 @@ package eu.slickbot.vremedo.screen.cameras
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import eu.slickbot.arso.model.ArsoCameraData
 import eu.slickbot.arso.model.ArsoCameraLength
 import eu.slickbot.arso.model.ArsoCameraOrientation
 import eu.slickbot.vremedo.repository.ArsoRepository
@@ -15,7 +16,7 @@ class CamerasViewModel(
   private val arsoRepo: ArsoRepository,
 ) : ViewModel() {
 
-  private val _state: MutableStateFlow<CamerasState> = MutableStateFlow(CamerasState())
+  private val _state = MutableStateFlow(CamerasState())
   val state = _state.asStateFlow()
 
   private var updateImageJob: Job? = null
@@ -34,7 +35,15 @@ class CamerasViewModel(
         arsoRepo.getCameraData()
       }.fold(
         onSuccess = { imageData ->
-          _state.update { it.copy(imageData = imageData, selectedImageData = imageData.firstOrNull()) }
+          _state.update {
+            val selectedImageData = imageData.randomOrNull()
+            val orientation = selectedImageData?.orientations?.randomOrNull()
+            it.copy(
+              cameraData = imageData,
+              selectedCameraData = selectedImageData,
+              orientation = orientation,
+            )
+          }
           updateImages()
         },
         onFailure = {
@@ -46,13 +55,16 @@ class CamerasViewModel(
   }
 
   private fun updateImages() {
+    val selectedImageData = state.value.selectedCameraData ?: return
+    val orientation = state.value.orientation ?: return
+
     updateImageJob?.cancel()
     updateImageJob = viewModelScope.launch {
       _state.update { it.copy(isLoading = true) }
       runCatching {
         arsoRepo.getCamerasImages(
-          data = state.value.selectedImageData!!,
-          orientation = state.value.orientation,
+          data = selectedImageData,
+          orientation = orientation,
           length = state.value.length,
         )
       }.fold(
@@ -69,6 +81,11 @@ class CamerasViewModel(
 
   fun setOrientation(orientation: ArsoCameraOrientation) {
     _state.update { it.copy(orientation = orientation) }
+    updateImages()
+  }
+
+  fun setCameraData(data: ArsoCameraData) {
+    _state.update { it.copy(selectedCameraData = data, orientation = data.orientations.randomOrNull()) }
     updateImages()
   }
 

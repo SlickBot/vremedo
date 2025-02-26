@@ -15,7 +15,7 @@ class RadarViewModel(
   private val arsoRepo: ArsoRepository,
 ) : ViewModel() {
 
-  private val _state: MutableStateFlow<RadarState> = MutableStateFlow(RadarState())
+  private val _state = MutableStateFlow(RadarState())
   val state = _state.asStateFlow()
 
   private var updateImageJob: Job? = null

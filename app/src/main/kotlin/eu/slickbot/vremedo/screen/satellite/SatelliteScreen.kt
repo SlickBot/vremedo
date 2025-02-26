@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Timelapse
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
           SimpleListDialog(
             items = ArsoSatelliteScope.entries,
             itemText = { it.name },
+            itemSelected = { it == state.scope },
             onItemClick = {
               vm.setScope(it)
               showScopesDialog = false
@@ -53,12 +55,13 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
       ),
       buttonRight = ImageScreenButton(
         text = "Mode",
-        icon = Icons.Filled.Timelapse,
+        icon = Icons.Filled.Timer,
         onClick = { showModesDialog = true },
         dialog = {
           SimpleListDialog(
             items = ArsoSatelliteLength.entries,
             itemText = { it.name },
+            itemSelected = { it == state.length },
             onItemClick = {
               vm.setMode(it)
               showModesDialog = false
