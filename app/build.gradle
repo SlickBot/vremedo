@@ -3,6 +3,13 @@ plugins {
   id "org.jetbrains.kotlin.android"
   id "org.jetbrains.kotlin.plugin.compose"
   id "kotlin-parcelize"
+  id "maven-publish"
+}
+
+def localProps = new Properties()
+def localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+  localProps.load(new FileInputStream(localPropsFile))
 }
 
 android {
@@ -26,10 +33,10 @@ android {
 
   signingConfigs {
     release {
-      storeFile file("release-key.jks")
-      storePassword "!wuH%2w7tMN6WjhQD6BtAf"
-      keyAlias "key-alias"
-      keyPassword "!wuH%2w7tMN6WjhQD6BtAf"
+      storeFile file(localProps.getProperty("keystore.storeFile") ?: "")
+      storePassword localProps.getProperty("keystore.storePassword") ?: ""
+      keyAlias localProps.getProperty("keystore.keyAlias") ?: ""
+      keyPassword localProps.getProperty("keystore.keyPassword") ?: ""
     }
   }
 
@@ -38,6 +45,7 @@ android {
       signingConfig signingConfigs.release
       minifyEnabled false
       proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+      applicationIdSuffix ".release"
       resValue "string", "app_name", "Vremedo"
     }
     debug {
@@ -74,31 +82,7 @@ android {
   }
 }
 
-tasks.register("assembleAll") {
-  group = "build"
-  description = "Builds debug and release APKs and copies them to releases/{versionName}"
-
-  dependsOn("assembleDebug", "assembleRelease")
-
-  doLast {
-    def versionName = android.defaultConfig.versionName
-    def outputDir = layout.buildDirectory.dir("outputs/apk").get().asFile
-    def releaseDir = file("releases/${versionName}")
-    releaseDir.mkdirs()
-
-    fileTree(dir: outputDir, include: "**/*.apk").files.each { apk ->
-      copy {
-        from apk
-        into releaseDir
-      }
-    }
-
-    println "Copied APKs to releases/${versionName}"
-  }
-}
-
 dependencies {
-
   /* Projects */
   implementation project(":arso")
   implementation project(":pro-vreme")
@@ -135,5 +119,69 @@ dependencies {
   androidTestImplementation "androidx.test.ext:junit:1.2.1"
   androidTestImplementation "androidx.test.espresso:espresso-core:3.6.1"
   androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+}
 
+publishing {
+  publications {
+    create("releaseApk", MavenPublication) {
+      groupId = "eu.slickbot"
+      artifactId = "vremedo-release"
+      version = android.defaultConfig.versionName
+      artifact("$buildDir/outputs/apk/release/vremedo-${android.defaultConfig.versionName}-release.apk") {
+        extension "apk"
+      }
+    }
+    create("debugApk", MavenPublication) {
+      groupId = "eu.slickbot"
+      artifactId = "vremedo-debug"
+      version = android.defaultConfig.versionName
+      artifact("$buildDir/outputs/apk/debug/vremedo-${android.defaultConfig.versionName}-debug.apk") {
+        extension "apk"
+      }
+    }
+  }
+  repositories {
+    maven {
+      url = uri("http://brane:8081/repository/apk-releases/")
+      allowInsecureProtocol = true
+      credentials {
+        username = localProps.getProperty("nexus.username") ?: ""
+        password = localProps.getProperty("nexus.password") ?: ""
+      }
+    }
+  }
+}
+
+tasks.register("assembleAll") {
+  group = "build"
+  description = "Builds debug and release APKs and copies them to releases/{versionName}"
+
+  dependsOn("assembleDebug", "assembleRelease")
+
+  doLast {
+    def versionName = android.defaultConfig.versionName
+    def outputDir = layout.buildDirectory.dir("outputs/apk").get().asFile
+    def releaseDir = file("releases/${versionName}")
+    releaseDir.mkdirs()
+
+    fileTree(dir: outputDir, include: "**/*.apk").files.each { apk ->
+      copy {
+        from apk
+        into releaseDir
+      }
+    }
+
+    println "Copied APKs to releases/${versionName}"
+  }
+}
+
+tasks.register("publishAll") {
+  group = "build"
+  description = "Publishes all build types to nexus"
+
+  dependsOn("publishDebugApkPublicationToMavenRepository", "publishReleaseApkPublicationToMavenRepository")
+
+  doLast {
+    println "Published APKs to Nexus"
+  }
 }
