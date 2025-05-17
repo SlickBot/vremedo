@@ -18,9 +18,9 @@ import eu.slickbot.vremedo.utils.AppNavigation
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -61,9 +61,7 @@ private fun defaultSharedPrefs(context: Context): SharedPreferences {
 private fun defaultHttpClient(): OkHttpClient {
   return OkHttpClient.Builder()
     .runIf(BuildConfig.DEBUG) {
-      addInterceptor(
-        HttpLoggingInterceptor().apply { setLevel(Level.BODY) }
-      )
+      addInterceptor(HttpLoggingInterceptor().apply { setLevel(Level.BODY) })
     }
     .build()
 }
