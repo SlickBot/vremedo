@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.slickbot.arso.model.ArsoRadarLength
 import eu.slickbot.arso.model.ArsoRadarScope
+import eu.slickbot.vremedo.composable.AppListDialog
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
-import eu.slickbot.vremedo.composable.SimpleListDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,7 +37,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
         icon = Icons.Filled.Map,
         onClick = { showScopesDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoRadarScope.entries,
             itemText = { it.name },
             itemSelected = { it == state.scope },
@@ -57,7 +57,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
         icon = Icons.Filled.Timer,
         onClick = { showLengthsDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoRadarLength.entries,
             itemText = { it.name },
             itemSelected = { it == state.length },

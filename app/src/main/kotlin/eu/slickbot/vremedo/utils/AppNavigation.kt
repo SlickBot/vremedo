@@ -1,6 +1,10 @@
 package eu.slickbot.vremedo.utils
 
-import androidx.navigation.*
+import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.Navigator
+import androidx.navigation.PopUpToBuilder
+import androidx.navigation.navOptions
 import eu.slickbot.vremedo.screen.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

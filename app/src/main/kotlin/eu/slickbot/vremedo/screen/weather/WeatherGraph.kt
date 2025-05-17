@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -59,12 +60,12 @@ import coil.ImageLoader
 import coil.request.CachePolicy
 import eu.slickbot.vremedo.R
 import eu.slickbot.vremedo.composable.rememberAndroidPaint
+import eu.slickbot.vremedo.extension.getBitmapFromVectorDrawable
 import eu.slickbot.vremedo.extension.getImageBitmap
 import eu.slickbot.vremedo.extension.getTextBounds
 import eu.slickbot.vremedo.extension.roundToIntOffset
 import eu.slickbot.vremedo.extension.size
 import eu.slickbot.vremedo.model.WeatherItem
-import eu.slickbot.vremedo.extension.getBitmapFromVectorDrawable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -109,6 +110,7 @@ fun WeatherGraph(
   windImageSize: DpSize,
   itemSpacing: Dp,
   lineOffset: Dp,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
   paddingValues: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -188,7 +190,11 @@ fun WeatherGraph(
         .background(Color.White.copy(alpha = .1f))
     )
 
-    Box(Modifier.horizontalScroll(state.scroll)) {
+    Box(
+      Modifier
+        .horizontalScroll(state.scroll)
+        .clickable(onClick = onClick),
+    ) {
 
       Canvas(
         modifier = Modifier

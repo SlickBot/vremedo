@@ -1,6 +1,5 @@
 package eu.slickbot.vremedo.composable
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +43,6 @@ fun AppBar(
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToolbarIcon(
   imageVector: ImageVector,
@@ -76,7 +74,7 @@ fun ToolbarTitle(
   onFocusChange: (FocusState) -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
-  AppUndecoratedTextField(
+  AppTextField(
     modifier = Modifier
       .onFocusChanged(onFocusChange)
       .runIf(focusRequester != null) {

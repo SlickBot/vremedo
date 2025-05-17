@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.slickbot.arso.model.ArsoAladinMode
 import eu.slickbot.arso.model.ArsoAladinScope
+import eu.slickbot.vremedo.composable.AppListDialog
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
-import eu.slickbot.vremedo.composable.SimpleListDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,7 +38,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
         onClick = { showScopesDialog = true },
 
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoAladinScope.entries,
             itemText = { it.name },
             itemSelected = { it == state.scope },
@@ -58,7 +58,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
         icon = Icons.Filled.Radar,
         onClick = { showModesDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoAladinMode.entries,
             itemText = { it.name },
             itemSelected = { it == state.mode },

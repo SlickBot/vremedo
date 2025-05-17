@@ -1,6 +1,5 @@
 package eu.slickbot.vremedo.composable
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -78,7 +77,6 @@ private fun DrawerContent(
     modifier = Modifier.padding(paddingValues),
   ) {
     Spacer(Modifier.height(12.dp))
-    @OptIn(ExperimentalFoundationApi::class)
     Image(
       modifier = Modifier
         .fillMaxWidth()

@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,18 +14,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.slickbot.arso.model.ArsoCameraLength
-import eu.slickbot.arso.model.ArsoCameraOrientation
+import eu.slickbot.vremedo.composable.AppListDialog
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.CustomIcons
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
-import eu.slickbot.vremedo.composable.SimpleListDialog
+import eu.slickbot.vremedo.theme.VremedoTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -48,7 +46,7 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
         icon = CustomIcons.Compass,
         onClick = { showOrientationDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = state.selectedCameraData?.orientations.orEmpty(),
             itemText = { it.name },
             itemSelected = { it == state.orientation },
@@ -68,7 +66,7 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
         icon = Icons.Filled.Timer,
         onClick = { showLengthsDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoCameraLength.entries,
             itemText = { it.name },
             itemSelected = { it == state.length },
@@ -84,21 +82,23 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
         }
       ),
       extraContent = {
-        Text(
-          modifier = Modifier
-            .fillMaxWidth()
-            .clickable { showCitiesDialog = !showCitiesDialog }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-          text = state.selectedCameraData?.title.orEmpty(),
-          fontSize = 30.sp,
-          fontWeight = FontWeight.SemiBold,
-          textAlign = TextAlign.Center,
-        )
+        VremedoTheme(darkTheme = true) {
+          Text(
+            modifier = Modifier
+              .fillMaxWidth()
+              .clickable { showCitiesDialog = !showCitiesDialog }
+              .padding(horizontal = 16.dp, vertical = 8.dp),
+            text = state.selectedCameraData?.title.orEmpty(),
+            fontSize = 26.sp,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+          )
+        }
       },
     )
   }
 
-  SimpleListDialog(
+  AppListDialog(
     items = state.cameraData,
     itemText = { it.title },
     itemSelected = { it == state.selectedCameraData },

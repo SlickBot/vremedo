@@ -1,11 +1,12 @@
 package eu.slickbot.vremedo.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
   primary = Purple80,
@@ -38,17 +39,8 @@ fun VremedoTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit,
 ) {
-  val useDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-  val colorScheme = when {
-    useDynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-    useDynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
-    darkTheme -> DarkColorScheme
-    else -> LightColorScheme
-  }
-
   MaterialTheme(
-    colorScheme = colorScheme,
+    colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
     typography = Typography,
     content = content,
   )

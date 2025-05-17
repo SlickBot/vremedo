@@ -8,8 +8,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -62,6 +66,8 @@ class MainActivity : ComponentActivity() {
           NavHost(
             navController = navController,
             startDestination = Screen.Weather.route,
+            enterTransition = { fadeIn(animationSpec = tween(350)) },
+            exitTransition = { fadeOut(animationSpec = tween(350)) },
           ) {
             screen(Screen.Weather)
             screen(Screen.Images)

@@ -1,6 +1,5 @@
 package eu.slickbot.vremedo.composable
 
-import android.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun <T> SimpleListDialog(
+fun <T> AppListDialog(
   items: List<T>,
   onItemClick: (T) -> Unit,
   onDismissRequest: () -> Unit,

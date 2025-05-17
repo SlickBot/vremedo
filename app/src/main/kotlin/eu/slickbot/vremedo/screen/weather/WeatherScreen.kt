@@ -109,20 +109,36 @@ fun WeatherScreen(
       weatherItems.getOrNull(graphState.currentIndex)
     }
 
-    LaunchedEffect(weatherItems) {
-      if (weatherItems.isEmpty()) return@LaunchedEffect
+    fun scrollToNow(animate: Boolean) {
+      if (weatherItems.isEmpty()) return
 
-      delay(1)
+      scope.launch {
+        val lastItemTime = weatherItems.last().dateTime.toInstant()
+        val firstItemTime = weatherItems.first().dateTime.toInstant()
+        val nowTime = localDateTimeNow().toInstant()
 
-      val lastItemTime = weatherItems.last().dateTime.toInstant()
-      val firstItemTime = weatherItems.first().dateTime.toInstant()
-      val nowTime = localDateTimeNow().toInstant()
+        val totalDuration = lastItemTime.epochSeconds - firstItemTime.epochSeconds
+        val partDuration = nowTime.epochSeconds - firstItemTime.epochSeconds
 
-      val totalDuration = lastItemTime.epochSeconds - firstItemTime.epochSeconds
-      val partDuration = nowTime.epochSeconds - firstItemTime.epochSeconds
+        if (totalDuration > 0 && partDuration > 0) {
+          val percentage = partDuration / totalDuration.toFloat()
+          if (animate) {
+            graphState.animateScrollTo(percentage)
+          } else {
+            graphState.scrollTo(percentage)
+          }
+        }
+      }
+    }
 
-      if (totalDuration > 0 && partDuration > 0) {
-        graphState.scrollTo(partDuration / totalDuration.toFloat())
+    fun scrollToDay(day: WeatherDay) {
+      if (weatherItems.isEmpty()) return
+
+      scope.launch {
+        val firstIdx = weatherItems.indexOfFirst { it.day == day }
+        val lastIdx = weatherItems.indexOfLast { it.day == day } + 1
+        val percentage = (lastIdx + firstIdx) / 2f / weatherItems.lastIndex.toFloat()
+        graphState.animateScrollTo(percentage * 1.001f)
       }
     }
 
@@ -154,12 +170,16 @@ fun WeatherScreen(
     }
 
     fun onDayClick(day: WeatherDay) {
-      scope.launch {
-        val firstIdx = weatherItems.indexOfFirst { it.day == day }
-        val lastIdx = weatherItems.indexOfLast { it.day == day } + 1
-        val percentage = (lastIdx + firstIdx) / 2f / weatherItems.lastIndex.toFloat()
-        graphState.animateScrollTo(percentage * 1.001f)
-      }
+      scrollToDay(day)
+    }
+
+    fun onResetClick() {
+      scrollToNow(animate = true)
+    }
+
+    LaunchedEffect(weatherItems) {
+      delay(1)
+      scrollToNow(animate = false)
     }
 
     BackHandler(enabled = isSearchOpen || drawerState.isOpen) {
@@ -225,6 +245,7 @@ fun WeatherScreen(
               graphMin = graphTempMin,
               graphMax = graphTempMax,
               onDayClick = ::onDayClick,
+              onResetClick = ::onResetClick,
             )
           }
 
@@ -387,6 +408,7 @@ private fun DashboardContent(
   graphMin: Float,
   graphMax: Float,
   onDayClick: (WeatherDay) -> Unit,
+  onResetClick: () -> Unit,
 ) {
   Column(
     Modifier
@@ -424,6 +446,7 @@ private fun DashboardContent(
       ),
       lineOffset = LocalConfiguration.current.screenWidthDp.dp / 2,
       itemSpacing = 14.dp,
+      onClick = onResetClick,
     )
     WeatherDaysNavbar(
       modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
@@ -607,7 +630,7 @@ private fun WeatherDaysNavbar(
         )
         Text(
           day.name.take(3).toUpperCase(Locale.current),
-          fontWeight = if (day == selectedItem?.day) FontWeight.Bold else FontWeight.Light,
+          fontWeight = if (day == selectedItem?.day) FontWeight.Bold else FontWeight.Normal,
           fontSize = 12.sp,
         )
       }

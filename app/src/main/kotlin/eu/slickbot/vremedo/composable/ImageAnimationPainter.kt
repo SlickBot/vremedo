@@ -1,7 +1,14 @@
 package eu.slickbot.vremedo.composable
 
 import android.content.Context
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.RememberObserver
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.FilterQuality
@@ -14,11 +21,18 @@ import coil.ImageLoader
 import coil.imageLoader
 import eu.slickbot.vremedo.extension.createPainter
 import eu.slickbot.vremedo.extension.getImageBitmap
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun rememberImageAnimationPainter(
@@ -140,16 +154,16 @@ class ImageAnimationPainter(
     // Short circuit if we're already remembered.
     if (rememberScope != null) return
 
-    // Create a new scope to observe state and execute requests while we're remembered.
-    val scope = CoroutineScope(SupervisorJob() + Main.immediate)
-    rememberScope = scope
-
     // If we're in inspection mode skip the image request and set the state to loading.
     if (isPreview) {
 //      val request = request.newBuilder().defaults(imageLoader.defaults).build()
 //      updateState(AsyncImagePainter.State.Loading(request.placeholder?.toPainter()))
       return
     }
+
+    // Create a new scope to observe state and execute requests while we're remembered.
+    val scope = CoroutineScope(SupervisorJob() + Main.immediate)
+    rememberScope = scope
 
     // Observe the current request and execute any emissions.
     scope.launch(Default) {
@@ -192,7 +206,7 @@ class ImageAnimationPainter(
 
       val bitmaps = values.filterNotNull().also { bitmaps = it }
 
-      // start updating job
+      // updating job
       updatingJob?.cancel()
       updatingJob = launch(Default) {
         _painter = bitmaps[_index].createPainter(filterQuality = filterQuality)

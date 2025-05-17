@@ -3,7 +3,6 @@ package eu.slickbot.vremedo.screen.satellite
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.slickbot.arso.model.ArsoSatelliteLength
 import eu.slickbot.arso.model.ArsoSatelliteScope
+import eu.slickbot.vremedo.composable.AppListDialog
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
-import eu.slickbot.vremedo.composable.SimpleListDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,7 +37,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
         icon = Icons.Filled.Map,
         onClick = { showScopesDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoSatelliteScope.entries,
             itemText = { it.name },
             itemSelected = { it == state.scope },
@@ -58,7 +57,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
         icon = Icons.Filled.Timer,
         onClick = { showModesDialog = true },
         dialog = {
-          SimpleListDialog(
+          AppListDialog(
             items = ArsoSatelliteLength.entries,
             itemText = { it.name },
             itemSelected = { it == state.length },
