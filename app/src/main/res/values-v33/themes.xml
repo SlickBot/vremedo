@@ -2,8 +2,8 @@
 <resources>
 
     <style name="Theme.AppSplash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/app_primary_color</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/edo</item>
+        <item name="windowSplashScreenBackground">#1e1f22</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/edo_splash</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.AppMain</item>
         <item name="android:windowSplashScreenBehavior">icon_preferred</item>
