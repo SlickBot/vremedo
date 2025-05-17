@@ -47,6 +47,7 @@ class AppNavigation() {
   fun navigateToWeather() {
     if (screen.value == Screen.Weather) return
     navigate(Screen.Weather) {
+      popUpToScreen(Screen.Weather)
       launchSingleTop = true
     }
   }
