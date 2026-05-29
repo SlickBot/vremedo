@@ -25,11 +25,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlin.time.Duration.Companion.minutes
+import androidx.core.content.edit
 
 class WeatherRepository(
   private val lifecycle: AppLifecycle,
@@ -53,11 +56,11 @@ class WeatherRepository(
   private fun cacheTodaySunriseSunset(times: List<SunriseSunsetTime>) {
     val today = localDateNow()
     val todayTime = times.firstOrNull { it.sunrise.date == today } ?: return
-    sharedPrefs.edit()
-      .putString("day_date", today.toString())
-      .putString("day_sunrise", todayTime.sunrise.time.toString())
-      .putString("day_sunset", todayTime.sunset.time.toString())
-      .apply()
+    sharedPrefs.edit {
+      putString("day_date", today.toString())
+      putString("day_sunrise", todayTime.sunrise.time.toString())
+      putString("day_sunset", todayTime.sunset.time.toString())
+    }
   }
 
   fun isNightFlow(location: String): Flow<Boolean> = flow {
@@ -87,55 +90,9 @@ class WeatherRepository(
 
   suspend fun getWeatherItems(cityId: Int): List<WeatherItem> {
     return withContext(Dispatchers.Default) {
-      val items = mutableListOf<WeatherItem>()
-
       val days = getDays(cityId)
-      val dayName = getTodayDayName()
-
-      // find today
-      val today = days.firstOrNull { it.name == dayName }
-      val firstDay = today ?: days.first()
-      val firstDayIdx = days.indexOf(firstDay)
-
-      for ((dayIdx, day) in days.withIndex()) {
-        val dayHours = getHours(cityId, day.id)
-        val daysDiff = dayIdx - firstDayIdx
-        val dayDate = localDateNow() + DatePeriod(days = daysDiff)
-
-        for ((hourSpanIdx, hourSpan) in dayHours.withIndex()) {
-          val hoursLength = (hourSpan.endHour - hourSpan.startHour).let {
-            if (it < 0) 24 + it else it
-          }
-          for (hourIdx in 0 until hoursLength) {
-            val hour = (hourSpan.startHour + hourIdx) % 24
-
-//            if (items.lastOrNull()?.dateTime?.hour == hour)
-//                continue
-
-            items += if (hourSpanIdx == 0 && hour > hourSpan.endHour) {
-              WeatherItem(
-                LocalDateTime(dayDate - DatePeriod(days = 1), LocalTime(hour, 0)),
-                days.getOrNull(dayIdx - 1) ?: continue,
-                hourSpan,
-              )
-            } else if (hourSpanIdx == dayHours.lastIndex && hour < hourSpan.startHour) {
-              WeatherItem(
-                LocalDateTime(dayDate + DatePeriod(days = 1), LocalTime(hour, 0)),
-                days.getOrNull(dayIdx + 1) ?: continue,
-                hourSpan,
-              )
-            } else {
-              WeatherItem(
-                LocalDateTime(dayDate, LocalTime(hour, 0)),
-                day,
-                hourSpan,
-              )
-            }
-          }
-        }
-      }
-
-      items
+      val daysWithHours = days.map { day -> day to getHours(cityId, day.id) }
+      buildWeatherItems(daysWithHours, localDateNow(), getTodayDayName())
     }
   }
 
@@ -212,7 +169,7 @@ class WeatherRepository(
   }
 
   private fun getTodayDayName(): String {
-    return when (localDateNow().dayOfWeek.value) {
+    return when (localDateNow().dayOfWeek.isoDayNumber) {
       1 -> "Ponedeljek"
       2 -> "Torek"
       3 -> "Sreda"
@@ -224,4 +181,59 @@ class WeatherRepository(
     }
   }
 
+}
+
+// Pure expansion of scraped day/hour spans into a flat, chronologically laid-out
+// list of WeatherItems. Extracted from WeatherRepository so it can be unit-tested
+// without network or Android dependencies.
+internal fun buildWeatherItems(
+  daysWithHours: List<Pair<WeatherDay, List<WeatherHours>>>,
+  today: LocalDate,
+  todayDayName: String,
+): List<WeatherItem> {
+  val items = mutableListOf<WeatherItem>()
+  val days = daysWithHours.map { it.first }
+
+  // find today (fall back to the first day if the name isn't present)
+  val todayDay = days.firstOrNull { it.name == todayDayName }
+  val firstDay = todayDay ?: days.firstOrNull() ?: return items
+  val firstDayIdx = days.indexOf(firstDay)
+
+  for ((dayIdx, pair) in daysWithHours.withIndex()) {
+    val (day, dayHours) = pair
+    val daysDiff = dayIdx - firstDayIdx
+    val dayDate = today + DatePeriod(days = daysDiff)
+
+    for ((hourSpanIdx, hourSpan) in dayHours.withIndex()) {
+      val startHour = hourSpan.startHour ?: continue
+      val endHour = hourSpan.endHour ?: continue
+      val hoursLength = (endHour - startHour).let {
+        if (it < 0) 24 + it else it
+      }
+      for (hourIdx in 0 until hoursLength) {
+        val hour = (startHour + hourIdx) % 24
+
+        items += if (hourSpanIdx == 0 && hour > endHour) {
+          WeatherItem(
+            LocalDateTime(dayDate - DatePeriod(days = 1), LocalTime(hour, 0)),
+            days.getOrNull(dayIdx - 1) ?: continue,
+            hourSpan,
+          )
+        } else if (hourSpanIdx == dayHours.lastIndex && hour < startHour) {
+          WeatherItem(
+            LocalDateTime(dayDate + DatePeriod(days = 1), LocalTime(hour, 0)),
+            days.getOrNull(dayIdx + 1) ?: continue,
+            hourSpan,
+          )
+        } else {
+          WeatherItem(
+            LocalDateTime(dayDate, LocalTime(hour, 0)),
+            day,
+            hourSpan,
+          )
+        }
+      }
+    }
+  }
+  return items
 }

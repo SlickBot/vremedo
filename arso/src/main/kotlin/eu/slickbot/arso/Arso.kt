@@ -2,8 +2,7 @@ package eu.slickbot.arso
 
 import eu.slickbot.arso.model.*
 import eu.slickbot.scrape.utils.extension.*
-import kotlinx.datetime.Instant
-import kotlinx.datetime.toInstant
+import kotlin.time.Instant
 import okhttp3.OkHttpClient
 import org.xml.sax.InputSource
 import retrofit2.Retrofit
@@ -33,49 +32,6 @@ class Arso(private val client: OkHttpClient) {
     return service.locationInfo(language, location)
   }
 
-  fun getCategoryGroups(): List<ArsoCategoryGroup> {
-    val content = client.getResponseDocument(SERVICE_URL)
-      .selectFirst("td.vsebina") ?: return emptyList()
-
-    val groups = mutableListOf<ArsoCategoryGroup>()
-    var currentGroup: ArsoCategoryGroup? = null
-    var currentGroupItems = mutableListOf<ArsoCategoryItem>()
-
-    for (element in content.children()) {
-      if (element.`is`("h2")) {
-        if (currentGroup != null) {
-          groups += currentGroup.copy(items = currentGroupItems.toList())
-          currentGroupItems = mutableListOf()
-        }
-        currentGroup = ArsoCategoryGroup(element.text(), emptyList())
-      }
-      if (element.`is`("a")) {
-        currentGroupItems += ArsoCategoryItem(element.text(), element.attr("href"))
-      }
-    }
-
-    if (currentGroup != null) {
-      groups += currentGroup.copy(items = currentGroupItems.toList())
-    }
-
-    return groups.toList().filter { it.items.isNotEmpty() }
-  }
-
-  fun getDataGroups(item: ArsoCategoryItem): List<ArsoDataGroup> {
-    // TODO: not implemented (previously a non-functional stub).
-    return emptyList()
-  }
-
-
-  // https://meteo.arso.gov.si/uploads/probase/www/plus/sl/weather/data/weather_eu.xml
-  // https://meteo.arso.gov.si/uploads/probase/www/plus/sl/forecast/data/forecast_eu.xml?nocache=laeftj6e21y3osl54kh
-  fun getWeather(
-    scope: ArsoWeatherScope,
-  ) {
-
-  }
-
-
   // https://meteo.arso.gov.si/uploads/probase/www/plus/timeline/timeline_satellite_ir_sateu_long.xml
   // https://meteo.arso.gov.si/uploads/probase/www/plus/timeline/timeline_satellite_hrv_si_long.xml
   fun getSatelliteImageUrls(
@@ -92,7 +48,7 @@ class Arso(private val client: OkHttpClient) {
     }
     val url = "${BASE_DATA_URL}/timeline_satellite_${scopeText}_${lengthText}.xml"
     val response = client.getResponseString(url)
-    val pattern = "\\{(.*)url:IMG\\+'(.*)'(.*)\\}".toPattern()
+    val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toPattern()
     val matcher = pattern.matcher(response)
     val imageUrls = matcher.findAllGroups(2)
     return imageUrls.map { "$BASE_OBSERV_URL/satellite/$it" }
@@ -118,7 +74,7 @@ class Arso(private val client: OkHttpClient) {
     val url = "${BASE_DATA_URL}/timeline_aladin_${modeText}_${scopeText}.xml"
     val responseString = client.getResponseString(url)
     return responseString
-      .matcher("\\{(.*)url:IMG\\+'(.*)',(.*)\\}".toRegex())
+      .matcher("\\{(.*)url:IMG\\+'(.*?)',(.*)\\}".toRegex())
       .findAllGroups(2)
       .map { "$BASE_MODEL_URL/aladin/field/$it" }
   }
@@ -140,7 +96,7 @@ class Arso(private val client: OkHttpClient) {
     }
     val url = "${BASE_DATA_URL}/timeline_radar_${scopeText}_${lengthText}.xml"
     val response = client.getResponseString(url)
-    val pattern = "\\{(.*)url:IMG\\+'(.*)'(.*)\\}".toPattern()
+    val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toPattern()
     val matcher = pattern.matcher(response)
     val imageUrls = matcher.findAllGroups(2)
     return imageUrls.map { "$BASE_OBSERV_URL/radar/$it" }
@@ -246,6 +202,10 @@ class Arso(private val client: OkHttpClient) {
     val camerasResponse = client.getResponseString(camerasUrl)
 //        val camerasResponse = CAMERA_DATA
 
+    // webcam.xml nests the real camera list inside an outer region grouping:
+    //   domains:[{ region..., domains:[{ cameras... }] }]
+    // The first match peels off the outer `domains:[...]` (greedy, to the last `]`),
+    // the second extracts the inner camera array. Both passes are intentional.
     val cameraList = camerasResponse
       .matcher("domains:\\[(.*)]".toRegex())
       .findAllGroups(1).first()
@@ -303,7 +263,7 @@ class Arso(private val client: OkHttpClient) {
       "$BASE_URL/uploads/probase/www/plus/timeline/timeline_webcam_${data.id}${orientationText}_${lengthText}.xml"
 
     return client.getResponseString(url)
-      .matcher("\\{(.*)url:IMG\\+'(.*)'(.*)\\}".toRegex())
+      .matcher("\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toRegex())
       .findAllGroups(2)
       .map { "$BASE_OBSERV_URL/webcam/${data.id}dir/$it" }
   }
@@ -361,7 +321,7 @@ class Arso(private val client: OkHttpClient) {
       when (rootElement.tagName) {
         "identifier" -> identifier = rootElement.childValue(0)
         "sender" -> sender = rootElement.childValue(0)
-        "sent" -> sent = rootElement.childValue(0)?.toInstant()
+        "sent" -> sent = rootElement.childValue(0)?.let { Instant.parse(it) }
         "status" -> status = rootElement.childValue(0)
         "msgType" -> msgType = rootElement.childValue(0)
         "scope" -> scope = rootElement.childValue(0)
@@ -395,9 +355,9 @@ class Arso(private val client: OkHttpClient) {
               "urgency" -> urgency = infoElement.childValue(0)
               "severity" -> severity = infoElement.childValue(0)
               "certainty" -> certainty = infoElement.childValue(0)
-              "effective" -> effective = infoElement.childValue(0)?.toInstant()
-              "onset" -> onset = infoElement.childValue(0)?.toInstant()
-              "expires" -> expires = infoElement.childValue(0)?.toInstant()
+              "effective" -> effective = infoElement.childValue(0)?.let { Instant.parse(it) }
+              "onset" -> onset = infoElement.childValue(0)?.let { Instant.parse(it) }
+              "expires" -> expires = infoElement.childValue(0)?.let { Instant.parse(it) }
               "senderName" -> senderName = infoElement.childValue(0)
               "headline" -> headline = infoElement.childValue(0)
               "description" -> description = infoElement.childValue(0) ?: ""

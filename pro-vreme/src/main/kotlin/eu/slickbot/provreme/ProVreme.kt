@@ -18,8 +18,11 @@ import org.jsoup.select.Elements
 class ProVreme(private val client: OkHttpClient) {
 
   fun getCities(): List<ProCity> {
-    return client.getResponseDocument(API_INDEX_URL)
-      .select("#profkoKraj > option")
+    return parseCities(client.getResponseDocument(API_INDEX_URL))
+  }
+
+  internal fun parseCities(document: Document): List<ProCity> {
+    return document.select("#profkoKraj > option")
       .filterFillers()
       .map { ProCity(it.`val`().toInt(), it.text()) }
       .distinct()
@@ -77,7 +80,7 @@ class ProVreme(private val client: OkHttpClient) {
         val titleCol = cols[0]
         val currentCol = cols[i]
 
-        val relativeImageUrl = currentCol.select("img")?.first()?.attr("src")
+        val relativeImageUrl = currentCol.select("img").first()?.attr("src")
         val imageUrl = relativeImageUrl?.let { "$API_BASE_URL/$it" }
 
         ProData(titleCol.text(), currentCol.text(), imageUrl)

@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import eu.slickbot.arso.model.ArsoSatelliteLength
 import eu.slickbot.arso.model.ArsoSatelliteScope
 import eu.slickbot.vremedo.repository.ArsoRepository
-import eu.slickbot.vremedo.utils.ComponentViewModel
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class SatelliteViewModel(
   private val arsoRepo: ArsoRepository,
-) : ComponentViewModel() {
+) : ViewModel() {
 
   private val _state = MutableStateFlow(SatelliteState())
   val state = _state.asStateFlow()

@@ -36,10 +36,6 @@ enum class ArsoCameraOrientation {
   N, NE, E, SE, S, SW, W, NW,
 }
 
-enum class ArsoWeatherScope {
-  SLOVENIA, EUROPE,
-}
-
 enum class ArsoAlertScope {
   SLOVENIA_CENTRAL,
   SLOVENIA_NW,

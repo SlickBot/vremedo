@@ -1,11 +1,11 @@
 package eu.slickbot.vremedo.screen.images
 
 import eu.slickbot.vremedo.utils.AppNavigation
-import eu.slickbot.vremedo.utils.ComponentViewModel
+import androidx.lifecycle.ViewModel
 
 class ImagesViewModel(
   private val navigation: AppNavigation,
-) : ComponentViewModel() {
+) : ViewModel() {
 
   fun onAladinClick() {
     navigation.navigateToAladin()

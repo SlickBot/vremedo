@@ -6,7 +6,8 @@ import eu.slickbot.vremedo.model.WeatherDay
 import eu.slickbot.vremedo.model.WeatherHours
 import eu.slickbot.vremedo.model.WeatherItem
 import eu.slickbot.vremedo.repository.WeatherRepository
-import eu.slickbot.vremedo.utils.ComponentViewModel
+import androidx.lifecycle.ViewModel
+import eu.slickbot.vremedo.DEFAULT_LOCATION
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,7 @@ import kotlinx.coroutines.withContext
 
 class WeatherViewModel(
   private val weatherRepository: WeatherRepository,
-) : ComponentViewModel() {
+) : ViewModel() {
 
   enum class Mode {
     DAY, HOURS,
@@ -61,7 +62,7 @@ class WeatherViewModel(
   private val _isLoadingWeather = MutableStateFlow(false)
   val isLoadingWeather = _isLoadingWeather.asStateFlow()
 
-  val isNight = weatherRepository.isNightFlow("Novo mesto")
+  val isNight = weatherRepository.isNightFlow(DEFAULT_LOCATION)
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), null)
 
   val filteredCities = combine(_cities, _searchInput) { cities, input ->
@@ -107,7 +108,7 @@ class WeatherViewModel(
       try {
         val cities = weatherRepository.getCities()
         _cities.update { cities }
-        _selectedCity.update { cities.find { it.name == "Novo mesto" } ?: cities.firstOrNull() }
+        _selectedCity.update { cities.find { it.name == DEFAULT_LOCATION } ?: cities.firstOrNull() }
         updateWeatherItems()
       } catch (e: Throwable) {
         // TODO: handle

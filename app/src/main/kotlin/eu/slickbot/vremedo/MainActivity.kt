@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
       val navController = rememberNavController()
       appNavigation.bind(navController)
 
-      val isNight by remember { weatherRepository.isNightFlow("Novo mesto") }.collectAsStateWithLifecycle(null)
+      val isNight by remember { weatherRepository.isNightFlow(DEFAULT_LOCATION) }.collectAsStateWithLifecycle(null)
       VremedoTheme(
         darkTheme = isNight ?: isSystemInDarkTheme(),
       ) {

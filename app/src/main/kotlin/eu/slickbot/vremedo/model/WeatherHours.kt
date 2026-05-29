@@ -6,11 +6,12 @@ data class WeatherHours(
   val dataList: List<WeatherData>,
 ) {
 
-  val startHour: Int
-    get() = name.split(" - ")[0].removeSuffix("h").toInt()
+  // name looks like "0h - 6h"; tolerate malformed scraped values instead of crashing.
+  val startHour: Int?
+    get() = name.substringBefore(" - ", "").trim().removeSuffix("h").toIntOrNull()
 
-  val endHour: Int
-    get() = name.split(" - ")[1].removeSuffix("h").toInt()
+  val endHour: Int?
+    get() = name.substringAfter(" - ", "").trim().removeSuffix("h").toIntOrNull()
 
 
   val temperatureText: String?
