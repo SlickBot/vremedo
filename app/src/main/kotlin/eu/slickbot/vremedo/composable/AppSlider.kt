@@ -1,6 +1,5 @@
 package eu.slickbot.vremedo.composable
 
-import android.os.Parcelable
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,12 +7,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import eu.slickbot.vremedo.theme.VremedoTheme
-import kotlinx.parcelize.Parcelize
 
 @Composable
 fun AppSlider(
@@ -37,26 +36,6 @@ fun AppSlider(
   )
 }
 
-@Parcelize
-class AppSliderStateSavable(
-  private val value: Float,
-  private val minValue: Float,
-  private val maxValue: Float,
-) : Parcelable {
-
-  constructor(savable: SliderBarState) : this(
-    savable.value,
-    savable.minValue,
-    savable.maxValue,
-  )
-
-  fun toState() = SliderBarState().also {
-    it.value = value
-    it.minValue = minValue
-    it.maxValue = maxValue
-  }
-}
-
 class SliderBarState {
 
   var value by mutableFloatStateOf(0f)
@@ -64,9 +43,15 @@ class SliderBarState {
   var maxValue by mutableFloatStateOf(0f)
 
   companion object {
-    val Saver: Saver<SliderBarState, AppSliderStateSavable> = Saver(
-      save = { AppSliderStateSavable(it) },
-      restore = { it.toState() },
+    val Saver: Saver<SliderBarState, *> = listSaver(
+      save = { listOf(it.value, it.minValue, it.maxValue) },
+      restore = { saved ->
+        SliderBarState().also {
+          it.value = saved[0]
+          it.minValue = saved[1]
+          it.maxValue = saved[2]
+        }
+      },
     )
   }
 }

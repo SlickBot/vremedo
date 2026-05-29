@@ -35,7 +35,7 @@ class Arso(private val client: OkHttpClient) {
 
   fun getCategoryGroups(): List<ArsoCategoryGroup> {
     val content = client.getResponseDocument(SERVICE_URL)
-      .selectFirst("td.vsebina")
+      .selectFirst("td.vsebina") ?: return emptyList()
 
     val groups = mutableListOf<ArsoCategoryGroup>()
     var currentGroup: ArsoCategoryGroup? = null
@@ -62,15 +62,7 @@ class Arso(private val client: OkHttpClient) {
   }
 
   fun getDataGroups(item: ArsoCategoryItem): List<ArsoDataGroup> {
-    val content = client.getResponseDocument("$BASE_URL${item.link}")
-      .selectFirst("div.content")
-      .selectFirst("tbody")
-      .select("tr")
-      .filterIndexed { index, _ -> index != 0 } // skip first item
-      .map {
-        val children = it.children()
-        println(children)
-      }
+    // TODO: not implemented (previously a non-functional stub).
     return emptyList()
   }
 
@@ -476,51 +468,4 @@ class Arso(private val client: OkHttpClient) {
 
     return ArsoAlert(identifier!!, sender!!, sent!!, status!!, msgType!!, scope!!, info)
   }
-}
-
-//val Element.numberOfNodes: Int
-//    get() = childNodes.length
-
-fun main() {
-  val client = OkHttpClient()
-  val arso = Arso(client)
-
-  val imageUrls1 = arso.getRadarImageUrls(
-    ArsoRadarLength.SHORT,
-    ArsoRadarScope.NEIGHBOURS,
-  )
-  println(imageUrls1.joinToString("\n"))
-
-  val imageUrls2 = arso.getSatelliteImageUrls(
-    ArsoSatelliteLength.LONG,
-    ArsoSatelliteScope.SLOVENIA,
-  )
-  println(imageUrls2.joinToString("\n"))
-
-  val imageUrls3 = arso.getAladinImageUrls(
-    ArsoAladinScope.ALPS_ADRIATIC,
-    ArsoAladinMode.RAIN,
-  )
-  println(imageUrls3.joinToString("\n"))
-
-  val cameraData = arso.getCameraImageData()
-  println(cameraData.joinToString("\n") { it.title })
-
-  val randomCameraData = cameraData.random()
-  val cameraImages = arso.getCameraImageUrls(
-    randomCameraData,
-    randomCameraData.orientations.random(),
-    ArsoCameraLength.LONG,
-  )
-  println(cameraImages.joinToString("\n"))
-
-  return
-
-//    val categoryGroups = arso.getArsoCategoryGroups()
-//    println(categoryGroups.joinToString("\n"))
-//
-//    println("\n")
-//
-//    val dataGroups = arso.getDataGroups(categoryGroups[0].items[0])
-//    println(dataGroups.joinToString("\n"))
 }

@@ -38,32 +38,30 @@ class WeatherRepository(
   private val sharedPrefs: SharedPreferences,
 ) {
 
-  private fun isNightCached(location: String): Boolean? {
-//    val dayLocation = sharedPrefs.getString("day_location", null) ?: return null
-//    if (location != dayLocation) return null
+  // Cached sunrise/sunset is only valid for the day it was stored on; a missing
+  // or different date means we must refresh from the network.
+  private fun isNightCached(): Boolean? {
+    val cachedDate = sharedPrefs.getString("day_date", null) ?: return null
+    if (cachedDate != localDateNow().toString()) return null
 
     val dayStart = sharedPrefs.getString("day_sunrise", null) ?: return null
     val dayEnd = sharedPrefs.getString("day_sunset", null) ?: return null
 
-    return localTimeNow() !in LocalTime.parse(dayStart) .. LocalTime.parse(dayEnd)
-//    return false
+    return localTimeNow() !in LocalTime.parse(dayStart)..LocalTime.parse(dayEnd)
   }
 
-  private suspend fun cacheSunriseSunsetTime(
-    location: String,
-    time: SunriseSunsetTime,
-  ) {
-    withContext(Dispatchers.Default) {
-      sharedPrefs.edit()
-//        .putString("day_location", location)
-        .putString("day_sunrise", time.sunrise.time.toString())
-        .putString("day_sunset", time.sunset.time.toString())
-        .commit()
-    }
+  private fun cacheTodaySunriseSunset(times: List<SunriseSunsetTime>) {
+    val today = localDateNow()
+    val todayTime = times.firstOrNull { it.sunrise.date == today } ?: return
+    sharedPrefs.edit()
+      .putString("day_date", today.toString())
+      .putString("day_sunrise", todayTime.sunrise.time.toString())
+      .putString("day_sunset", todayTime.sunset.time.toString())
+      .apply()
   }
 
   fun isNightFlow(location: String): Flow<Boolean> = flow {
-    isNightCached(location)?.let { emit(it) }
+    isNightCached()?.let { emit(it) }
     while (true) {
       if (lifecycle.isAtLeast(Lifecycle.State.STARTED)) {
         emit(isNight(location))
@@ -141,24 +139,25 @@ class WeatherRepository(
     }
   }
 
-  private suspend fun isDay(location: String): Boolean {
-    return withContext(Dispatchers.Default) {
-      getSunriseSunsetTime("sl", location).any {
-        localDateTimeNow() in it.sunrise..it.sunset
-      }
-    }
-  }
-
+  // Uses the cached value while it is still fresh for today; only hits the
+  // network (at most once per day) when the cache is missing or stale.
   private suspend fun isNight(location: String): Boolean {
-    return !isDay(location)
+    isNightCached()?.let { return it }
+
+    val times = getSunriseSunsetTime("sl", location)
+    isNightCached()?.let { return it }
+
+    // Fallback: today's entry was missing from the response, compute directly.
+    val now = localDateTimeNow()
+    return !times.any { now in it.sunrise..it.sunset }
   }
 
   private suspend fun getSunriseSunsetTime(
     language: String,
-    location: String
+    location: String,
   ): List<SunriseSunsetTime> {
-    return withContext(Dispatchers.Default) {
-      arso.getLocationInfo(language, location)
+    return withContext(Dispatchers.IO) {
+      val times = arso.getLocationInfo(language, location)
         .forecast6h.features.first() // there is always only one element
         .properties.days.map { day ->
           SunriseSunsetTime(
@@ -167,7 +166,8 @@ class WeatherRepository(
           )
         }
         .distinct()
-        .onEach { day -> cacheSunriseSunsetTime(location, day) }
+      cacheTodaySunriseSunset(times)
+      times
     }
   }
 

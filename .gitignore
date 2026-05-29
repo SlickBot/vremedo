@@ -3,6 +3,7 @@
 
 .gradle
 /build
+.kotlin
 
 local.properties
 
@@ -13,3 +14,9 @@ local.properties
 /captures
 
 *.jks
+
+# ai
+AGENTS.md
+.claude
+.serena
+.playwright-mcp

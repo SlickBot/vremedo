@@ -54,7 +54,7 @@ class ProVreme(private val client: OkHttpClient) {
   }
 
   private fun Document.selectRows(): Elements {
-    return select("table#numwrf").first().select("tr")
+    return select("table#numwrf").first()!!.select("tr")
   }
 
   private inline fun Elements.parseColumns(toColumn: (Element, String, List<ProData>) -> Column): List<Column> {
@@ -66,7 +66,7 @@ class ProVreme(private val client: OkHttpClient) {
       val titleElement = get(0).select("td")[i]
       val imageElement = get(1).select("td")[i]
 
-      val relativeUrl = imageElement.select("img").first().attr("src")
+      val relativeUrl = imageElement.select("img").first()!!.attr("src")
       val iconUrl = "$API_BASE_URL/$relativeUrl"
 
       val dataList = elements.subList(2, size).mapNotNull { element ->
@@ -89,7 +89,7 @@ class ProVreme(private val client: OkHttpClient) {
   }
 
   private fun parseDays(titleElement: Element, iconUrl: String, data: List<ProData>): Column {
-    val link = titleElement.select("a").first()
+    val link = titleElement.select("a").first()!!
     val id = link.attr("href").split("=").last().toInt()
     val text = link.text()
     return Column(id, text, iconUrl, data)

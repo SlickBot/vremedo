@@ -37,6 +37,7 @@ class AppNavigation() {
               Screen.Aladin.route -> Screen.Aladin
               Screen.Radar.route -> Screen.Radar
               Screen.Satellite.route -> Screen.Satellite
+              Screen.Cameras.route -> Screen.Cameras
               else -> screen
             }
           }
