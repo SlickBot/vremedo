@@ -78,9 +78,9 @@ happily next to a release install.
 
 ### Release builds
 
-The release build is signed, so it needs a keystore. The signing config and the
-version are read from environment variables, which keeps secrets out of the repo
-and plays nicely with CI:
+The release build is signed, so it needs a keystore. The signing config is read
+from environment variables, which keeps secrets out of the repo and plays nicely
+with CI.
 
 ```bash
 export KEYSTORE_FILE=/path/to/vremedo.jks
