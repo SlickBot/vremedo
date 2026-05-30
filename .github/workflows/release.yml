@@ -29,7 +29,7 @@ jobs:
 
       - name: Decode keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "${{ github.workspace }}/app/release-key.jks"
+          printf '%s' "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '[:space:]' | base64 -d > "${{ github.workspace }}/app/release-key.jks"
 
       - name: Build release and debug APKs
         env:
