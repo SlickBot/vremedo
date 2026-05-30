@@ -1,6 +1,6 @@
 package eu.slickbot.arso.model
 
-import kotlin.time.Instant
+import kotlinx.datetime.Instant
 
 data class ArsoAlert(
   val identifier: String,
