@@ -45,43 +45,35 @@ class AppNavigation {
   }
 
   fun navigateToWeather() {
-    if (screen.value == Screen.Weather) return
-    navigate(Screen.Weather) {
-      popUpToScreen(Screen.Weather)
-      launchSingleTop = true
-    }
+    navigateToTopLevel(Screen.Weather)
   }
 
   fun navigateToAladin() {
-    if (screen.value == Screen.Aladin) return
-    navigate(Screen.Aladin) {
-      launchSingleTop = true
-    }
+    navigateToTopLevel(Screen.Aladin)
   }
 
   fun navigateToRadar() {
-    if (screen.value == Screen.Radar) return
-    navigate(Screen.Radar) {
-      launchSingleTop = true
-    }
+    navigateToTopLevel(Screen.Radar)
   }
 
   fun navigateToSatellite() {
-    if (screen.value == Screen.Satellite) return
-    navigate(Screen.Satellite) {
-      launchSingleTop = true
-    }
+    navigateToTopLevel(Screen.Satellite)
   }
 
   fun navigateToCameras() {
-    if (screen.value == Screen.Cameras) return
-    navigate(Screen.Cameras) {
-      launchSingleTop = true
-    }
+    navigateToTopLevel(Screen.Cameras)
   }
 
 
   /* Helpers */
+
+  private fun navigateToTopLevel(screen: Screen) {
+    if (this.screen.value == screen) return
+    navigate(screen) {
+      popUpToScreen(Screen.Weather)
+      launchSingleTop = true
+    }
+  }
 
   private fun navigate(
     screen: Screen,
