@@ -1,6 +1,7 @@
 package eu.slickbot.arso
 
 import eu.slickbot.arso.model.*
+import eu.slickbot.scrape.utils.LiveNetwork
 import eu.slickbot.scrape.utils.UserAgentInterceptor
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -10,7 +11,9 @@ import org.junit.Assert
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.experimental.categories.Category
 
+@Category(LiveNetwork::class)
 class ArsoTest {
 
   companion object {

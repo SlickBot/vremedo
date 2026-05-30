@@ -29,17 +29,19 @@ class ProVreme(private val client: OkHttpClient) {
   }
 
   fun getDaysFor(cityId: Int): List<ProDay> {
-    return client.getResponseDocument("$API_WEEK_URL&m=$cityId")
-      .selectRows()
-      .parseColumns(::parseDays)
-      .toDays()
+    return parseDays(client.getResponseDocument("$API_WEEK_URL&m=$cityId"))
+  }
+
+  internal fun parseDays(document: Document): List<ProDay> {
+    return document.selectRows().parseColumns(::toDayColumn).toDays()
   }
 
   fun getHoursFor(cityId: Int, dayId: Int): List<ProHours> {
-    return client.getResponseDocument("$API_DAY_URL&m=$cityId&d=$dayId")
-      .selectRows()
-      .parseColumns(::parseHours)
-      .toHours()
+    return parseHours(client.getResponseDocument("$API_DAY_URL&m=$cityId&d=$dayId"))
+  }
+
+  internal fun parseHours(document: Document): List<ProHours> {
+    return document.selectRows().parseColumns(::toHourColumn).toHours()
   }
 
   private fun Elements.filterFillers(): List<Element> {
@@ -91,14 +93,14 @@ class ProVreme(private val client: OkHttpClient) {
     return list.toList()
   }
 
-  private fun parseDays(titleElement: Element, iconUrl: String, data: List<ProData>): Column {
+  private fun toDayColumn(titleElement: Element, iconUrl: String, data: List<ProData>): Column {
     val link = titleElement.select("a").first()!!
     val id = link.attr("href").split("=").last().toInt()
     val text = link.text()
     return Column(id, text, iconUrl, data)
   }
 
-  private fun parseHours(titleElement: Element, iconUrl: String, data: List<ProData>): Column {
+  private fun toHourColumn(titleElement: Element, iconUrl: String, data: List<ProData>): Column {
     val text = titleElement.text()
     return Column(null, text, iconUrl, data)
   }

@@ -2,13 +2,16 @@ package eu.slickbot.provreme
 
 import eu.slickbot.provreme.model.ProCity
 import eu.slickbot.provreme.model.ProDay
+import eu.slickbot.scrape.utils.LiveNetwork
 import eu.slickbot.scrape.utils.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import org.junit.Assert
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.experimental.categories.Category
 
+@Category(LiveNetwork::class)
 class ProVremeTest {
 
   companion object {

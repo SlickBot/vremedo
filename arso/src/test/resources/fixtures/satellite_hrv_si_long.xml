@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><pujs><![CDATA[
+var IMG = ACADEMA.URL.OBSERV + '/satellite/';
+var AT = ACADEMA.TEXT.AT;
+var Y = ACADEMA.TEXT.YESTERDAY;
+var T = ACADEMA.TEXT.TODAY;
+AcademaPUJS.set({
+navigator:['europe','slovenia'],
+shIcon:['LATEST','LONG'],
+shDirection:[],
+timeline:[
+{desc:T+' '+AT+' '+'6:00 CEST',url:IMG+'msg_20260530-0400_hrv_si.jpg',from:-1650,to:-1170}
+,{desc:T+' '+AT+' '+'7:00 CEST',url:IMG+'msg_20260530-0500_hrv_si.jpg',from:-1170,to:-1110}
+,{desc:T+' '+AT+' '+'8:00 CEST',url:IMG+'msg_20260530-0600_hrv_si.jpg',from:-1110,to:-1050}
+,{desc:T+' '+AT+' '+'9:00 CEST',url:IMG+'msg_20260530-0700_hrv_si.jpg',from:-1050,to:-990}
+,{desc:T+' '+AT+' '+'10:00 CEST',url:IMG+'msg_20260530-0800_hrv_si.jpg',from:-990,to:-930}
+,{desc:T+' '+AT+' '+'11:00 CEST',url:IMG+'msg_20260530-0900_hrv_si.jpg',from:-930,to:-870}
+,{desc:T+' '+AT+' '+'12:00 CEST',url:IMG+'msg_20260530-1000_hrv_si.jpg',from:-870,to:-810}
+,{desc:T+' '+AT+' '+'13:00 CEST',url:IMG+'msg_20260530-1100_hrv_si.jpg',from:-810,to:-750}
+,{desc:T+' '+AT+' '+'14:00 CEST',url:IMG+'msg_20260530-1200_hrv_si.jpg',from:-750,to:-690}
+,{desc:T+' '+AT+' '+'15:00 CEST',url:IMG+'msg_20260530-1300_hrv_si.jpg',from:-690,to:-630}
+,{desc:T+' '+AT+' '+'16:00 CEST',url:IMG+'msg_20260530-1400_hrv_si.jpg',from:-630,to:-570}
+,{desc:T+' '+AT+' '+'17:00 CEST',url:IMG+'msg_20260530-1500_hrv_si.jpg',from:-570,to:-510}
+,{desc:T+' '+AT+' '+'18:00 CEST',url:IMG+'msg_20260530-1600_hrv_si.jpg',from:-510,to:-450}
+,{desc:T+' '+AT+' '+'19:00 CEST',url:IMG+'msg_20260530-1700_hrv_si.jpg',from:-450,to:-390}
+,{desc:T+' '+AT+' '+'20:00 CEST',url:IMG+'msg_20260530-1800_hrv_si.jpg',from:-390,to:-330}
+]});]]></pujs>

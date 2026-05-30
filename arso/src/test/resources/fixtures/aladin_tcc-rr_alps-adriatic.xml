@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><pujs><![CDATA[
+var IMG = ACADEMA.URL.MODEL + '/aladin/field/';
+var AT = ACADEMA.TEXT.AT;
+var Y = ACADEMA.TEXT.YESTERDAY;
+var T = ACADEMA.TEXT.TODAY;
+AcademaPUJS.set({
+navigator:['slovenia_neighbours','europe_aa'],
+shIcon:['RR','T2M','VA10M','VF925','VF850'],
+shDirection:[],
+timeline:[
+{desc:T+' '+AT+' '+'17:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_003.png',from:-810,to:-450}
+,{desc:T+' '+AT+' '+'20:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_006.png',from:-450,to:-270}
+,{desc:T+' '+AT+' '+'23:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_009.png',from:-270,to:-90}
+,{desc:'2026-05-31'+' '+AT+' '+'2:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_012.png',from:-90,to:90}
+,{desc:'2026-05-31'+' '+AT+' '+'5:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_015.png',from:90,to:270}
+,{desc:'2026-05-31'+' '+AT+' '+'8:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_018.png',from:270,to:450}
+,{desc:'2026-05-31'+' '+AT+' '+'11:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_021.png',from:450,to:630}
+,{desc:'2026-05-31'+' '+AT+' '+'14:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_024.png',from:630,to:810}
+,{desc:'2026-05-31'+' '+AT+' '+'17:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_027.png',from:810,to:990}
+,{desc:'2026-05-31'+' '+AT+' '+'20:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_030.png',from:990,to:1170}
+,{desc:'2026-05-31'+' '+AT+' '+'23:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_033.png',from:1170,to:1350}
+,{desc:'2026-06-01'+' '+AT+' '+'2:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_036.png',from:1350,to:1530}
+,{desc:'2026-06-01'+' '+AT+' '+'5:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_039.png',from:1530,to:1710}
+,{desc:'2026-06-01'+' '+AT+' '+'8:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_042.png',from:1710,to:1890}
+,{desc:'2026-06-01'+' '+AT+' '+'11:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_045.png',from:1890,to:2070}
+,{desc:'2026-06-01'+' '+AT+' '+'14:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_048.png',from:2070,to:2250}
+,{desc:'2026-06-01'+' '+AT+' '+'17:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_051.png',from:2250,to:2430}
+,{desc:'2026-06-01'+' '+AT+' '+'20:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_054.png',from:2430,to:2610}
+,{desc:'2026-06-01'+' '+AT+' '+'23:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_057.png',from:2610,to:2790}
+,{desc:'2026-06-02'+' '+AT+' '+'2:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_060.png',from:2790,to:2970}
+,{desc:'2026-06-02'+' '+AT+' '+'5:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_063.png',from:2970,to:3150}
+,{desc:'2026-06-02'+' '+AT+' '+'8:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_066.png',from:3150,to:3330}
+,{desc:'2026-06-02'+' '+AT+' '+'11:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_069.png',from:3330,to:3510}
+,{desc:'2026-06-02'+' '+AT+' '+'14:00 CEST',url:IMG+'as_20260530-1200_tcc-rr_alps-adriatic_072.png',from:3510,to:3690}
+]});]]></pujs>

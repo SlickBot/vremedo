@@ -47,7 +47,10 @@ class Arso(private val client: OkHttpClient) {
       ArsoSatelliteScope.EUROPE -> "ir_sateu"
     }
     val url = "${BASE_DATA_URL}/timeline_satellite_${scopeText}_${lengthText}.xml"
-    val response = client.getResponseString(url)
+    return parseSatelliteImageUrls(client.getResponseString(url))
+  }
+
+  internal fun parseSatelliteImageUrls(response: String): List<String> {
     val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toPattern()
     val matcher = pattern.matcher(response)
     val imageUrls = matcher.findAllGroups(2)
@@ -72,8 +75,11 @@ class Arso(private val client: OkHttpClient) {
       ArsoAladinMode.WIND_1500M -> "r-t-vf850"
     }
     val url = "${BASE_DATA_URL}/timeline_aladin_${modeText}_${scopeText}.xml"
-    val responseString = client.getResponseString(url)
-    return responseString
+    return parseAladinImageUrls(client.getResponseString(url))
+  }
+
+  internal fun parseAladinImageUrls(response: String): List<String> {
+    return response
       .matcher("\\{(.*)url:IMG\\+'(.*?)',(.*)\\}".toRegex())
       .findAllGroups(2)
       .map { "$BASE_MODEL_URL/aladin/field/$it" }
@@ -95,7 +101,10 @@ class Arso(private val client: OkHttpClient) {
       ArsoRadarScope.NEIGHBOURS -> "si-neighbours"
     }
     val url = "${BASE_DATA_URL}/timeline_radar_${scopeText}_${lengthText}.xml"
-    val response = client.getResponseString(url)
+    return parseRadarImageUrls(client.getResponseString(url))
+  }
+
+  internal fun parseRadarImageUrls(response: String): List<String> {
     val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toPattern()
     val matcher = pattern.matcher(response)
     val imageUrls = matcher.findAllGroups(2)
@@ -103,13 +112,26 @@ class Arso(private val client: OkHttpClient) {
   }
 
   fun getCameraImageData(): List<ArsoCameraData> {
+    val orientationsUrl = "$BASE_URL/uploads/meteo/app/webmet/pujs/prog/index.xml"
+    val titlesUrl = "$BASE_URL/uploads/meteo/app/webmet/pujs/locale/sl/title.xml"
+    val camerasUrl = "$BASE_URL/uploads/meteo/app/webmet/pujs/prog/navigator/webcam.xml"
+
+    return parseCameraImageData(
+      client.getResponseString(orientationsUrl),
+      client.getResponseString(titlesUrl),
+      client.getResponseString(camerasUrl),
+    )
+  }
+
+  internal fun parseCameraImageData(
+    orientationsResponse: String,
+    titlesResponse: String,
+    camerasResponse: String,
+  ): List<ArsoCameraData> {
 
     /*
      * Orientation
      */
-
-    val orientationsUrl = "$BASE_URL/uploads/meteo/app/webmet/pujs/prog/index.xml"
-    val orientationsResponse = client.getResponseString(orientationsUrl)
 
     // ids
     // there are many 'doms=...' declarations in response
@@ -182,9 +204,6 @@ class Arso(private val client: OkHttpClient) {
      * Titles
      */
 
-    val titlesUrl = "$BASE_URL/uploads/meteo/app/webmet/pujs/locale/sl/title.xml"
-    val titlesResponse = client.getResponseString(titlesUrl)
-
     val titlesMap = titlesResponse.indicesOf("NAV_")
       .associate { startIdx ->
         val middleIdx = titlesResponse.indexOf(":\"", startIndex = startIdx)
@@ -197,10 +216,6 @@ class Arso(private val client: OkHttpClient) {
     /*
      * Cameras
      */
-
-    val camerasUrl = "$BASE_URL/uploads/meteo/app/webmet/pujs/prog/navigator/webcam.xml"
-    val camerasResponse = client.getResponseString(camerasUrl)
-//        val camerasResponse = CAMERA_DATA
 
     // webcam.xml nests the real camera list inside an outer region grouping:
     //   domains:[{ region..., domains:[{ cameras... }] }]
@@ -262,7 +277,11 @@ class Arso(private val client: OkHttpClient) {
     val url =
       "$BASE_URL/uploads/probase/www/plus/timeline/timeline_webcam_${data.id}${orientationText}_${lengthText}.xml"
 
-    return client.getResponseString(url)
+    return parseCameraImageUrls(client.getResponseString(url), data)
+  }
+
+  internal fun parseCameraImageUrls(response: String, data: ArsoCameraData): List<String> {
+    return response
       .matcher("\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toRegex())
       .findAllGroups(2)
       .map { "$BASE_OBSERV_URL/webcam/${data.id}dir/$it" }
@@ -298,8 +317,10 @@ class Arso(private val client: OkHttpClient) {
     }
 
     val url = "$BASE_URL/uploads/probase/www/warning/text/sl/warning_${scopeText}_latest_CAP.xml"
-    val responseString = client.getResponseString(url)
+    return parseAlert(client.getResponseString(url))
+  }
 
+  internal fun parseAlert(responseString: String): ArsoAlert {
     val factory = DocumentBuilderFactory.newInstance()
     val builder = factory.newDocumentBuilder()
     val source = InputSource(StringReader(responseString))

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><pujs><![CDATA[
+var IMG = ACADEMA.URL.IMAGE + '/radar/';
+var AT = ACADEMA.TEXT.AT;
+var Y = ACADEMA.TEXT.YESTERDAY;
+var T = ACADEMA.TEXT.TODAY;
+AcademaPUJS.set({
+navigator:['slovenia','slovenia_neighbours'],
+shIcon:['LATEST','SHORT','LONG'],
+shDirection:[],
+timeline:[
+{desc:T+' '+AT+' '+'20:55 CEST',url:IMG+'si0_20260530-1855_zm_si-neighbours.jpg',from:-307,to:-303}
+,{desc:T+' '+AT+' '+'21:00 CEST',url:IMG+'si0_20260530-1900_zm_si-neighbours.jpg',from:-303,to:-298}
+,{desc:T+' '+AT+' '+'21:05 CEST',url:IMG+'si0_20260530-1905_zm_si-neighbours.jpg',from:-298,to:-293}
+,{desc:T+' '+AT+' '+'21:10 CEST',url:IMG+'si0_20260530-1910_zm_si-neighbours.jpg',from:-293,to:-288}
+,{desc:T+' '+AT+' '+'21:15 CEST',url:IMG+'si0_20260530-1915_zm_si-neighbours.jpg',from:-288,to:-283}
+,{desc:T+' '+AT+' '+'21:20 CEST',url:IMG+'si0_20260530-1920_zm_si-neighbours.jpg',from:-283,to:-278}
+,{desc:T+' '+AT+' '+'21:25 CEST',url:IMG+'si0_20260530-1925_zm_si-neighbours.jpg',from:-278,to:-273}
+,{desc:T+' '+AT+' '+'21:30 CEST',url:IMG+'si0_20260530-1930_zm_si-neighbours.jpg',from:-273,to:-268}
+,{desc:T+' '+AT+' '+'21:35 CEST',url:IMG+'si0_20260530-1935_zm_si-neighbours.jpg',from:-268,to:-263}
+,{desc:T+' '+AT+' '+'21:40 CEST',url:IMG+'si0_20260530-1940_zm_si-neighbours.jpg',from:-263,to:-258}
+,{desc:T+' '+AT+' '+'21:45 CEST',url:IMG+'si0_20260530-1945_zm_si-neighbours.jpg',from:-258,to:-253}
+,{desc:T+' '+AT+' '+'21:50 CEST',url:IMG+'si0_20260530-1950_zm_si-neighbours.jpg',from:-253,to:-248}
+,{desc:T+' '+AT+' '+'21:55 CEST',url:IMG+'si0_20260530-1955_zm_si-neighbours.jpg',from:-248,to:-243}
+,{desc:T+' '+AT+' '+'22:00 CEST',url:IMG+'si0_20260530-2000_zm_si-neighbours.jpg',from:-243,to:-238}
+,{desc:T+' '+AT+' '+'22:05 CEST',url:IMG+'si0_20260530-2005_zm_si-neighbours.jpg',from:-238,to:-233}
+,{desc:T+' '+AT+' '+'22:10 CEST',url:IMG+'si0_20260530-2010_zm_si-neighbours.jpg',from:-233,to:-228}
+,{desc:T+' '+AT+' '+'22:15 CEST',url:IMG+'si0_20260530-2015_zm_si-neighbours.jpg',from:-228,to:-223}
+,{desc:T+' '+AT+' '+'22:20 CEST',url:IMG+'si0_20260530-2020_zm_si-neighbours.jpg',from:-223,to:-218}
+,{desc:T+' '+AT+' '+'22:25 CEST',url:IMG+'si0_20260530-2025_zm_si-neighbours.jpg',from:-218,to:-213}
+,{desc:T+' '+AT+' '+'22:30 CEST',url:IMG+'si0_20260530-2030_zm_si-neighbours.jpg',from:-213,to:-208}
+,{desc:T+' '+AT+' '+'22:35 CEST',url:IMG+'si0_20260530-2035_zm_si-neighbours.jpg',from:-208,to:-203}
+,{desc:T+' '+AT+' '+'22:40 CEST',url:IMG+'si0_20260530-2040_zm_si-neighbours.jpg',from:-203,to:-198}
+,{desc:T+' '+AT+' '+'22:45 CEST',url:IMG+'si0_20260530-2045_zm_si-neighbours.jpg',from:-198,to:-193}
+,{desc:T+' '+AT+' '+'22:50 CEST',url:IMG+'si0_20260530-2050_zm_si-neighbours.jpg',from:-193,to:-188}
+,{desc:T+' '+AT+' '+'22:55 CEST',url:IMG+'si0_20260530-2055_zm_si-neighbours.jpg',from:-188,to:-183}
+,{desc:T+' '+AT+' '+'23:00 CEST',url:IMG+'si0_20260530-2100_zm_si-neighbours.jpg',from:-183,to:-178}
+,{desc:T+' '+AT+' '+'23:05 CEST',url:IMG+'si0_20260530-2105_zm_si-neighbours.jpg',from:-178,to:-173}
+,{desc:T+' '+AT+' '+'23:10 CEST',url:IMG+'si0_20260530-2110_zm_si-neighbours.jpg',from:-173,to:-168}
+,{desc:T+' '+AT+' '+'23:15 CEST',url:IMG+'si0_20260530-2115_zm_si-neighbours.jpg',from:-168,to:-163}
+,{desc:T+' '+AT+' '+'23:20 CEST',url:IMG+'si0_20260530-2120_zm_si-neighbours.jpg',from:-163,to:-158}
+,{desc:T+' '+AT+' '+'23:25 CEST',url:IMG+'si0_20260530-2125_zm_si-neighbours.jpg',from:-158,to:-153}
+,{desc:T+' '+AT+' '+'23:30 CEST',url:IMG+'si0_20260530-2130_zm_si-neighbours.jpg',from:-153,to:-148}
+,{desc:T+' '+AT+' '+'23:35 CEST',url:IMG+'si0_20260530-2135_zm_si-neighbours.jpg',from:-148,to:-143}
+,{desc:T+' '+AT+' '+'23:40 CEST',url:IMG+'si0_20260530-2140_zm_si-neighbours.jpg',from:-143,to:-138}
+,{desc:T+' '+AT+' '+'23:45 CEST',url:IMG+'si0_20260530-2145_zm_si-neighbours.jpg',from:-138,to:-133}
+,{desc:T+' '+AT+' '+'23:50 CEST',url:IMG+'si0_20260530-2150_zm_si-neighbours.jpg',from:-133,to:-128}
+]});]]></pujs>

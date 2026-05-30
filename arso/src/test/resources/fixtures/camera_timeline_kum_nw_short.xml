@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><pujs><![CDATA[
+var IMG = ACADEMA.URL.IMAGE + '/webcam/KUM_dir/';
+var AT = ACADEMA.TEXT.AT;
+var Y = ACADEMA.TEXT.YESTERDAY;
+var T = ACADEMA.TEXT.TODAY;
+AcademaPUJS.set({
+navigator:['AJDOV-INA_DOLENJE_','BLEGOS_','BOVEC_','CELJE_MEDLOG_','CERKN-JEZ_','JERUZ-LEM_','KANIN_','KOPER_MARKOVEC_','KOREN-SED_','KREDA-ICA_','KRVAVEC_','KUM_','LISCA_','LJUBL-ANA_BEZIGRAD_','LJUBL-ANA_BRNIK_','LOGAR-DOL_','MARIBOR_VRBAN-PLA_','MIKLAVZ_NA-GOR_','MURSK-SOB_','NANOS_','NOVA-GOR_BILJE_','NOVO-MES_','OTLICA_','PASJA-RAV_','PLANINA_V-POD_','PORTOROZ_SECOVLJE_','POSTOJNA_','PREDEL_','RADEG-NDA_','ROGLA_','RUDNO-POL_','SEBRE-VRH_','SLAVNIK_','SLOVE-GRA_','SVISCAKI_','TOLMIN_VOLCE_','TROJANE_LIMOVCE_','URSLJ-GOR_','VOGEL_','VRHNIKA_','VRSIC_','ZGORN-KAP_','ZGORN-SOR_'],
+shIcon:['LATEST','SHORT','LONG'],
+shDirection:['nw','s','e'],
+timeline:[
+{desc:T+' '+AT+' '+'20:50 CEST',url:IMG+'siwc_20260530-1850_KUM_nw.jpg',from:-315,to:-305}
+,{desc:T+' '+AT+' '+'21:00 CEST',url:IMG+'siwc_20260530-1900_KUM_nw.jpg',from:-305,to:-295}
+,{desc:T+' '+AT+' '+'21:10 CEST',url:IMG+'siwc_20260530-1910_KUM_nw.jpg',from:-295,to:-285}
+,{desc:T+' '+AT+' '+'21:20 CEST',url:IMG+'siwc_20260530-1920_KUM_nw.jpg',from:-285,to:-275}
+,{desc:T+' '+AT+' '+'21:30 CEST',url:IMG+'siwc_20260530-1930_KUM_nw.jpg',from:-275,to:-265}
+,{desc:T+' '+AT+' '+'21:40 CEST',url:IMG+'siwc_20260530-1940_KUM_nw.jpg',from:-265,to:-255}
+,{desc:T+' '+AT+' '+'21:50 CEST',url:IMG+'siwc_20260530-1950_KUM_nw.jpg',from:-255,to:-245}
+,{desc:T+' '+AT+' '+'22:00 CEST',url:IMG+'siwc_20260530-2000_KUM_nw.jpg',from:-245,to:-235}
+,{desc:T+' '+AT+' '+'22:10 CEST',url:IMG+'siwc_20260530-2010_KUM_nw.jpg',from:-235,to:-225}
+,{desc:T+' '+AT+' '+'22:20 CEST',url:IMG+'siwc_20260530-2020_KUM_nw.jpg',from:-225,to:-215}
+,{desc:T+' '+AT+' '+'22:30 CEST',url:IMG+'siwc_20260530-2030_KUM_nw.jpg',from:-215,to:-205}
+,{desc:T+' '+AT+' '+'22:40 CEST',url:IMG+'siwc_20260530-2040_KUM_nw.jpg',from:-205,to:-195}
+,{desc:T+' '+AT+' '+'22:50 CEST',url:IMG+'siwc_20260530-2050_KUM_nw.jpg',from:-195,to:-185}
+]});]]></pujs>

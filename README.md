@@ -12,7 +12,7 @@ webcams.
 
 ---
 
-`Vreme` is Slovenian for *weather*. `Edo` is a friend whose face ended up as the
+Vreme is Slovenian for weather. Edo is a friend whose face ended up as the
 app icon. Put them together, and you get Vremedo, which is mostly a personal
 project: I wanted the ARSO forecasts and imagery I check every day in one place,
 without the official site's layout, and an excuse to build something
@@ -36,9 +36,9 @@ and all the maps, webcams and the sunrise/sunset times come straight from
   forecast: temperature, pressure, wind speed and direction, rain, snow,
   humidity and visibility, plus a drawn temperature graph for the day.
 - **ALADIN** - the animated ARSO model maps (rain & clouds, temperature, wind at
-  ground / 700 m / 1500 m) for Slovenia and the wider Alps–Adriatic region.
+  ground / 700 m / 1500 m) for Slovenia and the wider Alps-Adriatic region.
 - **Radar** - precipitation radar loops, short or long range, Slovenia or its
-  neighbours.
+  neighbors.
 - **Satellite** - visible (HRV) and infrared satellite imagery.
 - **Webcams** - the ARSO network of public cameras, browsable by location and
   viewing direction, played back as a timelapse.
@@ -55,13 +55,10 @@ Jsoup · kotlinx-datetime & coroutines · Timber · AGP 9. `minSdk` 26, `targetS
 
 The project is split by data source rather than by layer:
 
-- `:pro-vreme` - scraping and models for the pro-vreme.net forecasts.
-- `:arso` - the same for the ARSO maps, webcams and sun times.
-- `:scrape-utils` - the Jsoup glue both of those lean on.
-- `:app` - the Compose UI sitting on top of all of it.
-
-The point of the split is selfish: when one site rearranges its HTML, the mess
-stays inside one module instead of leaking through the whole app.
+- `:pro-vreme` - scraping and models for the pro-vreme.net.
+- `:arso` - scraping and models for the ARSO.
+- `:scrape-utils` - scraping utilities.
+- `:app` - the Compose UI.
 
 ## Building
 
@@ -96,5 +93,5 @@ export KEY_PASSWORD=...
 Vremedo is an unofficial, non-commercial hobby project. It is not affiliated with
 or endorsed by ARSO or pro-vreme.net - it just displays their public data. All
 forecasts, imagery and warnings belong to their respective sources; for anything
-you actually need to rely on, go to [pro-vreme.net](https://www.pro-vreme.net)
+you actually need to rely on, go to [pro-vreme.net](https://www.pro-vreme.net) 
 or [meteo.arso.gov.si](https://meteo.arso.gov.si).

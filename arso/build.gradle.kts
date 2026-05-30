@@ -36,6 +36,16 @@ configure<LibraryExtension> {
   }
 }
 
+tasks.withType<Test>().configureEach {
+  useJUnit {
+    if (project.hasProperty("liveTests")) {
+      includeCategories("eu.slickbot.scrape.utils.LiveNetwork")
+    } else {
+      excludeCategories("eu.slickbot.scrape.utils.LiveNetwork")
+    }
+  }
+}
+
 dependencies {
   // Network
   api(libs.okhttp.logging.interceptor)
