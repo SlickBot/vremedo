@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.slickbot.vremedo.theme.VremedoTheme
+import eu.slickbot.vremedo.theme.toolbarTitle
 import kotlinx.coroutines.launch
 
 private val SPEED_PRESETS = listOf(1, 2, 4, 8, 15)
@@ -127,17 +128,22 @@ fun ImageScreen(
         ToolbarIcon(
           imageVector = Icons.Default.Menu,
           contentDescription = "menu",
+          tint = Color.White,
           onClick = ::openMenu,
         )
-        ToolbarTitle(
-          modifier = Modifier.weight(1f),
-          value = title,
-          readOnly = true,
+        Text(
+          modifier = Modifier
+            .weight(1f)
+            .padding(start = 4.dp),
+          text = title,
+          style = MaterialTheme.typography.toolbarTitle,
+          color = Color.White,
         )
         buttonLeft?.let {
           ToolbarIcon(
             imageVector = it.icon,
             contentDescription = it.text,
+            tint = Color.White,
             onClick = it.onClick,
           )
         }
@@ -145,6 +151,7 @@ fun ImageScreen(
           ToolbarIcon(
             imageVector = it.icon,
             contentDescription = it.text,
+            tint = Color.White,
             onClick = it.onClick,
           )
         }

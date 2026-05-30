@@ -142,6 +142,19 @@ fun DrawerSourceItem(
   }
 }
 
+@Composable
+fun DrawerTextItem(
+  text: String,
+  modifier: Modifier = Modifier,
+) {
+  Text(
+    modifier = modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+    text = text,
+    style = MaterialTheme.typography.bodySmall,
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+  )
+}
+
 @Preview(showBackground = true, heightDp = 420)
 @Composable
 private fun DrawerScaffoldPreview() {

@@ -12,10 +12,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalView
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
@@ -59,6 +63,15 @@ class MainActivity : ComponentActivity() {
       appNavigation.bind(navController)
 
       val isNight by remember { weatherRepository.isNightFlow(DEFAULT_LOCATION) }.collectAsStateWithLifecycle(null)
+      val currentScreen by appNavigation.screen.collectAsState()
+
+      val view = LocalView.current
+      val lightStatusBarIcons = isNight == false && currentScreen == Screen.Weather
+      SideEffect {
+        val window = (view.context as ComponentActivity).window
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = lightStatusBarIcons
+      }
+
       VremedoTheme(
         darkTheme = isNight ?: isSystemInDarkTheme(),
       ) {

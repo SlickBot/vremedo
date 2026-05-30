@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import eu.slickbot.vremedo.BuildConfig
 import eu.slickbot.vremedo.R
 import eu.slickbot.vremedo.screen.Screen
 import eu.slickbot.vremedo.theme.VremedoTheme
@@ -170,6 +171,7 @@ private fun DataSourcesFooter() {
       description = "Weather forecasts",
       onClick = { open(PRO_VREME_URL) },
     )
+    DrawerTextItem(text = "Version ${BuildConfig.VERSION_NAME}")
   }
 }
 
