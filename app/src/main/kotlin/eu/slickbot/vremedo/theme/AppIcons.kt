@@ -70,7 +70,7 @@ object AppIcons {
         stroke = SolidColor(Color(0xFF464455)),
         strokeLineWidth = 2.0f,
         strokeLineCap = Round,
-        strokeLineJoin = StrokeJoin.Companion.Round,
+        strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 4.0f,
         pathFillType = NonZero,
       ) {
@@ -159,7 +159,7 @@ object AppIcons {
         stroke = SolidColor(Color(0xFF000000)),
         strokeLineWidth = 0.6f,
         strokeLineCap = Round,
-        strokeLineJoin = StrokeJoin.Companion.Round,
+        strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 4.0f,
         pathFillType = NonZero,
       ) {
@@ -234,7 +234,7 @@ object AppIcons {
         stroke = SolidColor(Color(0xFF000000)),
         strokeLineWidth = 2.0f,
         strokeLineCap = Round,
-        strokeLineJoin = StrokeJoin.Companion.Round,
+        strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 4.0f,
         pathFillType = NonZero,
       ) {
@@ -269,7 +269,7 @@ object AppIcons {
         stroke = SolidColor(Color(0xFF000000)),
         strokeLineWidth = 2.0f,
         strokeLineCap = Round,
-        strokeLineJoin = StrokeJoin.Companion.Round,
+        strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 4.0f,
         pathFillType = NonZero,
       ) {
@@ -303,7 +303,7 @@ object AppIcons {
         stroke = SolidColor(Color(0xFF000000)),
         strokeLineWidth = 2.0f,
         strokeLineCap = Round,
-        strokeLineJoin = StrokeJoin.Companion.Round,
+        strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 4.0f,
         pathFillType = NonZero,
       ) {

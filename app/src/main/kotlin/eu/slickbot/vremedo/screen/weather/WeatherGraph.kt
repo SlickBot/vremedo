@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -165,17 +166,24 @@ fun WeatherGraph(
   val chartWidth = itemSpacing * (items.size - 1)
   val canvasWidth = chartWidth + startPadding + endPadding
 
-  val chartWidthPx = with(LocalDensity.current) { chartWidth.toPx() }
-  val lineOffsetPx = with(LocalDensity.current) { state.scroll.value + lineOffset.toPx() - startPadding.toPx() }
+  val density = LocalDensity.current
+  val chartWidthPx = with(density) { chartWidth.toPx() }
+  val baseOffsetPx = with(density) { lineOffset.toPx() - startPadding.toPx() }
 
-  val percentage = if (lineOffsetPx < 0) 0f else lineOffsetPx / chartWidthPx
-  if (percentage != state.percentage) {
-    state.percentage = percentage
-  }
-
-  val index = (items.lastIndex * state.percentage).toInt()
-  if (index != state.currentIndex) {
-    state.currentIndex = index
+  // Derive the centered index from scroll position off the composition path.
+  LaunchedEffect(state, items, chartWidthPx, baseOffsetPx) {
+    snapshotFlow { state.scroll.value }
+      .collect { scrollValue ->
+        val lineOffsetPx = scrollValue + baseOffsetPx
+        val percentage = if (lineOffsetPx < 0) 0f else lineOffsetPx / chartWidthPx
+        if (percentage != state.percentage) {
+          state.percentage = percentage
+        }
+        val index = (items.lastIndex * percentage).toInt()
+        if (index != state.currentIndex) {
+          state.currentIndex = index
+        }
+      }
   }
 
   Box(modifier) {

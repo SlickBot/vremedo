@@ -43,8 +43,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
@@ -325,10 +326,6 @@ private fun endConstraintSet() = ConstraintSet {
     end.linkTo(parent.start)
     top.linkTo(parent.top)
   }
-//  constrain(topRight) {
-//    start.linkTo(parent.end)
-//    top.linkTo(parent.top)
-//  }
   constrain(topRight2) {
     end.linkTo(parent.end)
     top.linkTo(parent.top)
@@ -429,6 +426,9 @@ private fun DashboardContent(
         .weight(1f),
       item = selectedItem,
     )
+    val halfScreenWidth = with(LocalDensity.current) {
+      LocalWindowInfo.current.containerSize.width.toDp()
+    } / 2
     WeatherGraph(
       modifier = Modifier
         .fillMaxWidth()
@@ -441,10 +441,10 @@ private fun DashboardContent(
       weatherImageSize = DpSize(22.dp, 22.dp),
       windImageSize = DpSize(16.dp, 16.dp),
       paddingValues = PaddingValues(
-        start = LocalConfiguration.current.screenWidthDp.dp / 2,
-        end = LocalConfiguration.current.screenWidthDp.dp / 2,
+        start = halfScreenWidth,
+        end = halfScreenWidth,
       ),
-      lineOffset = LocalConfiguration.current.screenWidthDp.dp / 2,
+      lineOffset = halfScreenWidth,
       itemSpacing = 14.dp,
       onClick = onResetClick,
     )
@@ -463,38 +463,6 @@ fun WeatherContent(
   modifier: Modifier = Modifier,
 ) {
   if (item == null) return
-
-//  Card(
-//    modifier = Modifier
-//      .padding(top = 20.dp, start = 10.dp, end = 10.dp)
-//      .then(modifier),
-//    colors = CardDefaults.cardColors(
-//      containerColor = NavigationRailDefaults.ContainerColor.copy(alpha = .3f)
-//    )
-//  ) {
-//    LazyVerticalGrid(
-//      columns = GridCells.Adaptive(minSize = 150.dp),
-//      contentPadding = PaddingValues(10.dp)
-//    ) {
-//      items(item.hours.dataList) { item ->
-//        Column(
-//          modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-//        ) {
-//          Text(
-//            item.title,
-//            fontSize = 12.sp,
-//            lineHeight = 13.sp,
-//          )
-//          Text(
-//            item.text,
-//            fontSize = 15.sp,
-//            lineHeight = 16.sp,
-//          )
-//        }
-//      }
-//    }
-//  }
-//  return
 
   val weatherAttributes = remember(item.hours) {
     listOf(
