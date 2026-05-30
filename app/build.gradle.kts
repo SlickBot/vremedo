@@ -1,16 +1,8 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.api.variant.impl.VariantOutputImpl
-import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
-  id("maven-publish")
-}
-
-val localProps = Properties().apply {
-  val f = rootProject.file("local.properties")
-  if (f.exists()) f.inputStream().use { load(it) }
 }
 
 val appVersionName = "1.1"
@@ -38,23 +30,23 @@ configure<ApplicationExtension> {
 
   signingConfigs {
     create("release") {
-      storeFile = file(localProps.getProperty("keystore.storeFile") ?: "")
-      storePassword = localProps.getProperty("keystore.storePassword") ?: ""
-      keyAlias = localProps.getProperty("keystore.keyAlias") ?: ""
-      keyPassword = localProps.getProperty("keystore.keyPassword") ?: ""
+      System.getenv("KEYSTORE_FILE")?.let { storeFile = file(it) }
+      storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+      keyAlias = System.getenv("KEY_ALIAS") ?: ""
+      keyPassword = System.getenv("KEY_PASSWORD") ?: ""
     }
   }
 
   buildTypes {
     release {
-      signingConfig = signingConfigs.getByName("release")
-      isMinifyEnabled = false
-      proguardFiles(
-        getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro"
-      )
       applicationIdSuffix = ".release"
       resValue("string", "app_name", "Vremedo")
+
+      proguardFiles(
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro",
+      )
+      signingConfig = signingConfigs.getByName("release")
     }
     debug {
       applicationIdSuffix = ".debug"
@@ -76,16 +68,6 @@ configure<ApplicationExtension> {
   packaging {
     resources {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
-    }
-  }
-}
-
-androidComponents {
-  onVariants { variant ->
-    variant.outputs.forEach { output ->
-      (output as? VariantOutputImpl)?.outputFileName?.set(
-        "vremedo-$appVersionName-${variant.name}.apk"
-      )
     }
   }
 }
@@ -126,78 +108,6 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
+  androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("releaseApk") {
-      groupId = "eu.slickbot"
-      artifactId = "vremedo-release"
-      version = appVersionName
-      artifact(layout.buildDirectory.file("outputs/apk/release/vremedo-$appVersionName-release.apk")) {
-        extension = "apk"
-      }
-    }
-    create<MavenPublication>("debugApk") {
-      groupId = "eu.slickbot"
-      artifactId = "vremedo-debug"
-      version = appVersionName
-      artifact(layout.buildDirectory.file("outputs/apk/debug/vremedo-$appVersionName-debug.apk")) {
-        extension = "apk"
-      }
-    }
-  }
-  repositories {
-    maven {
-      url = uri("http://brane:8081/repository/apk-releases/")
-      isAllowInsecureProtocol = true
-      credentials {
-        username = localProps.getProperty("nexus.username") ?: ""
-        password = localProps.getProperty("nexus.password") ?: ""
-      }
-    }
-  }
-}
-
-// Ensure each APK publication assembles its variant first (lazy, name-based wiring).
-tasks.matching { it.name == "publishReleaseApkPublicationToMavenRepository" }
-  .configureEach { dependsOn("assembleRelease") }
-tasks.matching { it.name == "publishDebugApkPublicationToMavenRepository" }
-  .configureEach { dependsOn("assembleDebug") }
-
-tasks.register("assembleAll") {
-  group = "build"
-  description = "Builds debug and release APKs and copies them to releases/{versionName}"
-
-  dependsOn("assembleDebug", "assembleRelease")
-
-  doLast {
-    val outputDir = layout.buildDirectory.dir("outputs/apk").get().asFile
-    val releaseDir = file("releases/$appVersionName")
-    releaseDir.mkdirs()
-
-    fileTree(outputDir) { include("**/*.apk") }.files.forEach { apk ->
-      copy {
-        from(apk)
-        into(releaseDir)
-      }
-    }
-
-    println("Copied APKs to releases/$appVersionName")
-  }
-}
-
-tasks.register("publishAll") {
-  group = "build"
-  description = "Publishes all build types to nexus"
-
-  dependsOn(
-    "publishDebugApkPublicationToMavenRepository",
-    "publishReleaseApkPublicationToMavenRepository"
-  )
-
-  doLast {
-    println("Published APKs to Nexus")
-  }
 }
