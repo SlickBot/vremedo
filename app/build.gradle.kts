@@ -5,8 +5,8 @@ plugins {
   alias(libs.plugins.kotlin.compose)
 }
 
-val appVersionName = "1.1"
-val appVersionCode = 1
+val appVersionName = "1.2"
+val appVersionCode = 2
 
 configure<ApplicationExtension> {
   namespace = "eu.slickbot.vremedo"
