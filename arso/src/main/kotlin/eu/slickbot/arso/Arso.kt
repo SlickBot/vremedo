@@ -2,7 +2,7 @@ package eu.slickbot.arso
 
 import eu.slickbot.arso.model.*
 import eu.slickbot.scrape.utils.extension.*
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import okhttp3.OkHttpClient
 import org.xml.sax.InputSource
 import retrofit2.Retrofit

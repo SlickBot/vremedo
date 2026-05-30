@@ -13,5 +13,5 @@ fun OkHttpClient.getResponseDocument(url: String): Document {
 fun OkHttpClient.getResponseString(url: String): String {
   val request = Request.Builder().url(url).build()
   val response = newCall(request).execute()
-  return response.body!!.string()
+  return response.body.string()
 }
