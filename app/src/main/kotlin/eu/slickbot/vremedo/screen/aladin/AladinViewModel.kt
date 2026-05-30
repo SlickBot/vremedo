@@ -1,10 +1,10 @@
 package eu.slickbot.vremedo.screen.aladin
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eu.slickbot.arso.model.ArsoAladinMode
 import eu.slickbot.arso.model.ArsoAladinScope
 import eu.slickbot.vremedo.repository.ArsoRepository
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AppNavigation() {
+class AppNavigation {
 
   private lateinit var navController: NavHostController
 
@@ -33,7 +33,6 @@ class AppNavigation() {
           _screen.update { screen ->
             when (backStackEntry.destination.route) {
               Screen.Weather.route -> Screen.Weather
-              Screen.Images.route -> Screen.Images
               Screen.Aladin.route -> Screen.Aladin
               Screen.Radar.route -> Screen.Radar
               Screen.Satellite.route -> Screen.Satellite
@@ -49,13 +48,6 @@ class AppNavigation() {
     if (screen.value == Screen.Weather) return
     navigate(Screen.Weather) {
       popUpToScreen(Screen.Weather)
-      launchSingleTop = true
-    }
-  }
-
-  fun navigateToImages() {
-    if (screen.value == Screen.Images) return
-    navigate(Screen.Images) {
       launchSingleTop = true
     }
   }

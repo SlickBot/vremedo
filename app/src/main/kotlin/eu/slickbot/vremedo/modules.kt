@@ -9,7 +9,6 @@ import eu.slickbot.vremedo.repository.ArsoRepository
 import eu.slickbot.vremedo.repository.WeatherRepository
 import eu.slickbot.vremedo.screen.aladin.AladinViewModel
 import eu.slickbot.vremedo.screen.cameras.CamerasViewModel
-import eu.slickbot.vremedo.screen.images.ImagesViewModel
 import eu.slickbot.vremedo.screen.radar.RadarViewModel
 import eu.slickbot.vremedo.screen.satellite.SatelliteViewModel
 import eu.slickbot.vremedo.screen.weather.WeatherViewModel
@@ -31,7 +30,6 @@ val appModule = module {
 
 fun Module.viewModelModules() {
   viewModelOf(::WeatherViewModel)
-  viewModelOf(::ImagesViewModel)
   viewModelOf(::AladinViewModel)
   viewModelOf(::RadarViewModel)
   viewModelOf(::SatelliteViewModel)

@@ -1,6 +1,7 @@
 package eu.slickbot.vremedo.repository
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
 import eu.slickbot.arso.Arso
 import eu.slickbot.provreme.ProVreme
@@ -26,13 +27,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlin.time.Duration.Companion.minutes
-import androidx.core.content.edit
 
 class WeatherRepository(
   private val lifecycle: AppLifecycle,

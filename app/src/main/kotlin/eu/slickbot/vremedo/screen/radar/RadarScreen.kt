@@ -30,6 +30,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
     ImageScreen(
       modifier = Modifier.fillMaxSize(),
       innerPadding = innerPadding,
+      title = "Radar",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
       buttonLeft = ImageScreenButton(

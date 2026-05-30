@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
             exitTransition = { fadeOut(animationSpec = tween(350)) },
           ) {
             screen(Screen.Weather)
-            screen(Screen.Images)
             screen(Screen.Aladin)
             screen(Screen.Radar)
             screen(Screen.Satellite)

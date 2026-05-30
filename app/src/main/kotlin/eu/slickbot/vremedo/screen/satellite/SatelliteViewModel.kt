@@ -1,10 +1,10 @@
 package eu.slickbot.vremedo.screen.satellite
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eu.slickbot.arso.model.ArsoSatelliteLength
 import eu.slickbot.arso.model.ArsoSatelliteScope
 import eu.slickbot.vremedo.repository.ArsoRepository
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

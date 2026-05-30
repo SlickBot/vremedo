@@ -30,6 +30,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
     ImageScreen(
       modifier = Modifier.fillMaxSize(),
       innerPadding = innerPadding,
+      title = "Aladin",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
       buttonLeft = ImageScreenButton(

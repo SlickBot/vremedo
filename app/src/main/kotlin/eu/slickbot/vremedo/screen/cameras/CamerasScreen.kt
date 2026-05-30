@@ -21,9 +21,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.slickbot.arso.model.ArsoCameraLength
 import eu.slickbot.vremedo.composable.AppListDialog
 import eu.slickbot.vremedo.composable.AppScaffold
-import eu.slickbot.vremedo.composable.CustomIcons
 import eu.slickbot.vremedo.composable.ImageScreen
 import eu.slickbot.vremedo.composable.ImageScreenButton
+import eu.slickbot.vremedo.theme.App
 import eu.slickbot.vremedo.theme.VremedoTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -39,11 +39,12 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
     ImageScreen(
       modifier = Modifier.fillMaxSize(),
       innerPadding = innerPadding,
+      title = "Cameras",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
       buttonLeft = ImageScreenButton(
         text = "Orientation",
-        icon = CustomIcons.Compass,
+        icon = Icons.App.Compass,
         onClick = { showOrientationDialog = true },
         dialog = {
           AppListDialog(

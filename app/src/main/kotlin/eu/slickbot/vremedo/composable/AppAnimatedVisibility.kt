@@ -15,7 +15,7 @@ fun AppAnimatedVisibility(
   modifier: Modifier = Modifier,
   enter: EnterTransition = fadeIn(),
   exit: ExitTransition = fadeOut(),
-  content: @Composable() AnimatedVisibilityScope.() -> Unit,
+  content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
   AnimatedVisibility(
     modifier = modifier,

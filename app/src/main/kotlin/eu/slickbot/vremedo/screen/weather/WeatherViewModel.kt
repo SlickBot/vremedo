@@ -1,13 +1,13 @@
 package eu.slickbot.vremedo.screen.weather
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import eu.slickbot.vremedo.DEFAULT_LOCATION
 import eu.slickbot.vremedo.model.WeatherCity
 import eu.slickbot.vremedo.model.WeatherDay
 import eu.slickbot.vremedo.model.WeatherHours
 import eu.slickbot.vremedo.model.WeatherItem
 import eu.slickbot.vremedo.repository.WeatherRepository
-import androidx.lifecycle.ViewModel
-import eu.slickbot.vremedo.DEFAULT_LOCATION
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

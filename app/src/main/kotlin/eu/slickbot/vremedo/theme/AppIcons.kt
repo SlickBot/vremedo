@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
+@Suppress("UnusedReceiverParameter")
 val Icons.App get() = AppIcons
 
 object AppIcons {
@@ -28,7 +29,7 @@ object AppIcons {
         stroke = SolidColor(Color(0xFF000000)),
         strokeLineWidth = 2.0f,
         strokeLineCap = Round,
-        strokeLineJoin = StrokeJoin.Companion.Round,
+        strokeLineJoin = StrokeJoin.Round,
         strokeLineMiter = 4.0f,
         pathFillType = NonZero,
       ) {
@@ -358,6 +359,47 @@ object AppIcons {
         reflectiveCurveToRelative(1.34f, 3.0f, 3.0f, 3.0f)
         reflectiveCurveToRelative(3.0f, -1.34f, 3.0f, -3.0f)
         reflectiveCurveToRelative(-1.34f, -3.0f, -3.0f, -3.0f)
+        close()
+      }
+    }.build()
+  }
+
+  val Compass: ImageVector by lazy {
+    Builder(
+      name = "Compass",
+      defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
+      viewportWidth = 24.0f, viewportHeight = 24.0f,
+    ).apply {
+      path(
+        fill = null,
+        stroke = SolidColor(Color(0xFF000000)),
+        strokeLineWidth = 2.0f,
+        strokeLineCap = Round,
+        strokeLineJoin = StrokeJoin.Round,
+        strokeLineMiter = 1.0f,
+        pathFillType = NonZero,
+      ) {
+        moveTo(16.24f, 7.76f)
+        lineToRelative(-1.804f, 5.411f)
+        arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, -1.265f, 1.265f)
+        lineTo(7.76f, 16.24f)
+        lineToRelative(1.804f, -5.411f)
+        arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 1.265f, -1.265f)
+        close()
+      }
+      path(
+        fill = null,
+        stroke = SolidColor(Color(0xFF000000)),
+        strokeLineWidth = 2.0f,
+        strokeLineCap = Round,
+        strokeLineJoin = StrokeJoin.Round,
+        strokeLineMiter = 1.0f,
+        pathFillType = NonZero,
+      ) {
+        moveTo(22f, 12f)
+        arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 12f, 22f)
+        arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, 12f)
+        arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 22f, 12f)
         close()
       }
     }.build()

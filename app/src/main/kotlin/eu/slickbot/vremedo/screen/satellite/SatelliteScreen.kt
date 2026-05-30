@@ -30,6 +30,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
     ImageScreen(
       modifier = Modifier.fillMaxSize(),
       innerPadding = innerPadding,
+      title = "Satellite",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
       buttonLeft = ImageScreenButton(

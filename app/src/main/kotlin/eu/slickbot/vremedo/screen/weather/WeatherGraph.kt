@@ -37,7 +37,6 @@ import androidx.compose.ui.graphics.AndroidPath
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.NativeCanvas
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.asComposePath
@@ -69,7 +68,6 @@ import eu.slickbot.vremedo.model.WeatherItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-import android.graphics.Paint as AndroidPaint
 
 @Composable
 fun rememberWeatherGraphState(): WeatherGraphState {
@@ -362,17 +360,6 @@ fun WeatherGraph(
         }
       }
     }
-  }
-}
-
-private fun NativeCanvas.drawString(text: String, x: Float, y: Float, textPaint: AndroidPaint) {
-  if ("\n" in text) {
-    val split = text.split("\n")
-    for ((i, part) in split.withIndex()) {
-      drawText(part, x, y + (i * textPaint.getTextBounds(part).height), textPaint)
-    }
-  } else {
-    drawText(text, x, y, textPaint)
   }
 }
 
