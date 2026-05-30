@@ -25,11 +25,10 @@ and all the maps, webcams and the sunrise/sunset times come straight from
 
 ## Screenshots
 
-|                        Forecast                        |                         Menu                         |                     Image gallery                      |
-|:------------------------------------------------------:|:----------------------------------------------------:|:------------------------------------------------------:|
-| <img src="docs/screenshots/weather.png" width="230" /> | <img src="docs/screenshots/menu.png" width="230" />  | <img src="docs/screenshots/images.png" width="230" />  |
-|                    **ALADIN model**                    |                      **Radar**                       |                      **Webcams**                       |
-| <img src="docs/screenshots/aladin.png" width="230" />  | <img src="docs/screenshots/radar.png" width="230" /> | <img src="docs/screenshots/cameras.png" width="230" /> |
+|                           Forecast                           |                           Menu                            |                           Radar                            |
+|:------------------------------------------------------------:|:---------------------------------------------------------:|:----------------------------------------------------------:|
+| <img src="docs/screenshots/weather-light.png" width="230" /> | <img src="docs/screenshots/menu-light.png" width="230" /> | <img src="docs/screenshots/radar-light.png" width="230" /> |
+| <img src="docs/screenshots/weather-dark.png" width="230" />  | <img src="docs/screenshots/menu-dark.png" width="230" />  | <img src="docs/screenshots/radar-dark.png" width="230" />  |
 
 ## What it does
 
@@ -38,21 +37,31 @@ and all the maps, webcams and the sunrise/sunset times come straight from
   humidity and visibility, plus a drawn temperature graph for the day.
 - **ALADIN** - the animated ARSO model maps (rain & clouds, temperature, wind at
   ground / 700 m / 1500 m) for Slovenia and the wider Alps–Adriatic region.
-- **Radar** — precipitation radar loops, short or long range, Slovenia or
+- **Radar** - precipitation radar loops, short or long range, Slovenia or its
   neighbours.
-- **Satellite** — visible (HRV) and infrared satellite imagery.
-- **Webcams** — the ARSO network of public cameras, browsable by location and
+- **Satellite** - visible (HRV) and infrared satellite imagery.
+- **Webcams** - the ARSO network of public cameras, browsable by location and
   viewing direction, played back as a timelapse.
 
-A fair warning that follows from all of this: **the parsing is inherently
-fragile.** ARSO and pro-vreme.net can change their markup whenever they like, and
-when they do, a screen will break until the parser is updated.
+**The parsing is fragile.** ARSO and pro-vreme.net can change their markup
+whenever they please, and when they do,
+the matching screen breaks until I fix the parser.
 
 ### Stack
 
 Kotlin 2.3 · Jetpack Compose (Material 3, Navigation, ConstraintLayout /
 MotionLayout) · Koin for DI · Coil for image loading · OkHttp + Retrofit + Gson ·
 Jsoup · kotlinx-datetime & coroutines · Timber · AGP 9. `minSdk` 26, `targetSdk` 37.
+
+The project is split by data source rather than by layer:
+
+- `:pro-vreme` - scraping and models for the pro-vreme.net forecasts.
+- `:arso` - the same for the ARSO maps, webcams and sun times.
+- `:scrape-utils` - the Jsoup glue both of those lean on.
+- `:app` - the Compose UI sitting on top of all of it.
+
+The point of the split is selfish: when one site rearranges its HTML, the mess
+stays inside one module instead of leaking through the whole app.
 
 ## Building
 
