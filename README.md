@@ -18,7 +18,7 @@ project: I wanted the ARSO forecasts and imagery I check every day in one place,
 without the official site's layout, and an excuse to build something
 in Jetpack Compose.
 
-It pulls everything from public sources at runtime — there's no backend of my
+It pulls everything from public sources at runtime - there's no backend of my
 own. The weather numbers come from [pro-vreme.net](https://www.pro-vreme.net),
 and all the maps, webcams and the sunrise/sunset times come straight from
 [ARSO](https://meteo.arso.gov.si).
@@ -33,29 +33,16 @@ and all the maps, webcams and the sunrise/sunset times come straight from
 
 ## What it does
 
-- **Forecast** — pick any Slovenian town and get its day-by-day and hour-by-hour
+- **Forecast** - pick any Slovenian town and get its day-by-day and hour-by-hour
   forecast: temperature, pressure, wind speed and direction, rain, snow,
   humidity and visibility, plus a drawn temperature graph for the day.
-- **ALADIN** — the animated ARSO model maps (rain & clouds, temperature, wind at
+- **ALADIN** - the animated ARSO model maps (rain & clouds, temperature, wind at
   ground / 700 m / 1500 m) for Slovenia and the wider Alps–Adriatic region.
 - **Radar** — precipitation radar loops, short or long range, Slovenia or
   neighbours.
 - **Satellite** — visible (HRV) and infrared satellite imagery.
 - **Webcams** — the ARSO network of public cameras, browsable by location and
   viewing direction, played back as a timelapse.
-
-## How it's put together
-
-It's a multi-module Gradle project. The two data modules are plain Kotlin/JVM
-libraries with no Android dependencies, which keeps them unit-testable and
-reusable:
-
-| Module              | What lives here                                                                                                                                                                                                                                            |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **`:app`**          | The whole UI: Jetpack Compose + Material 3, navigation, view models, the weather graph (drawn on a Canvas), the animated image players and the day/night theming.                                                                                          |
-| **`:arso`**         | Client for ARSO. The structured forecast/location data comes from the `vreme.arso.gov.si` JSON API; radar, satellite, ALADIN, webcams, weather alerts (CAP) and the audio forecast are read from `meteo.arso.gov.si` and parsed out of its timeline files. |
-| **`:pro-vreme`**    | Scraper for the per-town forecast tables on pro-vreme.net, using Jsoup.                                                                                                                                                                                    |
-| **`:scrape-utils`** | Shared plumbing both scrapers lean on: OkHttp client setup, a user-agent and a force-HTTPS-redirect interceptor, and a handful of `String`/`Regex`/`Node` extensions.                                                                                      |
 
 A fair warning that follows from all of this: **the parsing is inherently
 fragile.** ARSO and pro-vreme.net can change their markup whenever they like, and
@@ -98,9 +85,7 @@ export KEY_PASSWORD=...
 ## Disclaimer
 
 Vremedo is an unofficial, non-commercial hobby project. It is not affiliated with
-or endorsed by ARSO or pro-vreme.net — it just displays their public data. All
+or endorsed by ARSO or pro-vreme.net - it just displays their public data. All
 forecasts, imagery and warnings belong to their respective sources; for anything
 you actually need to rely on, go to [pro-vreme.net](https://www.pro-vreme.net)
 or [meteo.arso.gov.si](https://meteo.arso.gov.si).
-</content>
-</invoke>
