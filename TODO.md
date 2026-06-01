@@ -15,10 +15,11 @@ General ideas to prune. We'll break them up later.
 ## Caching & offline
 - [ ] Cache last successful data; open to something offline.
 - [ ] "Last updated" timestamps + pull-to-refresh.
+- [ ] Persist last-selected image/radar screen across launches.
 
 ## Features
 - [ ] Favorite/pinned towns + nearest town via location.
-- [ ] Home-screen widget + severe-weather notifications.
+- [ ] Home-screen widget(s) + severe-weather notifications from ARSO alerts.
 - [ ] Sun/moon view, share screenshots, compare two towns.
 
 ## UI / UX
