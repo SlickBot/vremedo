@@ -36,13 +36,10 @@ android {
       applicationIdSuffix = ".release"
       resValue("string", "app_name", "Vremedo")
 
-      proguardFiles(
-        getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro",
-      )
       isMinifyEnabled = true
       isShrinkResources = true
       signingConfig = signingConfigs.getByName("release")
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     debug {
       applicationIdSuffix = ".debug"
@@ -66,10 +63,6 @@ android {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
   }
-}
-
-kotlin {
-  jvmToolchain(21)
 }
 
 dependencies {
