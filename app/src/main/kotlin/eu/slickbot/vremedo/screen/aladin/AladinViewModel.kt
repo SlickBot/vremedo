@@ -1,5 +1,6 @@
 package eu.slickbot.vremedo.screen.aladin
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eu.slickbot.arso.model.ArsoAladinMode
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class AladinViewModel(
   private val arsoRepo: ArsoRepository,
@@ -39,7 +39,7 @@ class AladinViewModel(
           _state.update { it.copy(imageUrls = imageUrls) }
         },
         onFailure = {
-          Timber.e(it, "Failed to load aladin images")
+          Log.e("AladinViewModel", "Failed to load aladin images", it)
           _state.update { it.copy(isError = true) }
         },
       )

@@ -1,5 +1,6 @@
 package eu.slickbot.vremedo.screen.satellite
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eu.slickbot.arso.model.ArsoSatelliteLength
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class SatelliteViewModel(
   private val arsoRepo: ArsoRepository,
@@ -39,7 +39,7 @@ class SatelliteViewModel(
           _state.update { it.copy(imageUrls = imageUrls) }
         },
         onFailure = {
-          Timber.e(it, "Failed to load satellite images")
+          Log.e("SatelliteViewModel", "Failed to load satellite images", it)
           _state.update { it.copy(isError = true) }
         },
       )

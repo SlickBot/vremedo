@@ -1,5 +1,6 @@
 package eu.slickbot.vremedo.screen.weather
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eu.slickbot.vremedo.DEFAULT_LOCATION
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class WeatherViewModel(
   private val weatherRepository: WeatherRepository,
@@ -124,7 +124,7 @@ class WeatherViewModel(
         _selectedCity.update { cities.find { it.name == DEFAULT_LOCATION } ?: cities.firstOrNull() }
         updateWeatherItems()
       } catch (e: Throwable) {
-        Timber.e(e, "Failed to load cities")
+        Log.e("WeatherViewModel", "Failed to load cities", e)
         _isError.update { true }
       }
       _isLoadingCities.update { false }
@@ -142,7 +142,7 @@ class WeatherViewModel(
         val weatherItems = weatherRepository.getWeatherItems(cityId)
         updateWeatherItemsState(weatherItems)
       } catch (e: Throwable) {
-        Timber.e(e, "Failed to load weather")
+        Log.e("WeatherViewModel", "Failed to load weather", e)
         _isError.update { true }
       }
       _isLoadingWeather.update { false }

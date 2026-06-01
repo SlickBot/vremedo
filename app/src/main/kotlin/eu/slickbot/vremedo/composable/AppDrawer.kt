@@ -1,5 +1,6 @@
 package eu.slickbot.vremedo.composable
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -37,7 +38,6 @@ import eu.slickbot.vremedo.theme.VremedoTheme
 import eu.slickbot.vremedo.utils.AppNavigation
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
-import timber.log.Timber
 
 private const val ARSO_URL = "https://meteo.arso.gov.si"
 private const val PRO_VREME_URL = "https://www.pro-vreme.net"
@@ -155,7 +155,7 @@ private fun DataSourcesFooter() {
 
   fun open(url: String) {
     runCatching { uriHandler.openUri(url) }
-      .onFailure { Timber.w(it, "Failed to open data source link: $url") }
+      .onFailure { Log.w("AppDrawer", "Failed to open data source link: $url", it) }
   }
 
   Column(modifier = Modifier.padding(bottom = 8.dp)) {

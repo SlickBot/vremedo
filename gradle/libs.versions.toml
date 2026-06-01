@@ -10,7 +10,6 @@ constraintlayoutCompose = "1.1.1"
 coreSplashscreen = "1.2.0"
 koin = "4.2.1"
 coil = "2.7.0"
-timber = "5.0.1"
 okhttp = "5.3.2"
 retrofit = "3.0.0"
 moshi = "1.15.2"
@@ -47,9 +46,6 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 
 # Image loading
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-
-# Logging
-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Network / scraping
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

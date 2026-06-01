@@ -1,5 +1,6 @@
 package eu.slickbot.vremedo.screen.cameras
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eu.slickbot.arso.model.ArsoCameraData
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class CamerasViewModel(
   private val arsoRepo: ArsoRepository,
@@ -48,7 +48,7 @@ class CamerasViewModel(
           updateImages()
         },
         onFailure = {
-          Timber.e(it, "Failed to load camera data")
+          Log.e("CamerasViewModel", "Failed to load camera data", it)
           _state.update { it.copy(isError = true) }
         },
       )
@@ -74,7 +74,7 @@ class CamerasViewModel(
           _state.update { it.copy(imageUrls = imageUrls) }
         },
         onFailure = {
-          Timber.e(it, "Failed to load camera images")
+          Log.e("CamerasViewModel", "Failed to load camera images", it)
           _state.update { it.copy(isError = true) }
         },
       )

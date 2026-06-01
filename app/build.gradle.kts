@@ -94,9 +94,6 @@ dependencies {
   // Image loading
   implementation(libs.coil.compose)
 
-  // Logging
-  implementation(libs.timber)
-
   // Test
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
