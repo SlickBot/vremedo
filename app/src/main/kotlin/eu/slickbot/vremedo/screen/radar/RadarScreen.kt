@@ -34,6 +34,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
       isError = state.isError,
+      onRetry = vm::retry,
       buttonLeft = ImageScreenButton(
         text = "Scope",
         icon = Icons.Filled.Map,

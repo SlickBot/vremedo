@@ -63,9 +63,11 @@ import eu.slickbot.vremedo.composable.AppDrawer
 import eu.slickbot.vremedo.composable.AppLoader
 import eu.slickbot.vremedo.composable.AppScaffold
 import eu.slickbot.vremedo.composable.EasterEgg
+import eu.slickbot.vremedo.composable.ErrorMessage
 import eu.slickbot.vremedo.composable.ToolbarIcon
 import eu.slickbot.vremedo.composable.ToolbarTitle
 import eu.slickbot.vremedo.composable.keyboardOnlyPadding
+import eu.slickbot.vremedo.composable.rememberDelayed
 import eu.slickbot.vremedo.extension.localDateTimeNow
 import eu.slickbot.vremedo.extension.toInstant
 import eu.slickbot.vremedo.model.WeatherAttribute
@@ -104,6 +106,7 @@ fun WeatherScreen(
     val graphTempMax by vm.graphTempMax.collectAsState()
     val isLoadingCities by vm.isLoadingCities.collectAsState()
     val isLoadingWeather by vm.isLoadingWeather.collectAsState()
+    val isError by vm.isError.collectAsState()
     val isNight by vm.isNight.collectAsState()
 
     val selectedItem = remember(weatherItems, graphState.currentIndex) {
@@ -238,6 +241,10 @@ fun WeatherScreen(
               closeSearch = ::closeSearch,
               onCityClick = vm::onCityClick,
             )
+            else if (isError && weatherItems.isEmpty()) ErrorMessage(
+              message = "Failed to fetch weather",
+              onRetry = vm::retry,
+            )
             else DashboardContent(
               weatherItems = weatherItems,
               selectedItem = selectedItem,
@@ -252,7 +259,7 @@ fun WeatherScreen(
 
           AppLoader(
             modifier = Modifier.layoutId("loader"),
-            show = isLoadingCities || isLoadingWeather,
+            show = rememberDelayed(isLoadingCities || isLoadingWeather),
             isDarkMode = isNight == true,
           )
         }

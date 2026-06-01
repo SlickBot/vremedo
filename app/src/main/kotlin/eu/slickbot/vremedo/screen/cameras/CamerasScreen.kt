@@ -43,6 +43,7 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
       isError = state.isError,
+      onRetry = vm::retry,
       buttonLeft = ImageScreenButton(
         text = "Orientation",
         icon = Icons.App.Compass,

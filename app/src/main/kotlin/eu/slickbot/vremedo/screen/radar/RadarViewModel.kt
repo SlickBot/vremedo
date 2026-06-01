@@ -47,6 +47,10 @@ class RadarViewModel(
     }
   }
 
+  fun retry() {
+    updateImages()
+  }
+
   fun setScope(scope: ArsoRadarScope) {
     _state.update { it.copy(scope = scope) }
     updateImages()

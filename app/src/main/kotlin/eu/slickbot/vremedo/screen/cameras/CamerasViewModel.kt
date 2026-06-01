@@ -82,6 +82,14 @@ class CamerasViewModel(
     }
   }
 
+  fun retry() {
+    if (_state.value.cameraData.isEmpty()) {
+      updateData()
+    } else {
+      updateImages()
+    }
+  }
+
   fun setOrientation(orientation: ArsoCameraOrientation) {
     _state.update { it.copy(orientation = orientation) }
     updateImages()

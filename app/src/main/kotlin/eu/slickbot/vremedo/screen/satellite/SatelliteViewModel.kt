@@ -47,6 +47,10 @@ class SatelliteViewModel(
     }
   }
 
+  fun retry() {
+    updateImages()
+  }
+
   fun setScope(scope: ArsoSatelliteScope) {
     _state.update { it.copy(scope = scope) }
     updateImages()

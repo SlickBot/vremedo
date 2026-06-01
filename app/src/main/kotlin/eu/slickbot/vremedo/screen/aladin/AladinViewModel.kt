@@ -47,6 +47,10 @@ class AladinViewModel(
     }
   }
 
+  fun retry() {
+    updateImages()
+  }
+
   fun setScope(scope: ArsoAladinScope) {
     _state.update { it.copy(scope = scope) }
     updateImages()

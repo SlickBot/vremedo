@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class WeatherViewModel(
   private val weatherRepository: WeatherRepository,
@@ -62,6 +63,9 @@ class WeatherViewModel(
   private val _isLoadingWeather = MutableStateFlow(false)
   val isLoadingWeather = _isLoadingWeather.asStateFlow()
 
+  private val _isError = MutableStateFlow(false)
+  val isError = _isError.asStateFlow()
+
   val isNight = weatherRepository.isNightFlow(DEFAULT_LOCATION)
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(1000), null)
 
@@ -101,18 +105,27 @@ class WeatherViewModel(
     updateWeatherItems()
   }
 
+  fun retry() {
+    if (_cities.value.isEmpty()) {
+      updateCities()
+    } else {
+      updateWeatherItems()
+    }
+  }
+
   private fun updateCities() {
     citiesJob?.cancel()
     citiesJob = viewModelScope.launch {
       _isLoadingCities.update { true }
+      _isError.update { false }
       try {
         val cities = weatherRepository.getCities()
         _cities.update { cities }
         _selectedCity.update { cities.find { it.name == DEFAULT_LOCATION } ?: cities.firstOrNull() }
         updateWeatherItems()
       } catch (e: Throwable) {
-        // TODO: handle
-        e.printStackTrace()
+        Timber.e(e, "Failed to load cities")
+        _isError.update { true }
       }
       _isLoadingCities.update { false }
     }
@@ -122,14 +135,15 @@ class WeatherViewModel(
     weatherItemsJob?.cancel()
     weatherItemsJob = viewModelScope.launch {
       _isLoadingWeather.update { true }
+      _isError.update { false }
       try {
         val cityId = _selectedCity.value?.id!!
         updateWeatherItemsState(emptyList())
         val weatherItems = weatherRepository.getWeatherItems(cityId)
         updateWeatherItemsState(weatherItems)
       } catch (e: Throwable) {
-        // TODO: handle
-        e.printStackTrace()
+        Timber.e(e, "Failed to load weather")
+        _isError.update { true }
       }
       _isLoadingWeather.update { false }
     }

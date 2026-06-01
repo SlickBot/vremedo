@@ -59,6 +59,7 @@ fun ImageScreen(
   isLoading: Boolean,
   modifier: Modifier = Modifier,
   isError: Boolean = false,
+  onRetry: (() -> Unit)? = null,
   buttonLeft: ImageScreenButton? = null,
   buttonRight: ImageScreenButton? = null,
   extraContent: @Composable () -> Unit = {},
@@ -107,7 +108,9 @@ fun ImageScreen(
       Animation(
         modifier = Modifier.fillMaxSize(),
         painter = animationPainter,
+        isLoading = isLoading,
         isError = isError,
+        onRetry = onRetry,
       )
       Box(
         modifier = Modifier
@@ -172,15 +175,6 @@ fun ImageScreen(
         onPlayClick = ::onPlayClick,
         onNextClick = ::onNextClick,
       )
-      AppAnimatedVisibility(visible = isLoading) {
-        Box(modifier = Modifier.fillMaxSize()) {
-          AppCircularLoader(
-            modifier = Modifier
-              .size(100.dp)
-              .align(Alignment.Center),
-          )
-        }
-      }
       buttonLeft?.dialog()
       buttonRight?.dialog()
     }
@@ -191,43 +185,58 @@ fun ImageScreen(
 private fun Animation(
   modifier: Modifier,
   painter: ImageAnimationPainter,
+  isLoading: Boolean,
   isError: Boolean,
+  onRetry: (() -> Unit)?,
 ) {
+  val showLoader = rememberDelayed(isLoading)
+  val state = painter.state
+  val display = when {
+    isError || state is ImageAnimationPainter.State.Error -> ImageDisplay.Error
+    showLoader || state is ImageAnimationPainter.State.Loading -> ImageDisplay.Loading
+    state is ImageAnimationPainter.State.Ready -> ImageDisplay.Images
+    isLoading -> ImageDisplay.Blank
+    else -> ImageDisplay.Empty
+  }
+
   Box(modifier = modifier) {
     AnimatedContent(
-      targetState = painter.state,
-      label = "ImageAnimation",
-    ) { state ->
-      when (state) {
-        is ImageAnimationPainter.State.Loading -> {
+      targetState = display,
+      label = "ImageContent",
+    ) { target ->
+      when (target) {
+        ImageDisplay.Loading -> {
           Box(modifier = Modifier.fillMaxSize()) {
+            val loading = painter.state as? ImageAnimationPainter.State.Loading
             AppCircularLoader(
               modifier = Modifier
                 .size(100.dp)
                 .align(Alignment.Center),
-              progress = { state.percentage },
+              progress = loading?.let { l -> { l.percentage } },
             )
           }
         }
-        is ImageAnimationPainter.State.Empty -> {
+        ImageDisplay.Error -> {
+          ErrorMessage(
+            message = "Failed to fetch images",
+            color = Color.White,
+            onRetry = onRetry,
+          )
+        }
+        ImageDisplay.Empty -> {
           Box(modifier = Modifier.fillMaxSize()) {
             Text(
               modifier = Modifier.align(Alignment.Center),
-              text = if (isError) "Failed to fetch images" else "No images",
+              text = "No images",
               style = MaterialTheme.typography.headlineMedium,
+              color = Color.White,
             )
           }
         }
-        is ImageAnimationPainter.State.Error -> {
-          Box(modifier = Modifier.fillMaxSize()) {
-            Text(
-              modifier = Modifier.align(Alignment.Center),
-              text = "Failed to fetch images",
-              style = MaterialTheme.typography.headlineMedium,
-            )
-          }
+        ImageDisplay.Blank -> {
+          Box(modifier = Modifier.fillMaxSize())
         }
-        is ImageAnimationPainter.State.Ready -> {
+        ImageDisplay.Images -> {
           ZoomableImage(
             modifier = Modifier.fillMaxSize(),
             painter = painter,
@@ -241,6 +250,8 @@ private fun Animation(
     }
   }
 }
+
+private enum class ImageDisplay { Loading, Error, Empty, Blank, Images }
 
 data class ImageScreenButton(
   val text: String,
@@ -262,12 +273,10 @@ private fun Controls(
   onPlayClick: () -> Unit,
   onNextClick: () -> Unit,
 ) {
-  AppAnimatedVisibility(
-    modifier = modifier,
-    visible = show,
-  ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-      Spacer(Modifier.weight(1f))
+  Column(modifier = modifier.fillMaxSize()) {
+    Spacer(Modifier.weight(1f))
+    extraContent()
+    AppAnimatedVisibility(visible = show) {
       Column(
         modifier = Modifier
           .fillMaxWidth()
@@ -279,7 +288,6 @@ private fun Controls(
           .padding(horizontal = 16.dp)
           .padding(top = 40.dp, bottom = 16.dp),
       ) {
-        extraContent()
         Row(verticalAlignment = Alignment.CenterVertically) {
           ControlChip(text = speedLabel, onClick = onSpeedClick)
           Spacer(Modifier.width(12.dp))
