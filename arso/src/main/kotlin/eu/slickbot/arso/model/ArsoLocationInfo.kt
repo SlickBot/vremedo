@@ -1,7 +1,9 @@
 package eu.slickbot.arso.model
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ArsoLocationInfo(
   val forecast1h: Forecast,
   val forecast3h: Forecast,
@@ -9,6 +11,7 @@ data class ArsoLocationInfo(
   val forecast24h: Forecast,
 )
 
+@JsonClass(generateAdapter = true)
 data class Forecast(
   val type: String,
   val dataType: String,
@@ -17,23 +20,26 @@ data class Forecast(
   val params: Params,
   val tsUpdated: String,
   val tsValid: String,
-  @SerializedName("icon_base_url")
+  @Json(name = "icon_base_url")
   val iconBaseUrl: String,
-  @SerializedName("icon_format")
+  @Json(name = "icon_format")
   val iconFormat: String,
 ) {
 
+  @JsonClass(generateAdapter = true)
   data class Feature(
     val type: String,
     val geometry: Geometry,
     val properties: Properties,
   ) {
 
+    @JsonClass(generateAdapter = true)
     data class Geometry(
       val type: String,
       val coordinates: List<Double>,
     )
 
+    @JsonClass(generateAdapter = true)
     data class Properties(
       val id: String,
       val parentId: String,
@@ -42,104 +48,108 @@ data class Forecast(
       val days: List<Day>,
     ) {
 
+      @JsonClass(generateAdapter = true)
       data class Day(
         val date: String,
         val sunrise: String,
         val sunset: String,
         val timeline: List<Timeline>,
-        @SerializedName("UTCoffset")
+        @Json(name = "UTCoffset")
         val utcOffset: String,
       ) {
 
+        @JsonClass(generateAdapter = true)
         data class Timeline(
-          @SerializedName("cloudBase_shortText")
+          @Json(name = "cloudBase_shortText")
           val cloudBaseShortText: String,
-          @SerializedName("clouds_icon_wwsyn_icon")
+          @Json(name = "clouds_icon_wwsyn_icon")
           val cloudsIconWwsynIcon: String,
-          @SerializedName("clouds_shortText")
+          @Json(name = "clouds_shortText")
           val cloudsShortText: String,
-          @SerializedName("clouds_shortText_wwsyn_shortText")
+          @Json(name = "clouds_shortText_wwsyn_shortText")
           val cloudsShortTextWwsynShortText: String,
-          @SerializedName("dd_shortText")
+          @Json(name = "dd_shortText")
           val ddShortText: String,
-          @SerializedName("ddff_icon")
+          @Json(name = "ddff_icon")
           val ddffIcon: String,
-          @SerializedName("ff_shortText")
+          @Json(name = "ff_shortText")
           val ffShortText: String,
-          @SerializedName("ff_val")
+          @Json(name = "ff_val")
           val ffVal: String,
-          @SerializedName("ffmax_val")
+          @Json(name = "ffmax_val")
           val ffMaxVal: String,
-          @SerializedName("interval")
+          @Json(name = "interval")
           val interval: String,
-          @SerializedName("msl")
+          @Json(name = "msl")
           val msl: String,
-          @SerializedName("pa_shortText")
+          @Json(name = "pa_shortText")
           val paShortText: String,
-          @SerializedName("rh")
+          @Json(name = "rh")
           val rh: String,
-          @SerializedName("rh_shortText")
+          @Json(name = "rh_shortText")
           val rhShortText: String,
-          @SerializedName("sn_acc")
+          @Json(name = "sn_acc")
           val snAcc: String,
-          @SerializedName("t")
+          @Json(name = "t")
           val t: String,
-          @SerializedName("time")
+          @Json(name = "time")
           val time: String,
-          @SerializedName("tp_acc")
+          @Json(name = "tp_acc")
           val tpAcc: String,
-          @SerializedName("valid")
+          @Json(name = "valid")
           val valid: String,
-          @SerializedName("wwsyn_decodeText")
+          @Json(name = "wwsyn_decodeText")
           val wwsynDecodeText: String,
-          @SerializedName("wwsyn_icon")
+          @Json(name = "wwsyn_icon")
           val wwsynIcon: String,
-          @SerializedName("wwsyn_shortText")
+          @Json(name = "wwsyn_shortText")
           val wwsynShortText: String,
         )
       }
     }
   }
 
+  @JsonClass(generateAdapter = true)
   data class Params(
-    @SerializedName("cloudBase_shortText")
+    @Json(name = "cloudBase_shortText")
     val cloudBaseShortText: Param,
-    @SerializedName("clouds_icon_wwsyn_icon")
+    @Json(name = "clouds_icon_wwsyn_icon")
     val cloudsIconWwsynIcon: Param,
-    @SerializedName("clouds_shortText")
+    @Json(name = "clouds_shortText")
     val cloudsShortText: Param,
-    @SerializedName("dd_shortText")
+    @Json(name = "dd_shortText")
     val ddShortText: Param,
-    @SerializedName("ddff_icon")
+    @Json(name = "ddff_icon")
     val ddffIcon: Param,
-    @SerializedName("ff_shortText")
+    @Json(name = "ff_shortText")
     val ffShortText: Param,
-    @SerializedName("ff_val")
+    @Json(name = "ff_val")
     val ffVal: Param,
-    @SerializedName("ffmax_val")
+    @Json(name = "ffmax_val")
     val ffmaxVal: Param,
-    @SerializedName("msl")
+    @Json(name = "msl")
     val msl: Param,
-    @SerializedName("pa_shortText")
+    @Json(name = "pa_shortText")
     val paShortText: Param,
-    @SerializedName("rh")
+    @Json(name = "rh")
     val rh: Param,
-    @SerializedName("rh_shortText")
+    @Json(name = "rh_shortText")
     val rhShortText: Param,
-    @SerializedName("sn_acc")
+    @Json(name = "sn_acc")
     val snAcc: Param,
-    @SerializedName("t")
+    @Json(name = "t")
     val t: Param,
-    @SerializedName("tp_acc")
+    @Json(name = "tp_acc")
     val tpAcc: Param,
-    @SerializedName("wwsyn_decodeText")
+    @Json(name = "wwsyn_decodeText")
     val wwsynDecodeText: Param,
-    @SerializedName("wwsyn_icon")
+    @Json(name = "wwsyn_icon")
     val wwsynIcon: Param,
-    @SerializedName("wwsyn_shortText")
+    @Json(name = "wwsyn_shortText")
     val wwsynShortText: Param,
   ) {
 
+    @JsonClass(generateAdapter = true)
     data class Param(
       val desc: String,
       val name: String,

@@ -40,7 +40,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoRadarScope.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.scope },
             onItemClick = {
               vm.setScope(it)
@@ -60,7 +60,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoRadarLength.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.length },
             onItemClick = {
               vm.setLength(it)

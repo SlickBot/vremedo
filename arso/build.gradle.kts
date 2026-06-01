@@ -1,10 +1,9 @@
-import com.android.build.api.dsl.LibraryExtension
-
 plugins {
   alias(libs.plugins.android.library)
+  alias(libs.plugins.ksp)
 }
 
-configure<LibraryExtension> {
+android {
   namespace = "eu.slickbot.arso"
 
   defaultConfig {
@@ -36,6 +35,12 @@ configure<LibraryExtension> {
   }
 }
 
+kotlin {
+  compilerOptions {
+    freeCompilerArgs.add("-Xannotation-default-target=param-property")
+  }
+}
+
 tasks.withType<Test>().configureEach {
   useJUnit {
     if (project.hasProperty("liveTests")) {
@@ -51,7 +56,9 @@ dependencies {
   api(libs.okhttp.logging.interceptor)
   api(libs.kotlinx.coroutines.core)
   implementation(libs.retrofit)
-  implementation(libs.retrofit.converter.gson)
+  implementation(libs.retrofit.converter.moshi)
+  implementation(libs.moshi)
+  ksp(libs.moshi.kotlin.codegen)
   api(project(":scrape-utils"))
 
   // Test

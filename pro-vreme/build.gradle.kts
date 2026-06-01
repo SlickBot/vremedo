@@ -1,10 +1,8 @@
-import com.android.build.api.dsl.LibraryExtension
-
 plugins {
   alias(libs.plugins.android.library)
 }
 
-configure<LibraryExtension> {
+android {
   namespace = "eu.slickbot.provreme"
 
   defaultConfig {

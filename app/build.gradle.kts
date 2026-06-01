@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.ApplicationExtension
-
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
@@ -8,11 +6,11 @@ plugins {
 val appVersionName = "1.2"
 val appVersionCode = 2
 
-configure<ApplicationExtension> {
+android {
   namespace = "eu.slickbot.vremedo"
 
   defaultConfig {
-    applicationId = "eu.slickbot.vremedo"
+    applicationId = namespace
 
     minSdk = 26
     targetSdk = 37
@@ -22,10 +20,6 @@ configure<ApplicationExtension> {
     versionName = appVersionName
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-    vectorDrawables {
-      useSupportLibrary = true
-    }
   }
 
   signingConfigs {
@@ -57,8 +51,8 @@ configure<ApplicationExtension> {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
   }
 
   buildFeatures {
@@ -72,6 +66,10 @@ configure<ApplicationExtension> {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
   }
+}
+
+kotlin {
+  jvmToolchain(21)
 }
 
 dependencies {

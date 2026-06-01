@@ -6,7 +6,7 @@ import kotlin.time.Instant
 import okhttp3.OkHttpClient
 import org.xml.sax.InputSource
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.StringReader
 import java.lang.Integer.min
 import javax.xml.parsers.DocumentBuilderFactory
@@ -15,7 +15,6 @@ class Arso(private val client: OkHttpClient) {
 
   companion object {
     private const val BASE_URL = "https://meteo.arso.gov.si"
-    private const val SERVICE_URL = "$BASE_URL/met/sl/service"
     private const val BASE_DATA_URL = "$BASE_URL/uploads/probase/www/plus/timeline"
     private const val BASE_OBSERV_URL = "$BASE_URL/uploads/probase/www/observ"
     private const val BASE_MODEL_URL = "$BASE_URL/uploads/probase/www/model"
@@ -24,7 +23,7 @@ class Arso(private val client: OkHttpClient) {
   private val service = Retrofit.Builder()
     .baseUrl("https://vreme.arso.gov.si/api/1.0/")
     .client(client)
-    .addConverterFactory(GsonConverterFactory.create())
+    .addConverterFactory(MoshiConverterFactory.create())
     .build()
     .create(ArsoService::class.java)
 
@@ -105,7 +104,7 @@ class Arso(private val client: OkHttpClient) {
   }
 
   internal fun parseRadarImageUrls(response: String): List<String> {
-    val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toPattern()
+    val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)}".toPattern()
     val matcher = pattern.matcher(response)
     val imageUrls = matcher.findAllGroups(2)
     return imageUrls.map { "$BASE_OBSERV_URL/radar/$it" }
@@ -188,7 +187,7 @@ class Arso(private val client: OkHttpClient) {
           string.substring(startIdx, endIdx)
             .split(",")
             .map { it.removePrefixSuffix("\"") }
-            .map { ArsoCameraOrientation.valueOf(it.uppercase()) }
+            .map { ArsoCameraOrientation.fromCode(it) }
         }
       }
 
@@ -273,7 +272,7 @@ class Arso(private val client: OkHttpClient) {
       ArsoCameraLength.SHORT -> "short"
       ArsoCameraLength.LONG -> "long"
     }
-    val orientationText = orientation.name.lowercase()
+    val orientationText = orientation.code
     val url =
       "$BASE_URL/uploads/probase/www/plus/timeline/timeline_webcam_${data.id}${orientationText}_${lengthText}.xml"
 

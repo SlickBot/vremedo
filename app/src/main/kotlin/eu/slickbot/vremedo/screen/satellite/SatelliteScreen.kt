@@ -40,7 +40,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoSatelliteScope.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.scope },
             onItemClick = {
               vm.setScope(it)
@@ -60,7 +60,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoSatelliteLength.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.length },
             onItemClick = {
               vm.setMode(it)

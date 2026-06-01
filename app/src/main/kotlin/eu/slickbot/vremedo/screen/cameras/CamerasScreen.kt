@@ -49,7 +49,7 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = state.selectedCameraData?.orientations.orEmpty(),
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.orientation },
             onItemClick = {
               vm.setOrientation(it)
@@ -69,7 +69,7 @@ fun CamerasScreen(vm: CamerasViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoCameraLength.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.length },
             onItemClick = {
               vm.setLength(it)

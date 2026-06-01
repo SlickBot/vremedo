@@ -41,7 +41,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoAladinScope.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.scope },
             onItemClick = {
               vm.setScope(it)
@@ -61,7 +61,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
         dialog = {
           AppListDialog(
             items = ArsoAladinMode.entries,
-            itemText = { it.name },
+            itemText = { it.displayName },
             itemSelected = { it == state.mode },
             onItemClick = {
               vm.setMode(it)
