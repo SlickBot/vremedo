@@ -90,5 +90,4 @@ class AppNavigation {
   ) {
     popUpTo(screen.route, builder)
   }
-
 }

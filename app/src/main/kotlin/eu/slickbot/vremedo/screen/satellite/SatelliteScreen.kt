@@ -33,6 +33,7 @@ fun SatelliteScreen(vm: SatelliteViewModel = koinViewModel()) {
       title = "Satellite",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
+      isError = state.isError,
       buttonLeft = ImageScreenButton(
         text = "Scope",
         icon = Icons.Filled.Map,

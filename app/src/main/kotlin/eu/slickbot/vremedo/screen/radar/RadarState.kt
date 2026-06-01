@@ -7,5 +7,6 @@ data class RadarState(
   val isLoading: Boolean = false,
   val length: ArsoRadarLength = ArsoRadarLength.LONG,
   val scope: ArsoRadarScope = ArsoRadarScope.NEIGHBOURS,
+  val isError: Boolean = false,
   val imageUrls: List<String> = emptyList(),
 )

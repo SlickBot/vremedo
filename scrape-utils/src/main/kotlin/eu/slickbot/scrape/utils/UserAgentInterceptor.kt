@@ -13,5 +13,4 @@ class UserAgentInterceptor(
       .build()
     return chain.proceed(newRequest)
   }
-
 }

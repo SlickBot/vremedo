@@ -33,6 +33,7 @@ fun AladinScreen(vm: AladinViewModel = koinViewModel()) {
       title = "Aladin",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
+      isError = state.isError,
       buttonLeft = ImageScreenButton(
         text = "Scope",
         icon = Icons.Filled.Map,

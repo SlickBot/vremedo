@@ -104,7 +104,7 @@ class Arso(private val client: OkHttpClient) {
   }
 
   internal fun parseRadarImageUrls(response: String): List<String> {
-    val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)}".toPattern()
+    val pattern = "\\{(.*)url:IMG\\+'(.*?)'(.*)\\}".toPattern()
     val matcher = pattern.matcher(response)
     val imageUrls = matcher.findAllGroups(2)
     return imageUrls.map { "$BASE_OBSERV_URL/radar/$it" }
@@ -137,7 +137,7 @@ class Arso(private val client: OkHttpClient) {
     // find the one with known values "LJUBL" and "MARIB"
 
     var domsText = ""
-    var domsStartIdx = 0
+    var domsStartIdx: Int
     var domsEndIdx = 0
 
     while (true) {

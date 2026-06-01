@@ -1,13 +1,11 @@
 package eu.slickbot.vremedo
 
 import android.animation.ObjectAnimator
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -41,7 +39,6 @@ class MainActivity : ComponentActivity() {
   private val appNavigation: AppNavigation by inject()
   private val weatherRepository: WeatherRepository by inject()
 
-  @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
   override fun onCreate(savedInstanceState: Bundle?) {
 
     super.onCreate(savedInstanceState)
@@ -107,5 +104,4 @@ class MainActivity : ComponentActivity() {
   ) {
     composable(screen.route, arguments, deepLinks, content = screen.screen)
   }
-
 }

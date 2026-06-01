@@ -58,6 +58,7 @@ fun ImageScreen(
   imageUrls: List<String>,
   isLoading: Boolean,
   modifier: Modifier = Modifier,
+  isError: Boolean = false,
   buttonLeft: ImageScreenButton? = null,
   buttonRight: ImageScreenButton? = null,
   extraContent: @Composable () -> Unit = {},
@@ -106,6 +107,7 @@ fun ImageScreen(
       Animation(
         modifier = Modifier.fillMaxSize(),
         painter = animationPainter,
+        isError = isError,
       )
       Box(
         modifier = Modifier
@@ -189,6 +191,7 @@ fun ImageScreen(
 private fun Animation(
   modifier: Modifier,
   painter: ImageAnimationPainter,
+  isError: Boolean,
 ) {
   Box(modifier = modifier) {
     AnimatedContent(
@@ -210,7 +213,7 @@ private fun Animation(
           Box(modifier = Modifier.fillMaxSize()) {
             Text(
               modifier = Modifier.align(Alignment.Center),
-              text = "No images",
+              text = if (isError) "Failed to fetch images" else "No images",
               style = MaterialTheme.typography.headlineMedium,
             )
           }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AladinViewModel(
   private val arsoRepo: ArsoRepository,
@@ -27,7 +28,7 @@ class AladinViewModel(
   private fun updateImages() {
     updateImageJob?.cancel()
     updateImageJob = viewModelScope.launch {
-      _state.update { it.copy(isLoading = true) }
+      _state.update { it.copy(isLoading = true, isError = false) }
       runCatching {
         arsoRepo.getAladinImages(
           scope = state.value.scope,
@@ -38,7 +39,8 @@ class AladinViewModel(
           _state.update { it.copy(imageUrls = imageUrls) }
         },
         onFailure = {
-          // TODO: handle failure
+          Timber.e(it, "Failed to load aladin images")
+          _state.update { it.copy(isError = true) }
         },
       )
       _state.update { it.copy(isLoading = false) }

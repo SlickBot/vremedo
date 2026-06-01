@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class CamerasViewModel(
   private val arsoRepo: ArsoRepository,
@@ -30,7 +31,7 @@ class CamerasViewModel(
   private fun updateData() {
     updateDataJob?.cancel()
     updateDataJob = viewModelScope.launch {
-      _state.update { it.copy(isLoading = true) }
+      _state.update { it.copy(isLoading = true, isError = false) }
       runCatching {
         arsoRepo.getCameraData()
       }.fold(
@@ -47,7 +48,8 @@ class CamerasViewModel(
           updateImages()
         },
         onFailure = {
-          // TODO: handle failure
+          Timber.e(it, "Failed to load camera data")
+          _state.update { it.copy(isError = true) }
         },
       )
       _state.update { it.copy(isLoading = false) }
@@ -60,7 +62,7 @@ class CamerasViewModel(
 
     updateImageJob?.cancel()
     updateImageJob = viewModelScope.launch {
-      _state.update { it.copy(isLoading = true) }
+      _state.update { it.copy(isLoading = true, isError = false) }
       runCatching {
         arsoRepo.getCamerasImages(
           data = selectedImageData,
@@ -72,7 +74,8 @@ class CamerasViewModel(
           _state.update { it.copy(imageUrls = imageUrls) }
         },
         onFailure = {
-          // TODO: handle failure
+          Timber.e(it, "Failed to load camera images")
+          _state.update { it.copy(isError = true) }
         },
       )
       _state.update { it.copy(isLoading = false) }

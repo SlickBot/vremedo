@@ -35,5 +35,4 @@ class AppLifecycle : LifecycleEventObserver {
       _state.value = state
     }
   }
-
 }

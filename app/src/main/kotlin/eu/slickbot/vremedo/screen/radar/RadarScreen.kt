@@ -33,6 +33,7 @@ fun RadarScreen(vm: RadarViewModel = koinViewModel()) {
       title = "Radar",
       imageUrls = state.imageUrls,
       isLoading = state.isLoading,
+      isError = state.isError,
       buttonLeft = ImageScreenButton(
         text = "Scope",
         icon = Icons.Filled.Map,

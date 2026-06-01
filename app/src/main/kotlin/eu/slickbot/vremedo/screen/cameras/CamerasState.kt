@@ -10,5 +10,6 @@ data class CamerasState(
   val length: ArsoCameraLength = ArsoCameraLength.LONG,
   val cameraData: List<ArsoCameraData> = emptyList(),
   val selectedCameraData: ArsoCameraData? = null,
+  val isError: Boolean = false,
   val imageUrls: List<String> = emptyList(),
 )
