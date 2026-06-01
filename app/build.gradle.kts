@@ -30,7 +30,7 @@ configure<ApplicationExtension> {
 
   signingConfigs {
     create("release") {
-      System.getenv("KEYSTORE_FILE")?.let { storeFile = file(it) }
+      storeFile = System.getenv("KEYSTORE_FILE")?.let { file(it) }
       storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
       keyAlias = System.getenv("KEY_ALIAS") ?: ""
       keyPassword = System.getenv("KEY_PASSWORD") ?: ""
@@ -46,6 +46,8 @@ configure<ApplicationExtension> {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro",
       )
+      isMinifyEnabled = true
+      isShrinkResources = true
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
