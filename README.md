@@ -50,8 +50,8 @@ the matching screen breaks until I fix the parser.
 ### Stack
 
 Kotlin · Jetpack Compose (Material 3, Navigation, ConstraintLayout /
-MotionLayout) · Koin for DI · Coil for image loading · OkHttp + Retrofit + Moshi ·
-Jsoup · kotlinx-datetime & coroutines · AGP 9. `minSdk` 26, `targetSdk` 37.
+MotionLayout) · Koin · Coil · OkHttp + Retrofit + Moshi ·
+Jsoup · AGP 9. `minSdk` 26, `targetSdk` 37.
 
 The project is split by data source rather than by layer:
 
