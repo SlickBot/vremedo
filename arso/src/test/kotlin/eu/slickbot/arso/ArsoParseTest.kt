@@ -1,9 +1,12 @@
 package eu.slickbot.arso
 
+import com.squareup.moshi.Moshi
 import eu.slickbot.arso.model.ArsoAudioBitrate
 import eu.slickbot.arso.model.ArsoLanguage
+import eu.slickbot.arso.model.Forecast
 import okhttp3.OkHttpClient
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.time.Instant
@@ -107,6 +110,58 @@ class ArsoParseTest {
   fun returnsEmptyForContentWithoutTimeline() {
     assertEquals(emptyList<String>(), arso.parseSatelliteImageUrls("<pujs>no timeline here</pujs>"))
     assertEquals(emptyList<String>(), arso.parseAladinImageUrls(""))
+  }
+
+  @Test
+  fun parsesTimelineWithMissingOptionalFields() {
+    val json = """
+      {
+        "cloudBase_shortText": "",
+        "clouds_icon_wwsyn_icon": "overcast",
+        "clouds_shortText": "oblačno",
+        "clouds_shortText_wwsyn_shortText": "oblačno",
+        "dd_shortText": "JZ",
+        "ddff_icon": "SW",
+        "ff_shortText": "šibak",
+        "ff_val": "5",
+        "ffmax_val": "10",
+        "interval": "24h",
+        "msl": "1013",
+        "pa_shortText": "",
+        "rh": "80",
+        "rh_shortText": "",
+        "t": "12",
+        "time": "2026-06-02T00:00:00",
+        "valid": "2026-06-02T00:00:00",
+        "wwsyn_decodeText": "",
+        "wwsyn_icon": "",
+        "wwsyn_shortText": ""
+      }
+    """.trimIndent()
+
+    val adapter = Moshi.Builder().build()
+      .adapter(Forecast.Feature.Properties.Day.Timeline::class.java)
+    val timeline = adapter.fromJson(json)!!
+
+    assertNull(timeline.snAcc)
+    assertNull(timeline.tpAcc)
+    assertEquals("oblačno", timeline.cloudsShortText)
+  }
+
+  @Test
+  fun parsesParamsWithMissingEntries() {
+    val json = """
+      {
+        "t": { "desc": "temperatura", "name": "t", "unit": "°C" }
+      }
+    """.trimIndent()
+
+    val adapter = Moshi.Builder().build().adapter(Forecast.Params::class.java)
+    val params = adapter.fromJson(json)!!
+
+    assertNull(params.snAcc)
+    assertNull(params.tpAcc)
+    assertEquals("temperatura", params.t?.desc)
   }
 
   @Test

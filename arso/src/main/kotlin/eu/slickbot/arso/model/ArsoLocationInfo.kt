@@ -5,105 +5,105 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ArsoLocationInfo(
-  val forecast1h: Forecast,
-  val forecast3h: Forecast,
-  val forecast6h: Forecast,
-  val forecast24h: Forecast,
+  val forecast1h: Forecast?,
+  val forecast3h: Forecast?,
+  val forecast6h: Forecast?,
+  val forecast24h: Forecast?,
 )
 
 @JsonClass(generateAdapter = true)
 data class Forecast(
-  val type: String,
-  val dataType: String,
-  val features: List<Feature>,
-  val language: String,
-  val params: Params,
-  val tsUpdated: String,
-  val tsValid: String,
+  val type: String?,
+  val dataType: String?,
+  val features: List<Feature> = emptyList(),
+  val language: String?,
+  val params: Params?,
+  val tsUpdated: String?,
+  val tsValid: String?,
   @Json(name = "icon_base_url")
-  val iconBaseUrl: String,
+  val iconBaseUrl: String?,
   @Json(name = "icon_format")
-  val iconFormat: String,
+  val iconFormat: String?,
 ) {
 
   @JsonClass(generateAdapter = true)
   data class Feature(
-    val type: String,
-    val geometry: Geometry,
-    val properties: Properties,
+    val type: String?,
+    val geometry: Geometry?,
+    val properties: Properties?,
   ) {
 
     @JsonClass(generateAdapter = true)
     data class Geometry(
-      val type: String,
-      val coordinates: List<Double>,
+      val type: String?,
+      val coordinates: List<Double> = emptyList(),
     )
 
     @JsonClass(generateAdapter = true)
     data class Properties(
-      val id: String,
-      val parentId: String,
-      val title: String,
-      val country: String,
-      val days: List<Day>,
+      val id: String?,
+      val parentId: String?,
+      val title: String?,
+      val country: String?,
+      val days: List<Day> = emptyList(),
     ) {
 
       @JsonClass(generateAdapter = true)
       data class Day(
-        val date: String,
-        val sunrise: String,
-        val sunset: String,
-        val timeline: List<Timeline>,
+        val date: String?,
+        val sunrise: String?,
+        val sunset: String?,
+        val timeline: List<Timeline> = emptyList(),
         @Json(name = "UTCoffset")
-        val utcOffset: String,
+        val utcOffset: String?,
       ) {
 
         @JsonClass(generateAdapter = true)
         data class Timeline(
           @Json(name = "cloudBase_shortText")
-          val cloudBaseShortText: String,
+          val cloudBaseShortText: String?,
           @Json(name = "clouds_icon_wwsyn_icon")
-          val cloudsIconWwsynIcon: String,
+          val cloudsIconWwsynIcon: String?,
           @Json(name = "clouds_shortText")
-          val cloudsShortText: String,
+          val cloudsShortText: String?,
           @Json(name = "clouds_shortText_wwsyn_shortText")
-          val cloudsShortTextWwsynShortText: String,
+          val cloudsShortTextWwsynShortText: String?,
           @Json(name = "dd_shortText")
-          val ddShortText: String,
+          val ddShortText: String?,
           @Json(name = "ddff_icon")
-          val ddffIcon: String,
+          val ddffIcon: String?,
           @Json(name = "ff_shortText")
-          val ffShortText: String,
+          val ffShortText: String?,
           @Json(name = "ff_val")
-          val ffVal: String,
+          val ffVal: String?,
           @Json(name = "ffmax_val")
-          val ffMaxVal: String,
+          val ffMaxVal: String?,
           @Json(name = "interval")
-          val interval: String,
+          val interval: String?,
           @Json(name = "msl")
-          val msl: String,
+          val msl: String?,
           @Json(name = "pa_shortText")
-          val paShortText: String,
+          val paShortText: String?,
           @Json(name = "rh")
-          val rh: String,
+          val rh: String?,
           @Json(name = "rh_shortText")
-          val rhShortText: String,
+          val rhShortText: String?,
           @Json(name = "sn_acc")
-          val snAcc: String,
+          val snAcc: String?,
           @Json(name = "t")
-          val t: String,
+          val t: String?,
           @Json(name = "time")
-          val time: String,
+          val time: String?,
           @Json(name = "tp_acc")
-          val tpAcc: String,
+          val tpAcc: String?,
           @Json(name = "valid")
-          val valid: String,
+          val valid: String?,
           @Json(name = "wwsyn_decodeText")
-          val wwsynDecodeText: String,
+          val wwsynDecodeText: String?,
           @Json(name = "wwsyn_icon")
-          val wwsynIcon: String,
+          val wwsynIcon: String?,
           @Json(name = "wwsyn_shortText")
-          val wwsynShortText: String,
+          val wwsynShortText: String?,
         )
       }
     }
@@ -112,49 +112,48 @@ data class Forecast(
   @JsonClass(generateAdapter = true)
   data class Params(
     @Json(name = "cloudBase_shortText")
-    val cloudBaseShortText: Param,
+    val cloudBaseShortText: Param?,
     @Json(name = "clouds_icon_wwsyn_icon")
-    val cloudsIconWwsynIcon: Param,
+    val cloudsIconWwsynIcon: Param?,
     @Json(name = "clouds_shortText")
-    val cloudsShortText: Param,
+    val cloudsShortText: Param?,
     @Json(name = "dd_shortText")
-    val ddShortText: Param,
+    val ddShortText: Param?,
     @Json(name = "ddff_icon")
-    val ddffIcon: Param,
+    val ddffIcon: Param?,
     @Json(name = "ff_shortText")
-    val ffShortText: Param,
+    val ffShortText: Param?,
     @Json(name = "ff_val")
-    val ffVal: Param,
+    val ffVal: Param?,
     @Json(name = "ffmax_val")
-    val ffmaxVal: Param,
+    val ffmaxVal: Param?,
     @Json(name = "msl")
-    val msl: Param,
+    val msl: Param?,
     @Json(name = "pa_shortText")
-    val paShortText: Param,
+    val paShortText: Param?,
     @Json(name = "rh")
-    val rh: Param,
+    val rh: Param?,
     @Json(name = "rh_shortText")
-    val rhShortText: Param,
+    val rhShortText: Param?,
     @Json(name = "sn_acc")
-    val snAcc: Param,
+    val snAcc: Param?,
     @Json(name = "t")
-    val t: Param,
+    val t: Param?,
     @Json(name = "tp_acc")
-    val tpAcc: Param,
+    val tpAcc: Param?,
     @Json(name = "wwsyn_decodeText")
-    val wwsynDecodeText: Param,
+    val wwsynDecodeText: Param?,
     @Json(name = "wwsyn_icon")
-    val wwsynIcon: Param,
+    val wwsynIcon: Param?,
     @Json(name = "wwsyn_shortText")
-    val wwsynShortText: Param,
+    val wwsynShortText: Param?,
   ) {
 
     @JsonClass(generateAdapter = true)
     data class Param(
-      val desc: String,
-      val name: String,
-      val unit: String,
+      val desc: String?,
+      val name: String?,
+      val unit: String?,
     )
   }
-
 }

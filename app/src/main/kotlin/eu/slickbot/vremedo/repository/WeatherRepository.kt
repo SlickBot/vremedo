@@ -115,12 +115,12 @@ class WeatherRepository(
   ): List<SunriseSunsetTime> {
     return withContext(Dispatchers.IO) {
       val times = arso.getLocationInfo(language, location)
-        .forecast6h.features.first() // there is always only one element
-        .properties.days.map { day ->
-          SunriseSunsetTime(
-            sunrise = day.sunrise.toKotlinLocalDateTime(),
-            sunset = day.sunset.toKotlinLocalDateTime(),
-          )
+        .forecast6h?.features?.firstOrNull() // there is always only one element
+        ?.properties?.days.orEmpty()
+        .mapNotNull { day ->
+          val sunrise = day.sunrise?.toKotlinLocalDateTime() ?: return@mapNotNull null
+          val sunset = day.sunset?.toKotlinLocalDateTime() ?: return@mapNotNull null
+          SunriseSunsetTime(sunrise, sunset)
         }
         .distinct()
       cacheTodaySunriseSunset(times)

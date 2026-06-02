@@ -150,7 +150,9 @@ fun WeatherGraph(
   LaunchedEffect(items) {
     scope.launch(Dispatchers.IO) {
       for (item in items) {
-        bitmaps[item.hours.iconUrl] = imageLoader.getImageBitmap(context, item.hours.iconUrl)
+        imageLoader.getImageBitmap(context, item.hours.iconUrl)?.let {
+          bitmaps[item.hours.iconUrl] = it
+        }
       }
     }
   }
