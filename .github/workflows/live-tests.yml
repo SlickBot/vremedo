@@ -25,13 +25,13 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run live web-source tests
-        run: ./gradlew test -PliveTests --stacktrace
+        run: ./gradlew test -PliveTests --continue --stacktrace
 
       - name: Upload test reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: live-test-reports
-          path: app/build/reports/tests/
-          if-no-files-found: ignore
+          path: '**/build/reports/tests/'
+          if-no-files-found: warn
           retention-days: 14
