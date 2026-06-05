@@ -7,7 +7,6 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
-import org.junit.Assert
 import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
@@ -77,13 +76,13 @@ class ArsoTest {
   @Test
   fun test_camera_images() {
     val data = arso.getCameraImageData()
-    val randomCameraData = data.random()
+    val camera = data.first { it.id == "LJUBL-ANA_BEZIGRAD_" }
     val images = arso.getCameraImageUrls(
-      randomCameraData,
-      randomCameraData.orientations.random(),
+      camera,
+      camera.orientations.first(),
       ArsoCameraLength.LONG,
     )
-    assertNotEquals(images.size, 0)
+    assertNotEquals(0, images.size)
     images.forEach(::println)
   }
 
