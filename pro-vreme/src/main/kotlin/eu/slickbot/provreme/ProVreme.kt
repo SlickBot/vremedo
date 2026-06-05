@@ -59,7 +59,9 @@ class ProVreme(private val client: OkHttpClient) {
   }
 
   private fun Document.selectRows(): Elements {
-    return select("table#numwrf").first()!!.select("tr")
+    val table = select("table#numwrf").first()
+      ?: throw IllegalStateException("Missing 'table#numwrf' (page title: '${title()}')")
+    return table.select("tr")
   }
 
   private inline fun Elements.parseColumns(toColumn: (Element, String, List<ProData>) -> Column): List<Column> {
