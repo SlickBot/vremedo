@@ -1,7 +1,5 @@
 # TODO
 
-General ideas to prune. We'll break them up later.
-
 ## Localization
 - [ ] Extract hardcoded strings into `strings.xml` (currently a mix of SLO/EN).
 - [ ] Slovenian + English, locale-aware weekdays/units/dates.
